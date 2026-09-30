@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.vercel
+scratch/
+scratch_*.png
+*.bak
+*.original
+.DS_Store
+Thumbs.db

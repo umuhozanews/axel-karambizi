@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — Axel Karambizi Portfolio CMS</title>
+  <link rel="icon" href="../assets/favicon.png">
+  <style>
+    :root {
+      --bg: #0c0d12;
+      --card: #151722;
+      --card-border: #232738;
+      --text: #f0f2f8;
+      --text-muted: #8b92a8;
+      --primary: #6a71df;
+      --primary-hover: #7b82f0;
+      --accent: #27d974;
+      --danger: #ef4444;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Auth Overlay */
+    #login-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: radial-gradient(circle at 50% 25%, #181b2e 0%, #090a0f 85%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .login-card {
+      background: rgba(21, 23, 34, 0.95);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 42px 36px;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.75), 0 0 45px rgba(106, 113, 223, 0.15);
+      backdrop-filter: blur(24px);
+      text-align: center;
+      animation: cardPop 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes cardPop {
+      from { opacity: 0; transform: scale(0.94) translateY(12px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .login-avatar {
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--primary);
+      margin: 0 auto 16px;
+      display: block;
+      box-shadow: 0 0 24px rgba(106, 113, 223, 0.45);
+    }
+    .login-card h2 {
+      font-size: 23px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+    .login-card p.subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      text-align: left;
+    }
+    .login-error {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-bottom: 4px;
+      display: none;
+      animation: shake 0.3s ease;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+    .login-footer {
+      margin-top: 24px;
+      padding-top: 18px;
+      border-top: 1px solid var(--card-border);
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* Admin Workspace */
+    #admin-app {
+      display: none;
+      width: 100%;
+      min-height: 100vh;
+    }
+    aside {
+      width: 270px;
+      background: var(--card);
+      border-right: 1px solid var(--card-border);
+      padding: 24px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .brand-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--primary);
+    }
+    .brand h2 { font-size: 16px; font-weight: 700; line-height: 1.2; }
+    .brand span { font-size: 11px; color: var(--accent); font-weight: 600; display: block; }
+    .brand .admin-email-tag { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    
+    .nav-tabs {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      flex: 1;
+      overflow-y: auto;
+    }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 10px 14px;
+      font-size: 13.5px;
+      font-weight: 500;
+      text-align: left;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s;
+    }
+    .tab-btn:hover { background: #1c1f2e; color: var(--text); }
+    .tab-btn.active { background: var(--primary); color: #fff; }
+    
+    .aside-actions {
+      border-top: 1px solid var(--card-border);
+      padding-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .aside-footer {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 4px;
+    }
+
+    main {
+      flex: 1;
+      padding: 36px 48px;
+      max-width: 1100px;
+      overflow-y: auto;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--card-border);
+    }
+    header h1 { font-size: 26px; font-weight: 700; }
+    .top-actions { display: flex; gap: 12px; }
+    .btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-secondary { background: #232738; color: var(--text); }
+    .btn-secondary:hover { background: #2d3248; }
+    .btn-outline { background: transparent; border: 1px solid var(--card-border); color: var(--text-muted); }
+    .btn-outline:hover { color: var(--text); border-color: var(--text-muted); }
+    .btn-danger { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; }
+    .btn-danger:hover { background: rgba(239, 68, 68, 0.3); color: #fff; }
+    .btn-upload { background: #232738; border: 1px solid var(--card-border); color: var(--text); font-size: 12px; padding: 7px 12px; border-radius: 6px; cursor: pointer; }
+    .btn-upload:hover { background: #2d3248; border-color: var(--primary); }
+    
+    .panel { display: none; }
+    .panel.active { display: block; animation: fadeIn 0.2s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    .card-box {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .card-box h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 16px;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .form-group.full { grid-column: 1 / -1; }
+    label { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+    input[type="text"], input[type="email"], input[type="password"], textarea, select {
+      background: #0f1017;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: var(--text);
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--primary);
+    }
+    textarea { min-height: 80px; resize: vertical; }
+
+    .image-field-wrap {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      background: #0c0d12;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+    }
+    .image-preview-thumb {
+      width: 75px;
+      height: 50px;
+      border-radius: 6px;
+      object-fit: cover;
+      background: #1c1f2e;
+      border: 1px solid var(--card-border);
+      flex-shrink: 0;
+    }
+
+    .media-card {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      background: #0f1017;
+      padding: 16px;
+      border-radius: 10px;
+      border: 1px solid var(--card-border);
+      margin-bottom: 14px;
+    }
+    .media-preview {
+      width: 110px;
+      height: 75px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #1c1f2e;
+      border: 1px solid var(--card-border);
+      flex-shrink: 0;
+    }
+    .media-info { flex: 1; }
+    .media-info strong { display: block; font-size: 14px; margin-bottom: 4px; }
+    .media-info p { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; word-break: break-all; }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--accent);
+      color: #0c0d12;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      display: none;
+      z-index: 10001;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. LOGIN OVERLAY -->
+  <div id="login-overlay">
+    <div class="login-card">
+      <img src="../assets/avatar.jpg" alt="Axel Karambizi" class="login-avatar">
+      <h2>Axel Karambizi CMS</h2>
+      <p class="subtitle">Enter administrator credentials to unlock full editing access to titles, content, images, and footers.</p>
+      
+      <div id="login-error" class="login-error"></div>
+
+      <form id="login-form" class="login-form" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label for="login-email">Admin Email Address</label>
+          <input type="email" id="login-email" placeholder="nextech@gmail.com" required autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <div style="position: relative;">
+            <input type="password" id="login-password" placeholder="••••••••" required autocomplete="current-password" style="width: 100%; padding-right: 44px;">
+            <button type="button" onclick="togglePasswordVisibility()" title="Show/Hide Password" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 16px;">👁️</button>
+          </div>
+        </div>
+        <button type="submit" id="login-btn" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 12px; margin-top: 6px;">
+          🔐 Sign In with Full Privileges
+        </button>
+      </form>
+
+      <div class="login-footer">
+        Protected CMS • Created by <strong>Gacondo Labs</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. ADMIN DASHBOARD WORKSPACE -->
+  <div id="admin-app">
+    <aside>
+      <div class="brand">
+        <img src="../assets/avatar.jpg" alt="Avatar" class="brand-avatar">
+        <div>
+          <h2>Axel CMS</h2>
+          <span>● Super Admin Online</span>
+          <div id="sidebar-email" class="admin-email-tag">nextech@gmail.com</div>
+        </div>
+      </div>
+
+      <nav class="nav-tabs">
+        <button class="tab-btn active" data-tab="tab-hero" onclick="switchTab('tab-hero')">👤 General & Hero</button>
+        <button class="tab-btn" data-tab="tab-projects" onclick="switchTab('tab-projects')">🚀 Featured Projects</button>
+        <button class="tab-btn" data-tab="tab-more-projects" onclick="switchTab('tab-more-projects')">📁 More Projects</button>
+        <button class="tab-btn" data-tab="tab-explore" onclick="switchTab('tab-explore')">🧭 Explore Stories</button>
+        <button class="tab-btn" data-tab="tab-about" onclick="switchTab('tab-about')">📖 About & Timeline</button>
+        <button class="tab-btn" data-tab="tab-contact" onclick="switchTab('tab-contact')">📞 Contact & Footer</button>
+        <button class="tab-btn" data-tab="tab-media" onclick="switchTab('tab-media')">🖼️ Media & Photos</button>
+      </nav>
+
+      <div class="aside-actions">
+        <button onclick="logout()" class="tab-btn btn-danger" style="justify-content: center;">
+          🚪 Log Out
+        </button>
+        <div class="aside-footer">
+          Created by Gacondo Labs<br>
+          © 2026 Axel Karambizi
+        </div>
+      </div>
+    </aside>
+
+    <main>
+      <header>
+        <div>
+          <h1 id="tab-title">General & Hero Settings</h1>
+          <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">
+            Full Administrator Privilege: <strong id="header-user-email" style="color: var(--text);">nextech@gmail.com</strong>
+          </p>
+        </div>
+        <div class="top-actions">
+          <a href="../index.html" target="_blank" class="btn btn-outline">👁️ View Site</a>
+          <button onclick="saveAll()" class="btn btn-primary">💾 Save & Sync All</button>
+        </div>
+      </header>
+
+      <!-- Tab 1: General & Hero -->
+      <div id="tab-hero" class="panel active">
+        <div class="card-box">
+          <h3>Hero Identity</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Full Name</label>
+              <input type="text" id="gen-name">
+            </div>
+            <div class="form-group">
+              <label>Badge</label>
+              <input type="text" id="gen-badge">
+            </div>
+            <div class="form-group">
+              <label>Headline 1</label>
+              <input type="text" id="gen-h1">
+            </div>
+            <div class="form-group">
+              <label>Headline 2</label>
+              <input type="text" id="gen-h2">
+            </div>
+            <div class="form-group full">
+              <label>Tagline (Below Builder)</label>
+              <textarea id="gen-tagline"></textarea>
+            </div>
+            <div class="form-group full">
+              <label>Hero Front Portrait Image (Axel HD)</label>
+              <div class="image-field-wrap">
+                <img id="prev-gen-hero-front" src="" class="image-preview-thumb">
+                <input type="text" id="gen-hero-front" style="flex:1;">
+                <label class="btn-upload">
+                  📁 Replace Photo
+                  <input type="file" accept="image/*" style="display:none;" onchange="uploadImageFile(this, 'gen-hero-front', 'prev-gen-hero-front')">
+                </label>
+              </div>
+            </div>
+            <div class="form-group full">
+              <label>Hero Back Image (Rotating Card)</label>
+              <div class="image-field-wrap">
+                <img id="prev-gen-hero-back" src="" class="image-preview-thumb">
+                <input type="text" id="gen-hero-back" style="flex:1;">
+                <label class="btn-upload">
+                  📁 Replace Photo
+                  <input type="file" accept="image/*" style="display:none;" onchange="uploadImageFile(this, 'gen-hero-back', 'prev-gen-hero-back')">
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-box">
+          <h3>Key Metric Counters</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Counter 1 Number & Label</label>
+              <input type="text" id="cnt-1-num" placeholder="1,200+">
+              <input type="text" id="cnt-1-lbl" placeholder="Children Reached" style="margin-top:4px;">
+            </div>
+            <div class="form-group">
+              <label>Counter 2 Number & Label</label>
+              <input type="text" id="cnt-2-num" placeholder="20+">
+              <input type="text" id="cnt-2-lbl" placeholder="Schools Deployed" style="margin-top:4px;">
+            </div>
+            <div class="form-group">
+              <label>Counter 3 Number & Label</label>
+              <input type="text" id="cnt-3-num" placeholder="1,000+">
+              <input type="text" id="cnt-3-lbl" placeholder="Trees Planted" style="margin-top:4px;">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Featured Projects -->
+      <div id="tab-projects" class="panel">
+        <div id="featured-projects-container"></div>
+      </div>
+
+      <!-- Tab 3: More Projects -->
+      <div id="tab-more-projects" class="panel">
+        <div id="more-projects-container"></div>
+      </div>
+
+      <!-- Tab 4: Explore Stories -->
+      <div id="tab-explore" class="panel">
+        <div class="card-box">
+          <h3>Explore Page Header</h3>
+          <div class="form-group full">
+            <label>Heading</label>
+            <input type="text" id="explore-header-heading">
+          </div>
+          <div class="form-group full" style="margin-top:12px;">
+            <label>Intro Subtitle</label>
+            <textarea id="explore-header-intro"></textarea>
+          </div>
+        </div>
+        <div id="explore-stories-container"></div>
+      </div>
+
+      <!-- Tab 5: About Page -->
+      <div id="tab-about" class="panel">
+        <div class="card-box">
+          <h3>About Me Bio</h3>
+          <div class="form-group full">
+            <label>Paragraph 1</label>
+            <textarea id="about-p1"></textarea>
+          </div>
+          <div class="form-group full" style="margin-top: 12px;">
+            <label>Paragraph 2</label>
+            <textarea id="about-p2"></textarea>
+          </div>
+        </div>
+
+        <div class="card-box">
+          <h3>Discover My Journey Timeline</h3>
+          <div id="journey-container"></div>
+        </div>
+
+        <div class="card-box">
+          <h3>What I’m Becoming (Learning Stack)</h3>
+          <div class="form-group full" style="margin-bottom:16px;">
+            <label>Intro</label>
+            <textarea id="about-learn-intro"></textarea>
+          </div>
+          <div id="learning-stack-container"></div>
+        </div>
+      </div>
+
+      <!-- Tab 6: Contact & Footer -->
+      <div id="tab-contact" class="panel">
+        <div class="card-box">
+          <h3>Contact Section</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Heading</label>
+              <input type="text" id="contact-heading">
+            </div>
+            <div class="form-group">
+              <label>Email Address</label>
+              <input type="email" id="contact-email">
+            </div>
+            <div class="form-group">
+              <label>Phone / WhatsApp</label>
+              <input type="text" id="contact-phone">
+            </div>
+            <div class="form-group full">
+              <label>Intro Text</label>
+              <textarea id="contact-intro"></textarea>
+            </div>
+            <div class="form-group full">
+              <label>Contact Portrait Image</label>
+              <div class="image-field-wrap">
+                <img id="prev-contact-portrait" src="" class="image-preview-thumb">
+                <input type="text" id="contact-portrait-img" style="flex:1;">
+                <label class="btn-upload">
+                  📁 Replace Photo
+                  <input type="file" accept="image/*" style="display:none;" onchange="uploadImageFile(this, 'contact-portrait-img', 'prev-contact-portrait')">
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-box">
+          <h3>Footer & Branding Credits</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Copyright Text</label>
+              <input type="text" id="footer-copyright">
+            </div>
+            <div class="form-group">
+              <label>Created By Credit</label>
+              <input type="text" id="footer-created-by">
+            </div>
+            <div class="form-group">
+              <label>X (Twitter) URL</label>
+              <input type="text" id="social-x">
+            </div>
+            <div class="form-group">
+              <label>Instagram URL</label>
+              <input type="text" id="social-ig">
+            </div>
+            <div class="form-group">
+              <label>Behance URL</label>
+              <input type="text" id="social-be">
+            </div>
+            <div class="form-group">
+              <label>Dribbble URL</label>
+              <input type="text" id="social-dr">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 7: Media & Photos -->
+      <div id="tab-media" class="panel">
+        <div class="card-box">
+          <h3>Upload Any New Asset to Site</h3>
+          <p style="color:var(--text-muted); font-size:13px; margin-bottom:14px;">Select any image from your computer to save it directly into the <code>assets/</code> folder for use anywhere.</p>
+          <div style="display:flex; gap:12px; align-items:center;">
+            <label class="btn btn-primary">
+              📁 Upload New Image to Assets
+              <input type="file" accept="image/*" style="display:none;" onchange="handleDirectAssetUpload(this)">
+            </label>
+          </div>
+        </div>
+
+        <div class="card-box">
+          <h3>Primary Site & Blog Photos</h3>
+          <div id="media-list"></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <div id="toast" class="toast">Changes saved & synced successfully!</div>
+
+  <script id="initial-content" type="application/json">
+{
+  "general": {
+    "name": "Axel Karambizi",
+    "badge": "Hi",
+    "headline_1": "founder",
+    "headline_2": "builder",
+    "tagline": "I’m a Kigali-based founder and builder of companies, communities and technology",
+    "hero_front_image": "./assets/hero_front_hd.jpg",
+    "hero_back_image": "./assets/hero_back_hd.jpg",
+    "avatar_image": "./assets/avatar.jpg",
+    "favicon_image": "./assets/favicon.png"
+  },
+  "navigation": {
+    "items": [
+      {
+        "label": "Home",
+        "url": "./"
+      },
+      {
+        "label": "About",
+        "url": "./about/"
+      },
+      {
+        "label": "Project",
+        "url": "./projects/"
+      },
+      {
+        "label": "Explore",
+        "url": "./explore/"
+      }
+    ],
+    "button": {
+      "label": "Contact",
+      "url": "#contact"
+    },
+    "status_badge": "Available for work"
+  },
+  "counters": [
+    {
+      "number": "1,200+",
+      "label": "Children Reached"
+    },
+    {
+      "number": "20+",
+      "label": "Schools Deployed"
+    },
+    {
+      "number": "1,000+",
+      "label": "Trees Planted"
+    }
+  ],
+  "services": [
+    {
+      "title": "1. software & design",
+      "items": [
+        "Custom software systems and digital solutions",
+        "EdTech and library intelligence platforms",
+        "Design and software agency work with Atomiq",
+        "AI-powered tools built to be useful"
+      ]
+    },
+    {
+      "title": "2. Education",
+      "items": [
+        "Accredited school foundations in rural areas",
+        "Classrooms and daily meals for children",
+        "Mobile classroom bringing tech to underserved areas",
+        "Community mentorship pathways for local youth"
+      ]
+    },
+    {
+      "title": "3. Community Action",
+      "items": [
+        "Kigali Car Free Day community runs",
+        "Blood drives and civic events",
+        "Environmental initiatives, 1,000+ trees planted",
+        "Youth empowerment with Youth Uplift Initiative"
+      ]
+    },
+    {
+      "title": "4. Storytelling",
+      "items": [
+        "Writing and travel journals",
+        "Field notes from founder journeys",
+        "Building across borders: DRC, Uganda, France, UAE",
+        "Documenting lessons in building and giving back"
+      ]
+    }
+  ],
+  "featured_projects": [
+    {
+      "id": "risevana",
+      "title": "Risevana Foundation",
+      "category": "Non-Profit / Education",
+      "description": "An accredited foundation that built classrooms and daily meals on the children’s side of the river, reaching 1,200+ children.",
+      "image": "./assets/project_risevana.png",
+      "link": "./project-detail/"
+    },
+    {
+      "id": "libblio",
+      "title": "Libblio",
+      "category": "EdTech / Software",
+      "description": "School library software and reader intelligence for Rwandan schools, transforming how institutions organize knowledge.",
+      "image": "./assets/project_libblio.png",
+      "link": "./project-detail/"
+    },
+    {
+      "id": "youth-uplift",
+      "title": "Youth Uplift Initiative",
+      "category": "Community / Youth",
+      "description": "Youth empowerment initiatives spanning mentorship, community runs, blood donation drives, and environmental restoration across Kigali.",
+      "image": "./assets/project_youth_uplift.png",
+      "link": "./project-detail/"
+    },
+    {
+      "id": "atomiq",
+      "title": "Atomiq Agency",
+      "category": "Agency / Technology",
+      "description": "A design, branding, and software agency helping founders, creators, and institutions build world-class digital products and stories.",
+      "image": "./assets/project_atomiq.png",
+      "link": "./project-detail/"
+    }
+  ],
+  "more_projects": [
+    {
+      "title": "Mobile Classroom",
+      "category": "Education / Outreach",
+      "description": "A traveling learning lab bringing tech, books, and digital literacy workshops directly to remote communities."
+    },
+    {
+      "title": "Community Mentorship",
+      "category": "Youth / Skills",
+      "description": "Pairing young builders and students with active practitioners across software, craft, and entrepreneurship."
+    },
+    {
+      "title": "Car Free Day Runs & Blood Drives",
+      "category": "Civic / Health",
+      "description": "Mobilizing thousands of Kigali residents for active fitness, community unity, and life-saving blood donation drives."
+    },
+    {
+      "title": "Tree Planting Initiatives",
+      "category": "Environment",
+      "description": "Community-led agroforestry planting over 1,000 native trees across vulnerable hillsides to combat soil erosion."
+    }
+  ],
+  "explore_header": {
+    "heading": "The World Is Too Alive to Stay in One Place",
+    "intro": "I travel to see how people find clarity and purpose, collecting places, conversations, quiet moments and perspectives along the way."
+  },
+  "explore_stories": [
+    {
+      "id": "lake-kivu-stillness",
+      "title": "Reading by the Water: Agisere & The Art of Stillness",
+      "category": "Field Notes",
+      "date": "May 2, 2025",
+      "tag": "Most Viewed",
+      "excerpt": "Pausing on the shores of Lake Kivu with The Almanack of Naval Ravikant, and why making space to reflect matters as much as building.",
+      "image": "./assets/explore_reading_water.png",
+      "link": "./blog-detail/"
+    },
+    {
+      "id": "dubai-opportunity",
+      "title": "I Went to Dubai Looking for Opportunity. Here’s What I Found.",
+      "category": "Field Notes",
+      "date": "Apr 30, 2025",
+      "tag": "",
+      "excerpt": "I went looking for founders, capital and a little bit of chaos, and found that world-class ambition begins with local conviction.",
+      "image": "./assets/explore_dubai.jpg",
+      "link": "./blog-detail/"
+    },
+    {
+      "id": "cross-border-founders",
+      "title": "What I Learned From Talking to Founders in Another Country",
+      "category": "Travel",
+      "date": "Apr 27, 2025",
+      "tag": "",
+      "excerpt": "Cross-border lessons from Switzerland, Paris, Uganda and the DRC on how founders see constraint, speed and market boundaries.",
+      "image": "./assets/explore_founder_lessons.jpg",
+      "link": "./blog-detail/"
+    },
+    {
+      "id": "people-i-met",
+      "title": "The People I Met on the Way",
+      "category": "Field Notes",
+      "date": "Apr 24, 2025",
+      "tag": "",
+      "excerpt": "From Car Free Day runners in Kigali to community elders in rural villages, the journey is measured in the stories people trust you with.",
+      "image": "./assets/explore_people_met.jpg",
+      "link": "./blog-detail/"
+    },
+    {
+      "id": "lake-kivu-speed",
+      "title": "Moments on the Lake: Finding Speed and Stillness",
+      "category": "Movement",
+      "date": "Apr 20, 2025",
+      "tag": "",
+      "excerpt": "Out on the waters of Lake Kivu, taking in Rwanda’s natural beauty, adventure, fresh air and the freedom of boundless horizons.",
+      "image": "./assets/explore_lake_kivu_jetski.png",
+      "link": "./blog-detail/"
+    },
+    {
+      "id": "places-and-perspectives",
+      "title": "Places & Perspectives",
+      "category": "Journeys",
+      "date": "Apr 15, 2025",
+      "tag": "",
+      "excerpt": "From Rwanda to Switzerland, Paris, Uganda, DR Congo and Dubai, every journey offers a new lens to understand people and possibility.",
+      "image": "./assets/explore_places_perspectives.jpg",
+      "link": "./blog-detail/"
+    }
+  ],
+  "about": {
+    "paragraph_1": "I’m a founder and builder from Kigali, Rwanda, passionate about turning barriers into opportunity through companies, communities and technology.",
+    "paragraph_2": "I grew up believing opportunity could be on the other side of a barrier. Sometimes a river, sometimes access to technology. So I started building.",
+    "portrait_image": "./assets/contact_portrait.jpg",
+    "journey": [
+      {
+        "title": "Founder & Director",
+        "company": "Risevana Foundation",
+        "years": "2021 – Present"
+      },
+      {
+        "title": "Co-Founder & Tech Lead",
+        "company": "Libblio",
+        "years": "2023 – Present"
+      },
+      {
+        "title": "Founder & Lead Strategist",
+        "company": "Atomiq Agency",
+        "years": "2022 – Present"
+      },
+      {
+        "title": "Founder & Community Lead",
+        "company": "Youth Uplift Initiative",
+        "years": "2021 – Present"
+      }
+    ],
+    "learning_stack_intro": "I learn by doing. Here is what I’m actively mastering across engineering, design, leadership, and operational scale.",
+    "learning_stack": [
+      {
+        "name": "Full-Stack Software Architecture",
+        "description": "Building resilient web applications, data platforms, and product engines"
+      },
+      {
+        "name": "Design Systems & Product UX",
+        "description": "Crafting clean, accessible, and intuitive digital interfaces"
+      },
+      {
+        "name": "Nonprofit Leadership & Governance",
+        "description": "Scaling accredited community initiatives with accountability and impact"
+      },
+      {
+        "name": "Ecosystem Building & Mentorship",
+        "description": "Connecting founders, empowering youth, and organizing civic initiatives"
+      },
+      {
+        "name": "Strategic Storytelling & Brand",
+        "description": "Helping ideas cross borders and find their natural audience"
+      }
+    ]
+  },
+  "contact": {
+    "heading": "Let’s build something.",
+    "intro": "Have a project in mind, an initiative you'd like to collaborate on, or just want to connect? Reach out below.",
+    "email": "hello@axelkarambizi.com",
+    "phone": "+250 788 749 709",
+    "portrait_image": "./assets/contact_portrait.jpg"
+  },
+  "footer": {
+    "copyright": "© Copyright 2026. All Rights Reserved by Axel Karambizi",
+    "created_by": "Gacondo Labs",
+    "created_by_url": "#",
+    "social": {
+      "x": "https://x.com/",
+      "instagram": "https://www.instagram.com/",
+      "behance": "https://www.behance.net/",
+      "dribbble": "https://dribbble.com/"
+    }
+  }
+}
+  </script>
+
+  <script>
+    const VALID_EMAIL = "nextech@gmail.com";
+    const VALID_PASS = "axel@12345";
+    const VALID_TOKEN = "gacondo_admin_session_auth_2026_secured";
+
+    let siteData = {};
+
+    function togglePasswordVisibility() {
+      const pass = document.getElementById('login-password');
+      pass.type = pass.type === 'password' ? 'text' : 'password';
+    }
+
+    function showLoginError(msg) {
+      const err = document.getElementById('login-error');
+      err.textContent = msg;
+      err.style.display = 'block';
+    }
+
+    function hideLoginError() {
+      const err = document.getElementById('login-error');
+      err.style.display = 'none';
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      hideLoginError();
+
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+      const btn = document.getElementById('login-btn');
+      btn.textContent = 'Verifying credentials...';
+
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        btn.textContent = '🔐 Sign In with Full Privileges';
+
+        if (res.ok && data.status === 'ok') {
+          sessionStorage.setItem('admin_token', data.token);
+          sessionStorage.setItem('admin_email', data.user.email);
+          loginSuccess(data.user.email);
+          return;
+        } else {
+          showLoginError(data.message || 'Invalid email or password. Access denied.');
+          return;
+        }
+      } catch (err) {
+        btn.textContent = '🔐 Sign In with Full Privileges';
+        if (email.toLowerCase() === VALID_EMAIL.toLowerCase() && password === VALID_PASS) {
+          sessionStorage.setItem('admin_token', VALID_TOKEN);
+          sessionStorage.setItem('admin_email', VALID_EMAIL);
+          loginSuccess(VALID_EMAIL);
+          return;
+        } else {
+          showLoginError('Invalid email or password. Access denied.');
+        }
+      }
+    }
+
+    function loginSuccess(email) {
+      document.getElementById('login-overlay').style.display = 'none';
+      document.getElementById('admin-app').style.display = 'flex';
+      document.getElementById('sidebar-email').textContent = email;
+      document.getElementById('header-user-email').textContent = email;
+      loadData();
+    }
+
+    function logout() {
+      sessionStorage.removeItem('admin_token');
+      sessionStorage.removeItem('admin_email');
+      localStorage.removeItem('admin_token');
+      document.getElementById('admin-app').style.display = 'none';
+      document.getElementById('login-overlay').style.display = 'flex';
+      document.getElementById('login-password').value = '';
+      hideLoginError();
+      showToast('Logged out successfully.');
+    }
+
+    function initAuth() {
+      const token = sessionStorage.getItem('admin_token') || localStorage.getItem('admin_token');
+      const email = sessionStorage.getItem('admin_email') || VALID_EMAIL;
+      if (token === VALID_TOKEN) {
+        loginSuccess(email);
+      } else {
+        document.getElementById('login-overlay').style.display = 'flex';
+        document.getElementById('admin-app').style.display = 'none';
+      }
+    }
+
+    async function loadData() {
+      try {
+        const res = await fetch('/api/content');
+        if (res.ok) {
+          siteData = await res.json();
+        } else {
+          throw new Error('Fallback');
+        }
+      } catch (e) {
+        const saved = localStorage.getItem('site_content_data');
+        if (saved) {
+          try { siteData = JSON.parse(saved); } catch(e3){}
+        }
+        if (!siteData || !siteData.general) {
+          const initEl = document.getElementById('initial-content');
+          if (initEl) {
+            try { siteData = JSON.parse(initEl.textContent); } catch(e4){}
+          }
+        }
+      }
+      populateForm();
+    }
+
+    async function uploadImageFile(fileInput, inputId, previewId) {
+      const file = fileInput.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = async function(e) {
+        const base64Data = e.target.result;
+        const token = sessionStorage.getItem('admin_token') || VALID_TOKEN;
+
+        if (previewId) {
+          const pEl = document.getElementById(previewId);
+          if (pEl) pEl.src = base64Data;
+        }
+
+        try {
+          const res = await fetch('/api/upload', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({
+              filename: file.name,
+              data: base64Data
+            })
+          });
+          const data = await res.json();
+          if (res.ok && data.status === 'ok') {
+            if (inputId) {
+              document.getElementById(inputId).value = data.path;
+            }
+            showToast(`Uploaded "${file.name}" to assets/!`);
+            return;
+          }
+        } catch (err) {
+          console.warn('Upload API offline; updated locally');
+        }
+
+        if (inputId) {
+          document.getElementById(inputId).value = './assets/' + file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+        }
+        showToast(`Photo "${file.name}" selected!`);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function handleDirectAssetUpload(fileInput) {
+      const file = fileInput.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = async function(e) {
+        const base64Data = e.target.result;
+        const token = sessionStorage.getItem('admin_token') || VALID_TOKEN;
+
+        try {
+          const res = await fetch('/api/upload', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({
+              filename: file.name,
+              data: base64Data
+            })
+          });
+          const data = await res.json();
+          if (res.ok && data.status === 'ok') {
+            showToast(`Saved "${file.name}" to assets/!`);
+            populateMedia();
+            return;
+          }
+        } catch (err) {}
+        showToast(`File "${file.name}" ready!`);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function populateForm() {
+      const g = siteData.general || {};
+      document.getElementById('gen-name').value = g.name || '';
+      document.getElementById('gen-badge').value = g.badge || '';
+      document.getElementById('gen-h1').value = g.headline_1 || '';
+      document.getElementById('gen-h2').value = g.headline_2 || '';
+      document.getElementById('gen-tagline').value = g.tagline || '';
+      document.getElementById('gen-hero-front').value = g.hero_front_image || './assets/hero_front_hd.jpg';
+      document.getElementById('prev-gen-hero-front').src = '../' + (g.hero_front_image || './assets/hero_front_hd.jpg').replace('./', '');
+      document.getElementById('gen-hero-back').value = g.hero_back_image || './assets/hero_back_hd.jpg';
+      document.getElementById('prev-gen-hero-back').src = '../' + (g.hero_back_image || './assets/hero_back_hd.jpg').replace('./', '');
+
+      const c = siteData.counters || [];
+      if (c[0]) { document.getElementById('cnt-1-num').value = c[0].number; document.getElementById('cnt-1-lbl').value = c[0].label; }
+      if (c[1]) { document.getElementById('cnt-2-num').value = c[1].number; document.getElementById('cnt-2-lbl').value = c[1].label; }
+      if (c[2]) { document.getElementById('cnt-3-num').value = c[2].number; document.getElementById('cnt-3-lbl').value = c[2].label; }
+
+      // Featured Projects
+      const fpCont = document.getElementById('featured-projects-container');
+      fpCont.innerHTML = '';
+      (siteData.featured_projects || []).forEach((p, i) => {
+        const imgSrc = '../' + (p.image || '').replace('./', '');
+        fpCont.innerHTML += `
+          <div class="card-box">
+            <h3>Featured Project ${i+1}: ${p.title}</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Project Title</label>
+                <input type="text" id="fp-title-${i}" value="${p.title}">
+              </div>
+              <div class="form-group">
+                <label>Category Tag</label>
+                <input type="text" id="fp-cat-${i}" value="${p.category}">
+              </div>
+              <div class="form-group full">
+                <label>Description</label>
+                <textarea id="fp-desc-${i}">${p.description}</textarea>
+              </div>
+              <div class="form-group full">
+                <label>Cover Image</label>
+                <div class="image-field-wrap">
+                  <img id="prev-fp-img-${i}" src="${imgSrc}" class="image-preview-thumb">
+                  <input type="text" id="fp-img-${i}" value="${p.image}" style="flex:1;">
+                  <label class="btn-upload">
+                    📁 Replace Photo
+                    <input type="file" accept="image/*" style="display:none;" onchange="uploadImageFile(this, 'fp-img-${i}', 'prev-fp-img-${i}')">
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      // More Projects
+      const mpCont = document.getElementById('more-projects-container');
+      mpCont.innerHTML = '';
+      (siteData.more_projects || []).forEach((p, i) => {
+        mpCont.innerHTML += `
+          <div class="card-box">
+            <h3>More Project ${i+1}: ${p.title}</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Title</label>
+                <input type="text" id="mp-title-${i}" value="${p.title}">
+              </div>
+              <div class="form-group">
+                <label>Category</label>
+                <input type="text" id="mp-cat-${i}" value="${p.category}">
+              </div>
+              <div class="form-group full">
+                <label>Description</label>
+                <textarea id="mp-desc-${i}">${p.description}</textarea>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      // Explore Stories
+      const expHead = siteData.explore_header || {};
+      document.getElementById('explore-header-heading').value = expHead.heading || 'The World Is Too Alive to Stay in One Place';
+      document.getElementById('explore-header-intro').value = expHead.intro || 'I travel to see how people find clarity and purpose, collecting places, conversations, quiet moments and perspectives along the way.';
+
+      const expCont = document.getElementById('explore-stories-container');
+      expCont.innerHTML = '';
+      (siteData.explore_stories || []).forEach((s, i) => {
+        const imgSrc = '../' + (s.image || '').replace('./', '');
+        expCont.innerHTML += `
+          <div class="card-box">
+            <h3>Blog / Explore Story ${i+1}: ${s.title}</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Story Title</label>
+                <input type="text" id="exp-title-${i}" value="${s.title}">
+              </div>
+              <div class="form-group">
+                <label>Category Tag</label>
+                <input type="text" id="exp-cat-${i}" value="${s.category}">
+              </div>
+              <div class="form-group">
+                <label>Date / Slot Label</label>
+                <input type="text" id="exp-date-${i}" value="${s.date}">
+              </div>
+              <div class="form-group">
+                <label>Top Badge Tag (e.g. Most Viewed)</label>
+                <input type="text" id="exp-tag-${i}" value="${s.tag || ''}">
+              </div>
+              <div class="form-group full">
+                <label>Story Excerpt / Paragraph</label>
+                <textarea id="exp-exc-${i}">${s.excerpt}</textarea>
+              </div>
+              <div class="form-group full">
+                <label>Blog Cover Image</label>
+                <div class="image-field-wrap">
+                  <img id="prev-exp-img-${i}" src="${imgSrc}" class="image-preview-thumb">
+                  <input type="text" id="exp-img-${i}" value="${s.image}" style="flex:1;">
+                  <label class="btn-upload">
+                    📁 Replace Photo
+                    <input type="file" accept="image/*" style="display:none;" onchange="uploadImageFile(this, 'exp-img-${i}', 'prev-exp-img-${i}')">
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      // About
+      const ab = siteData.about || {};
+      document.getElementById('about-p1').value = ab.paragraph_1 || '';
+      document.getElementById('about-p2').value = ab.paragraph_2 || '';
+      document.getElementById('about-learn-intro').value = ab.learning_stack_intro || '';
+
+      const jCont = document.getElementById('journey-container');
+      jCont.innerHTML = '';
+      (ab.journey || []).forEach((j, i) => {
+        jCont.innerHTML += `
+          <div class="form-grid" style="margin-bottom:12px; background:#0f1017; padding:12px; border-radius:8px;">
+            <div class="form-group"><label>Role / Title</label><input type="text" id="j-title-${i}" value="${j.title}"></div>
+            <div class="form-group"><label>Company / Category</label><input type="text" id="j-comp-${i}" value="${j.company}"></div>
+            <div class="form-group"><label>Years / Stat Line</label><input type="text" id="j-years-${i}" value="${j.years}"></div>
+          </div>
+        `;
+      });
+
+      const lCont = document.getElementById('learning-stack-container');
+      lCont.innerHTML = '';
+      (ab.learning_stack || []).forEach((item, i) => {
+        lCont.innerHTML += `
+          <div class="form-grid" style="margin-bottom:12px; background:#0f1017; padding:12px; border-radius:8px;">
+            <div class="form-group"><label>Skill / Area</label><input type="text" id="ls-name-${i}" value="${item.name}"></div>
+            <div class="form-group" style="flex:2;"><label>Description</label><input type="text" id="ls-desc-${i}" value="${item.description}"></div>
+          </div>
+        `;
+      });
+
+      // Contact & Footer
+      const ct = siteData.contact || {};
+      document.getElementById('contact-heading').value = ct.heading || '';
+      document.getElementById('contact-intro').value = ct.intro || '';
+      document.getElementById('contact-email').value = ct.email || '';
+      document.getElementById('contact-phone').value = ct.phone || '';
+      document.getElementById('contact-portrait-img').value = ct.portrait_image || './assets/contact_portrait.jpg';
+      document.getElementById('prev-contact-portrait').src = '../' + (ct.portrait_image || './assets/contact_portrait.jpg').replace('./', '');
+
+      const ft = siteData.footer || {};
+      document.getElementById('footer-copyright').value = ft.copyright || '';
+      document.getElementById('footer-created-by').value = ft.created_by || 'Gacondo Labs';
+
+      const soc = ft.social || {};
+      document.getElementById('social-x').value = soc.x || '';
+      document.getElementById('social-ig').value = soc.instagram || '';
+      document.getElementById('social-be').value = soc.behance || '';
+      document.getElementById('social-dr').value = soc.dribbble || '';
+
+      populateMedia();
+    }
+
+    function populateMedia() {
+      const mediaList = document.getElementById('media-list');
+      const items = [
+        { name: "Blog Cover 1: Reading by the Water (Lake Kivu)", path: siteData.explore_stories?.[0]?.image || './assets/explore_reading_water.png', id: 'med-bc1' },
+        { name: "Blog Cover 2: Dubai Opportunity", path: siteData.explore_stories?.[1]?.image || './assets/explore_dubai.jpg', id: 'med-bc2' },
+        { name: "Blog Cover 3: Talking to Founders", path: siteData.explore_stories?.[2]?.image || './assets/explore_founder_lessons.jpg', id: 'med-bc3' },
+        { name: "Blog Cover 4: People I Met", path: siteData.explore_stories?.[3]?.image || './assets/explore_people_met.jpg', id: 'med-bc4' },
+        { name: "Blog Cover 5: Moments on the Lake (Jet Ski)", path: siteData.explore_stories?.[4]?.image || './assets/explore_lake_kivu_jetski.png', id: 'med-bc5' },
+        { name: "Blog Cover 6: Places & Perspectives", path: siteData.explore_stories?.[5]?.image || './assets/explore_places_perspectives.jpg', id: 'med-bc6' },
+        { name: "Featured Project 1: Risevana Foundation", path: siteData.featured_projects?.[0]?.image || './assets/project_risevana.png', id: 'med-p1' },
+        { name: "Featured Project 2: Libblio Software", path: siteData.featured_projects?.[1]?.image || './assets/project_libblio.png', id: 'med-p2' },
+        { name: "Featured Project 3: Youth Uplift Initiative", path: siteData.featured_projects?.[2]?.image || './assets/project_youth_uplift.png', id: 'med-p3' },
+        { name: "Featured Project 4: Atomiq Agency", path: siteData.featured_projects?.[3]?.image || './assets/project_atomiq.png', id: 'med-p4' },
+        { name: "Hero Front Image (Axel HD)", path: siteData.general?.hero_front_image || './assets/hero_front_hd.jpg', id: 'med-hf' },
+        { name: "Hero Back Image (Rotating Card)", path: siteData.general?.hero_back_image || './assets/hero_back_hd.jpg', id: 'med-hb' },
+        { name: "Navbar Avatar", path: siteData.general?.avatar_image || './assets/avatar.jpg', id: 'med-av' },
+        { name: "Contact & About Portrait", path: siteData.contact?.portrait_image || './assets/contact_portrait.jpg', id: 'med-cp' }
+      ];
+
+      mediaList.innerHTML = items.map(it => `
+        <div class="media-card">
+          <img id="prev-${it.id}" src="../${it.path.replace('./', '')}" class="media-preview" alt="${it.name}">
+          <div class="media-info">
+            <strong>${it.name}</strong>
+            <p>${it.path}</p>
+            <div style="display:flex; gap:10px; align-items:center;">
+              <input type="text" id="input-${it.id}" value="${it.path}" style="flex:1; font-size:12px; padding:6px 10px;">
+              <label class="btn-upload">
+                📁 Upload / Replace
+                <input type="file" accept="image/*" style="display:none;" onchange="uploadImageFile(this, 'input-${it.id}', 'prev-${it.id}')">
+              </label>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      
+      const panel = document.getElementById(tabId);
+      if (panel) panel.classList.add('active');
+
+      const btn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+      if (btn) btn.classList.add('active');
+
+      const titles = {
+        'tab-hero': 'General & Hero Settings',
+        'tab-projects': 'Featured Projects (4 Cards)',
+        'tab-more-projects': 'More Projects (4 Cards)',
+        'tab-explore': 'Explore & Blog Stories (6 Cards)',
+        'tab-about': 'About Page, Timeline & Learning Stack',
+        'tab-contact': 'Contact Form & Footer Settings',
+        'tab-media': 'Media, Photos & Asset Uploader'
+      };
+      document.getElementById('tab-title').textContent = titles[tabId] || 'Admin Dashboard';
+    }
+
+    async function saveAll() {
+      const token = sessionStorage.getItem('admin_token') || VALID_TOKEN;
+
+      // Gather General
+      siteData.general.name = document.getElementById('gen-name').value;
+      siteData.general.badge = document.getElementById('gen-badge').value;
+      siteData.general.headline_1 = document.getElementById('gen-h1').value;
+      siteData.general.headline_2 = document.getElementById('gen-h2').value;
+      siteData.general.tagline = document.getElementById('gen-tagline').value;
+      siteData.general.hero_front_image = document.getElementById('gen-hero-front').value;
+      siteData.general.hero_back_image = document.getElementById('gen-hero-back').value;
+
+      siteData.counters[0] = { number: document.getElementById('cnt-1-num').value, label: document.getElementById('cnt-1-lbl').value };
+      siteData.counters[1] = { number: document.getElementById('cnt-2-num').value, label: document.getElementById('cnt-2-lbl').value };
+      siteData.counters[2] = { number: document.getElementById('cnt-3-num').value, label: document.getElementById('cnt-3-lbl').value };
+
+      // Featured projects
+      siteData.featured_projects.forEach((p, i) => {
+        p.title = document.getElementById(`fp-title-${i}`).value;
+        p.category = document.getElementById(`fp-cat-${i}`).value;
+        p.description = document.getElementById(`fp-desc-${i}`).value;
+        p.image = document.getElementById(`fp-img-${i}`).value;
+      });
+
+      // More projects
+      siteData.more_projects.forEach((p, i) => {
+        p.title = document.getElementById(`mp-title-${i}`).value;
+        p.category = document.getElementById(`mp-cat-${i}`).value;
+        p.description = document.getElementById(`mp-desc-${i}`).value;
+      });
+
+      // Explore
+      if (!siteData.explore_header) siteData.explore_header = {};
+      siteData.explore_header.heading = document.getElementById('explore-header-heading').value;
+      siteData.explore_header.intro = document.getElementById('explore-header-intro').value;
+
+      siteData.explore_stories.forEach((s, i) => {
+        s.title = document.getElementById(`exp-title-${i}`).value;
+        s.category = document.getElementById(`exp-cat-${i}`).value;
+        s.date = document.getElementById(`exp-date-${i}`).value;
+        s.tag = document.getElementById(`exp-tag-${i}`).value;
+        s.excerpt = document.getElementById(`exp-exc-${i}`).value;
+        s.image = document.getElementById(`exp-img-${i}`).value;
+      });
+
+      // About
+      siteData.about.paragraph_1 = document.getElementById('about-p1').value;
+      siteData.about.paragraph_2 = document.getElementById('about-p2').value;
+      siteData.about.learning_stack_intro = document.getElementById('about-learn-intro').value;
+
+      siteData.about.journey.forEach((j, i) => {
+        j.title = document.getElementById(`j-title-${i}`).value;
+        j.company = document.getElementById(`j-comp-${i}`).value;
+        j.years = document.getElementById(`j-years-${i}`).value;
+      });
+
+      siteData.about.learning_stack.forEach((ls, i) => {
+        ls.name = document.getElementById(`ls-name-${i}`).value;
+        ls.description = document.getElementById(`ls-desc-${i}`).value;
+      });
+
+      // Contact & Footer
+      siteData.contact.heading = document.getElementById('contact-heading').value;
+      siteData.contact.intro = document.getElementById('contact-intro').value;
+      siteData.contact.email = document.getElementById('contact-email').value;
+      siteData.contact.phone = document.getElementById('contact-phone').value;
+      siteData.contact.portrait_image = document.getElementById('contact-portrait-img').value;
+
+      siteData.footer.copyright = document.getElementById('footer-copyright').value;
+      siteData.footer.created_by = document.getElementById('footer-created-by').value;
+      siteData.footer.social.x = document.getElementById('social-x').value;
+      siteData.footer.social.instagram = document.getElementById('social-ig').value;
+      siteData.footer.social.behance = document.getElementById('social-be').value;
+      siteData.footer.social.dribbble = document.getElementById('social-dr').value;
+
+      localStorage.setItem('site_content_data', JSON.stringify(siteData));
+
+      try {
+        const response = await fetch('/api/save', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify(siteData)
+        });
+        if (response.ok) {
+          showToast('Changes saved & published to all pages successfully!');
+          return;
+        } else if (response.status === 401) {
+          showToast('Session expired. Please log in again.');
+          logout();
+          return;
+        }
+      } catch (e) {
+        console.log('Saved locally to browser cache');
+      }
+
+      showToast('Changes saved locally! Run sync script to publish.');
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 3000);
+    }
+
+    window.addEventListener('DOMContentLoaded', initAuth);
+  </script>
+</body>
+</html>

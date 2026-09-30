@@ -1,0 +1,280 @@
+{
+  "general": {
+    "name": "Axel Karambizi",
+    "badge": "Hi",
+    "headline_1": "founder",
+    "headline_2": "builder",
+    "tagline": "I’m a Kigali-based founder and builder of companies, communities and technology",
+    "hero_front_image": "./assets/hero_front_hd.jpg",
+    "hero_back_image": "./assets/hero_back_hd.jpg",
+    "avatar_image": "./assets/avatar.jpg",
+    "favicon_image": "./assets/favicon.png"
+  },
+  "navigation": {
+    "items": [
+      {
+        "label": "Home",
+        "url": "./"
+      },
+      {
+        "label": "About",
+        "url": "./about/"
+      },
+      {
+        "label": "Project",
+        "url": "./projects/"
+      },
+      {
+        "label": "Explore",
+        "url": "./explore/"
+      }
+    ],
+    "button": {
+      "label": "Contact",
+      "url": "#contact"
+    },
+    "status_badge": "Available for work"
+  },
+  "counters": [
+    {
+      "number": "1,200+",
+      "label": "Children Reached"
+    },
+    {
+      "number": "20+",
+      "label": "Schools Deployed"
+    },
+    {
+      "number": "1,000+",
+      "label": "Trees Planted"
+    }
+  ],
+  "services": [
+    {
+      "title": "1. software & design",
+      "items": [
+        "Custom software systems and digital solutions",
+        "EdTech and library intelligence platforms",
+        "Design and software agency work with Atomiq",
+        "AI-powered tools built to be useful"
+      ]
+    },
+    {
+      "title": "2. Education",
+      "items": [
+        "Accredited school foundations in rural areas",
+        "Classrooms and daily meals for children",
+        "Mobile classroom bringing tech to underserved areas",
+        "Community mentorship pathways for local youth"
+      ]
+    },
+    {
+      "title": "3. Community Action",
+      "items": [
+        "Kigali Car Free Day community runs",
+        "Blood drives and civic events",
+        "Environmental initiatives, 1,000+ trees planted",
+        "Youth empowerment with Youth Uplift Initiative"
+      ]
+    },
+    {
+      "title": "4. Storytelling",
+      "items": [
+        "Writing and travel journals",
+        "Field notes from founder journeys",
+        "Building across borders: DRC, Uganda, France, UAE",
+        "Documenting lessons in building and giving back"
+      ]
+    }
+  ],
+  "featured_projects": [
+    {
+      "id": "risevana",
+      "title": "Risevana Foundation",
+      "category": "Non-Profit / Education",
+      "description": "An accredited foundation that built classrooms and daily meals on the children’s side of the river, reaching 1,200+ children.",
+      "image": "./assets/project_risevana.png",
+      "link": "./project-detail/"
+    },
+    {
+      "id": "libblio",
+      "title": "Libblio",
+      "category": "EdTech / Software",
+      "description": "School library software and reader intelligence for Rwandan schools, transforming how institutions organize knowledge.",
+      "image": "./assets/project_libblio.png",
+      "link": "./project-detail/"
+    },
+    {
+      "id": "youth-uplift",
+      "title": "Youth Uplift Initiative",
+      "category": "Community / Youth",
+      "description": "Youth empowerment initiatives spanning mentorship, community runs, blood donation drives, and environmental restoration across Kigali.",
+      "image": "./assets/project_youth_uplift.png",
+      "link": "./project-detail/"
+    },
+    {
+      "id": "atomiq",
+      "title": "Atomiq Agency",
+      "category": "Agency / Technology",
+      "description": "A design, branding, and software agency helping founders, creators, and institutions build world-class digital products and stories.",
+      "image": "./assets/project_atomiq.png",
+      "link": "./project-detail/"
+    }
+  ],
+  "more_projects": [
+    {
+      "title": "Mobile Classroom",
+      "category": "Education / Outreach",
+      "description": "A traveling learning lab bringing tech, books, and digital literacy workshops directly to remote communities."
+    },
+    {
+      "title": "Community Mentorship",
+      "category": "Youth / Skills",
+      "description": "Pairing young builders and students with active practitioners across software, craft, and entrepreneurship."
+    },
+    {
+      "title": "Car Free Day Runs & Blood Drives",
+      "category": "Civic / Health",
+      "description": "Mobilizing thousands of Kigali residents for active fitness, community unity, and life-saving blood donation drives."
+    },
+    {
+      "title": "Tree Planting Initiatives",
+      "category": "Environment",
+      "description": "Community-led agroforestry planting over 1,000 native trees across vulnerable hillsides to combat soil erosion."
+    }
+  ],
+  "explore_header": {
+    "heading": "The World Is Too Alive to Stay in One Place",
+    "intro": "I travel to see how people find clarity and purpose, collecting places, conversations, quiet moments and perspectives along the way."
+  },
+  "explore_stories": [
+    {
+      "id": "lake-kivu-stillness",
+      "title": "Reading by the Water: Agisere & The Art of Stillness",
+      "category": "Field Notes",
+      "date": "May 2, 2025",
+      "tag": "Most Viewed",
+      "excerpt": "Pausing on the shores of Lake Kivu with The Almanack of Naval Ravikant, and why making space to reflect matters as much as building.",
+      "image": "./assets/explore_reading_water.png",
+      "link": "./blog-detail/"
+    },
+    {
+      "id": "dubai-opportunity",
+      "title": "I Went to Dubai Looking for Opportunity. Here’s What I Found.",
+      "category": "Field Notes",
+      "date": "Apr 30, 2025",
+      "tag": "",
+      "excerpt": "I went looking for founders, capital and a little bit of chaos, and found that world-class ambition begins with local conviction.",
+      "image": "./assets/explore_dubai.jpg",
+      "link": "./blog-detail/"
+    },
+    {
+      "id": "cross-border-founders",
+      "title": "What I Learned From Talking to Founders in Another Country",
+      "category": "Travel",
+      "date": "Apr 27, 2025",
+      "tag": "",
+      "excerpt": "Cross-border lessons from Switzerland, Paris, Uganda and the DRC on how founders see constraint, speed and market boundaries.",
+      "image": "./assets/explore_founder_lessons.jpg",
+      "link": "./blog-detail/"
+    },
+    {
+      "id": "people-i-met",
+      "title": "The People I Met on the Way",
+      "category": "Field Notes",
+      "date": "Apr 24, 2025",
+      "tag": "",
+      "excerpt": "From Car Free Day runners in Kigali to community elders in rural villages, the journey is measured in the stories people trust you with.",
+      "image": "./assets/explore_people_met.jpg",
+      "link": "./blog-detail/"
+    },
+    {
+      "id": "lake-kivu-speed",
+      "title": "Moments on the Lake: Finding Speed and Stillness",
+      "category": "Movement",
+      "date": "Apr 20, 2025",
+      "tag": "",
+      "excerpt": "Out on the waters of Lake Kivu, taking in Rwanda’s natural beauty, adventure, fresh air and the freedom of boundless horizons.",
+      "image": "./assets/explore_lake_kivu_jetski.png",
+      "link": "./blog-detail/"
+    },
+    {
+      "id": "places-and-perspectives",
+      "title": "Places & Perspectives",
+      "category": "Journeys",
+      "date": "Apr 15, 2025",
+      "tag": "",
+      "excerpt": "From Rwanda to Switzerland, Paris, Uganda, DR Congo and Dubai, every journey offers a new lens to understand people and possibility.",
+      "image": "./assets/explore_places_perspectives.jpg",
+      "link": "./blog-detail/"
+    }
+  ],
+  "about": {
+    "paragraph_1": "I’m a founder and builder from Kigali, Rwanda, passionate about turning barriers into opportunity through companies, communities and technology.",
+    "paragraph_2": "I grew up believing opportunity could be on the other side of a barrier. Sometimes a river, sometimes access to technology. So I started building.",
+    "portrait_image": "./assets/contact_portrait.jpg",
+    "journey": [
+      {
+        "title": "Founder & Director",
+        "company": "Risevana Foundation",
+        "years": "2021 – Present"
+      },
+      {
+        "title": "Co-Founder & Tech Lead",
+        "company": "Libblio",
+        "years": "2023 – Present"
+      },
+      {
+        "title": "Founder & Lead Strategist",
+        "company": "Atomiq Agency",
+        "years": "2022 – Present"
+      },
+      {
+        "title": "Founder & Community Lead",
+        "company": "Youth Uplift Initiative",
+        "years": "2021 – Present"
+      }
+    ],
+    "learning_stack_intro": "I learn by doing. Here is what I’m actively mastering across engineering, design, leadership, and operational scale.",
+    "learning_stack": [
+      {
+        "name": "Full-Stack Software Architecture",
+        "description": "Building resilient web applications, data platforms, and product engines"
+      },
+      {
+        "name": "Design Systems & Product UX",
+        "description": "Crafting clean, accessible, and intuitive digital interfaces"
+      },
+      {
+        "name": "Nonprofit Leadership & Governance",
+        "description": "Scaling accredited community initiatives with accountability and impact"
+      },
+      {
+        "name": "Ecosystem Building & Mentorship",
+        "description": "Connecting founders, empowering youth, and organizing civic initiatives"
+      },
+      {
+        "name": "Strategic Storytelling & Brand",
+        "description": "Helping ideas cross borders and find their natural audience"
+      }
+    ]
+  },
+  "contact": {
+    "heading": "Let’s build something.",
+    "intro": "Have a project in mind, an initiative you'd like to collaborate on, or just want to connect? Reach out below.",
+    "email": "hello@axelkarambizi.com",
+    "phone": "+250 788 749 709",
+    "portrait_image": "./assets/contact_portrait.jpg"
+  },
+  "footer": {
+    "copyright": "© Copyright 2026. All Rights Reserved by Axel Karambizi",
+    "created_by": "Gacondo Labs",
+    "created_by_url": "#",
+    "social": {
+      "x": "https://x.com/",
+      "instagram": "https://www.instagram.com/",
+      "behance": "https://www.behance.net/",
+      "dribbble": "https://dribbble.com/"
+    }
+  }
+}
