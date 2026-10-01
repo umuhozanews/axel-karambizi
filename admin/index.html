@@ -378,6 +378,7 @@
         <button class="tab-btn" data-tab="tab-projects" onclick="switchTab('tab-projects')">🚀 Featured Projects</button>
         <button class="tab-btn" data-tab="tab-more-projects" onclick="switchTab('tab-more-projects')">📁 More Projects</button>
         <button class="tab-btn" data-tab="tab-explore" onclick="switchTab('tab-explore')">🧭 Explore Stories</button>
+        <button class="tab-btn" data-tab="tab-faq" onclick="switchTab('tab-faq')">❓ FAQ / Q&A</button>
         <button class="tab-btn" data-tab="tab-about" onclick="switchTab('tab-about')">📖 About & Timeline</button>
         <button class="tab-btn" data-tab="tab-contact" onclick="switchTab('tab-contact')">📞 Contact & Footer</button>
         <button class="tab-btn" data-tab="tab-media" onclick="switchTab('tab-media')">🖼️ Media & Photos</button>
@@ -402,9 +403,11 @@
             Full Administrator Privilege: <strong id="header-user-email" style="color: var(--text);">nextech@gmail.com</strong>
           </p>
         </div>
-        <div class="top-actions">
-          <a href="../index.html" target="_blank" class="btn btn-outline">👁️ View Site</a>
-          <button onclick="saveAll()" class="btn btn-primary">💾 Save & Sync All</button>
+        <div class="top-actions" style="display:flex; gap:8px; align-items:center;">
+          <a href="../index.html" target="_blank" class="btn btn-outline" style="text-decoration:none;">👁️ View Site</a>
+          <button onclick="downloadContentJSON()" class="btn btn-outline" title="Download content.json">📥 Export JSON</button>
+          <button onclick="copyContentJSON()" class="btn btn-outline" title="Copy JSON">📋 Copy JSON</button>
+          <button onclick="saveAll()" class="btn btn-primary">💾 Save All Changes</button>
         </div>
       </header>
 
@@ -482,12 +485,18 @@
 
       <!-- Tab 2: Featured Projects -->
       <div id="tab-projects" class="panel">
-        <div id="featured-projects-container"></div>
+        <div style="display:flex; justify-content:flex-end; margin-bottom:14px;">
+      <button type="button" onclick="addFeaturedProject()" class="btn btn-primary">+ Add Featured Project</button>
+    </div>
+    <div id="featured-projects-container"></div>
       </div>
 
       <!-- Tab 3: More Projects -->
       <div id="tab-more-projects" class="panel">
-        <div id="more-projects-container"></div>
+        <div style="display:flex; justify-content:flex-end; margin-bottom:14px;">
+      <button type="button" onclick="addMoreProject()" class="btn btn-primary">+ Add More Project</button>
+    </div>
+    <div id="more-projects-container"></div>
       </div>
 
       <!-- Tab 4: Explore Stories -->
@@ -503,7 +512,10 @@
             <textarea id="explore-header-intro"></textarea>
           </div>
         </div>
-        <div id="explore-stories-container"></div>
+        <div style="display:flex; justify-content:flex-end; margin-bottom:14px;">
+      <button type="button" onclick="addExploreStory()" class="btn btn-primary">+ Add New Story / Article</button>
+    </div>
+    <div id="explore-stories-container"></div>
       </div>
 
       <!-- Tab 5: About Page -->
@@ -523,6 +535,9 @@
         <div class="card-box">
           <h3>Discover My Journey Timeline</h3>
           <div id="journey-container"></div>
+    <div style="margin-top:10px;">
+      <button type="button" onclick="addJourneyItem()" class="btn btn-outline" style="width:100%; justify-content:center;">+ Add Role / Experience</button>
+    </div>
         </div>
 
         <div class="card-box">
@@ -532,6 +547,9 @@
             <textarea id="about-learn-intro"></textarea>
           </div>
           <div id="learning-stack-container"></div>
+    <div style="margin-top:10px;">
+      <button type="button" onclick="addLearningItem()" class="btn btn-outline" style="width:100%; justify-content:center;">+ Add Skill</button>
+    </div>
         </div>
       </div>
 
@@ -1103,6 +1121,441 @@
       reader.readAsDataURL(file);
     }
 
+
+    // Dynamic List Management (Add & Delete)
+    function renderFAQs() {
+      const cont = document.getElementById('faq-items-container');
+      if (!cont) return;
+      cont.innerHTML = '';
+      const faqs = siteData.faq || [];
+      if (faqs.length === 0) {
+        cont.innerHTML = '<div class="card-box" style="text-align:center; padding:32px; color:var(--text-muted);">No FAQ items yet. Click "+ Add New Q&A" to create one.</div>';
+        return;
+      }
+      faqs.forEach((faq, i) => {
+        cont.innerHTML += `
+          <div class="card-box" style="position:relative; margin-bottom:16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+              <h3 style="margin:0;">Question ${i+1}</h3>
+              <button type="button" onclick="deleteFAQItem(${i})" class="btn btn-danger" style="padding:6px 12px; font-size:12px;">🗑️ Delete</button>
+            </div>
+            <div class="form-grid">
+              <div class="form-group full">
+                <label>Question</label>
+                <input type="text" id="faq-q-${i}" value="${faq.question || ''}">
+              </div>
+              <div class="form-group full">
+                <label>Detailed Answer</label>
+                <textarea id="faq-a-${i}" rows="3">${faq.answer || ''}</textarea>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function addFAQItem() {
+      collectFormData();
+      if (!siteData.faq) siteData.faq = [];
+      siteData.faq.push({
+        id: 'faq-' + Date.now(),
+        question: 'New Question?',
+        answer: 'Detailed answer goes here.'
+      });
+      renderFAQs();
+      showToast('New FAQ added! Remember to save changes.');
+    }
+
+    function deleteFAQItem(index) {
+      collectFormData();
+      if (confirm('Delete this question?')) {
+        siteData.faq.splice(index, 1);
+        renderFAQs();
+        showToast('FAQ deleted.');
+      }
+    }
+
+    function renderFeaturedProjects() {
+      const fpCont = document.getElementById('featured-projects-container');
+      if (!fpCont) return;
+      fpCont.innerHTML = '';
+      (siteData.featured_projects || []).forEach((p, i) => {
+        const imgSrc = '../' + (p.image || '').replace('./', '');
+        fpCont.innerHTML += `
+          <div class="card-box" style="margin-bottom:16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+              <h3 style="margin:0;">Featured Project ${i+1}: ${p.title || 'Untitled'}</h3>
+              <button type="button" onclick="deleteFeaturedProject(${i})" class="btn btn-danger" style="padding:6px 12px; font-size:12px;">🗑️ Delete</button>
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Project Title</label>
+                <input type="text" id="fp-title-${i}" value="${p.title || ''}">
+              </div>
+              <div class="form-group">
+                <label>Category Tag</label>
+                <input type="text" id="fp-cat-${i}" value="${p.category || ''}">
+              </div>
+              <div class="form-group full">
+                <label>Description</label>
+                <textarea id="fp-desc-${i}">${p.description || ''}</textarea>
+              </div>
+              <div class="form-group full">
+                <label>Cover Image</label>
+                <div class="image-field-wrap">
+                  <img id="prev-fp-img-${i}" src="${imgSrc}" class="image-preview-thumb">
+                  <input type="text" id="fp-img-${i}" value="${p.image || ''}" style="flex:1;">
+                  <label class="btn-upload">
+                    📁 Replace Photo
+                    <input type="file" accept="image/*" style="display:none;" onchange="uploadImageFile(this, 'fp-img-${i}', 'prev-fp-img-${i}')">
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function addFeaturedProject() {
+      collectFormData();
+      if (!siteData.featured_projects) siteData.featured_projects = [];
+      siteData.featured_projects.push({
+        id: 'project-' + Date.now(),
+        title: 'New Project',
+        category: 'Software / Venture',
+        description: 'Description of the project and impact.',
+        image: './assets/project_risevana.png',
+        link: './project-detail/'
+      });
+      renderFeaturedProjects();
+      showToast('Project added! Remember to save changes.');
+    }
+
+    function deleteFeaturedProject(index) {
+      collectFormData();
+      if (confirm('Delete this project?')) {
+        siteData.featured_projects.splice(index, 1);
+        renderFeaturedProjects();
+        showToast('Project deleted.');
+      }
+    }
+
+    function renderMoreProjects() {
+      const mpCont = document.getElementById('more-projects-container');
+      if (!mpCont) return;
+      mpCont.innerHTML = '';
+      (siteData.more_projects || []).forEach((p, i) => {
+        mpCont.innerHTML += `
+          <div class="card-box" style="margin-bottom:16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+              <h3 style="margin:0;">More Project ${i+1}: ${p.title || 'Untitled'}</h3>
+              <button type="button" onclick="deleteMoreProject(${i})" class="btn btn-danger" style="padding:6px 12px; font-size:12px;">🗑️ Delete</button>
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Title</label>
+                <input type="text" id="mp-title-${i}" value="${p.title || ''}">
+              </div>
+              <div class="form-group">
+                <label>Category</label>
+                <input type="text" id="mp-cat-${i}" value="${p.category || ''}">
+              </div>
+              <div class="form-group full">
+                <label>Description</label>
+                <textarea id="mp-desc-${i}">${p.description || ''}</textarea>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function addMoreProject() {
+      collectFormData();
+      if (!siteData.more_projects) siteData.more_projects = [];
+      siteData.more_projects.push({
+        title: 'New Initiative',
+        category: 'Community / Tech',
+        description: 'Details about this initiative.'
+      });
+      renderMoreProjects();
+      showToast('Initiative added! Remember to save changes.');
+    }
+
+    function deleteMoreProject(index) {
+      collectFormData();
+      if (confirm('Delete this initiative?')) {
+        siteData.more_projects.splice(index, 1);
+        renderMoreProjects();
+        showToast('Initiative deleted.');
+      }
+    }
+
+    function renderExploreStories() {
+      const expCont = document.getElementById('explore-stories-container');
+      if (!expCont) return;
+      expCont.innerHTML = '';
+      (siteData.explore_stories || []).forEach((s, i) => {
+        const imgSrc = '../' + (s.image || '').replace('./', '');
+        expCont.innerHTML += `
+          <div class="card-box" style="margin-bottom:16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+              <h3 style="margin:0;">Story / Blog ${i+1}: ${s.title || 'Untitled'}</h3>
+              <button type="button" onclick="deleteExploreStory(${i})" class="btn btn-danger" style="padding:6px 12px; font-size:12px;">🗑️ Delete</button>
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Story Title</label>
+                <input type="text" id="exp-title-${i}" value="${s.title || ''}">
+              </div>
+              <div class="form-group">
+                <label>Category Tag</label>
+                <input type="text" id="exp-cat-${i}" value="${s.category || ''}">
+              </div>
+              <div class="form-group">
+                <label>Date / Slot Label</label>
+                <input type="text" id="exp-date-${i}" value="${s.date || ''}">
+              </div>
+              <div class="form-group">
+                <label>Top Badge Tag (e.g. Most Viewed)</label>
+                <input type="text" id="exp-tag-${i}" value="${s.tag || ''}">
+              </div>
+              <div class="form-group full">
+                <label>Story Excerpt / Paragraph</label>
+                <textarea id="exp-exc-${i}">${s.excerpt || ''}</textarea>
+              </div>
+              <div class="form-group full">
+                <label>Blog Cover Image</label>
+                <div class="image-field-wrap">
+                  <img id="prev-exp-img-${i}" src="${imgSrc}" class="image-preview-thumb">
+                  <input type="text" id="exp-img-${i}" value="${s.image || ''}" style="flex:1;">
+                  <label class="btn-upload">
+                    📁 Replace Photo
+                    <input type="file" accept="image/*" style="display:none;" onchange="uploadImageFile(this, 'exp-img-${i}', 'prev-exp-img-${i}')">
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function addExploreStory() {
+      collectFormData();
+      if (!siteData.explore_stories) siteData.explore_stories = [];
+      siteData.explore_stories.push({
+        id: 'story-' + Date.now(),
+        title: 'New Story Title',
+        category: 'Field Notes',
+        date: 'May 10, 2025',
+        tag: '',
+        excerpt: 'Write your story excerpt here.',
+        image: './assets/explore_reading_water.png',
+        link: './blog-detail/'
+      });
+      renderExploreStories();
+      showToast('Story added! Remember to save changes.');
+    }
+
+    function deleteExploreStory(index) {
+      collectFormData();
+      if (confirm('Delete this story?')) {
+        siteData.explore_stories.splice(index, 1);
+        renderExploreStories();
+        showToast('Story deleted.');
+      }
+    }
+
+    function renderJourney() {
+      const jCont = document.getElementById('journey-container');
+      if (!jCont) return;
+      jCont.innerHTML = '';
+      ((siteData.about && siteData.about.journey) || []).forEach((j, i) => {
+        jCont.innerHTML += `
+          <div class="form-grid" style="margin-bottom:12px; background:#0f1017; padding:12px; border-radius:8px; align-items:center;">
+            <div class="form-group"><label>Role / Title</label><input type="text" id="j-title-${i}" value="${j.title || ''}"></div>
+            <div class="form-group"><label>Company / Category</label><input type="text" id="j-comp-${i}" value="${j.company || ''}"></div>
+            <div class="form-group"><label>Years / Stat Line</label><input type="text" id="j-years-${i}" value="${j.years || ''}"></div>
+            <div style="padding-top:20px;">
+              <button type="button" onclick="deleteJourneyItem(${i})" class="btn btn-danger" style="padding:8px 10px;">🗑️</button>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function addJourneyItem() {
+      collectFormData();
+      if (!siteData.about) siteData.about = {};
+      if (!siteData.about.journey) siteData.about.journey = [];
+      siteData.about.journey.push({
+        title: 'New Role',
+        company: 'Company / Venture',
+        years: '2024 – Present'
+      });
+      renderJourney();
+    }
+
+    function deleteJourneyItem(index) {
+      collectFormData();
+      if (confirm('Delete this role?')) {
+        siteData.about.journey.splice(index, 1);
+        renderJourney();
+      }
+    }
+
+    function renderLearningStack() {
+      const lCont = document.getElementById('learning-stack-container');
+      if (!lCont) return;
+      lCont.innerHTML = '';
+      ((siteData.about && siteData.about.learning_stack) || []).forEach((item, i) => {
+        lCont.innerHTML += `
+          <div class="form-grid" style="margin-bottom:12px; background:#0f1017; padding:12px; border-radius:8px; align-items:center;">
+            <div class="form-group"><label>Skill / Area</label><input type="text" id="ls-name-${i}" value="${item.name || ''}"></div>
+            <div class="form-group" style="flex:2;"><label>Description</label><input type="text" id="ls-desc-${i}" value="${item.description || ''}"></div>
+            <div style="padding-top:20px;">
+              <button type="button" onclick="deleteLearningItem(${i})" class="btn btn-danger" style="padding:8px 10px;">🗑️</button>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function addLearningItem() {
+      collectFormData();
+      if (!siteData.about) siteData.about = {};
+      if (!siteData.about.learning_stack) siteData.about.learning_stack = [];
+      siteData.about.learning_stack.push({
+        name: 'New Area / Discipline',
+        description: 'What you are mastering or building with.'
+      });
+      renderLearningStack();
+    }
+
+    function deleteLearningItem(index) {
+      collectFormData();
+      if (confirm('Delete this skill?')) {
+        siteData.about.learning_stack.splice(index, 1);
+        renderLearningStack();
+      }
+    }
+
+    function downloadContentJSON() {
+      collectFormData();
+      const jsonStr = JSON.stringify(siteData, null, 2);
+      const blob = new Blob([jsonStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'content.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('Downloaded content.json!');
+    }
+
+    function copyContentJSON() {
+      collectFormData();
+      const jsonStr = JSON.stringify(siteData, null, 2);
+      navigator.clipboard.writeText(jsonStr).then(() => {
+        showToast('Copied content.json to clipboard!');
+      }).catch(() => {
+        showToast('Please allow clipboard access.');
+      });
+    }
+
+    function collectFormData() {
+      if (!siteData.general) siteData.general = {};
+      const gn = document.getElementById('gen-name'); if (gn) siteData.general.name = gn.value;
+      const gb = document.getElementById('gen-badge'); if (gb) siteData.general.badge = gb.value;
+      const gh1 = document.getElementById('gen-h1'); if (gh1) siteData.general.headline_1 = gh1.value;
+      const gh2 = document.getElementById('gen-h2'); if (gh2) siteData.general.headline_2 = gh2.value;
+      const gt = document.getElementById('gen-tagline'); if (gt) siteData.general.tagline = gt.value;
+      const ghf = document.getElementById('gen-hero-front'); if (ghf) siteData.general.hero_front_image = ghf.value;
+      const ghb = document.getElementById('gen-hero-back'); if (ghb) siteData.general.hero_back_image = ghb.value;
+
+      if (!siteData.counters) siteData.counters = [];
+      const c1n = document.getElementById('cnt-1-num'), c1l = document.getElementById('cnt-1-lbl');
+      if (c1n && c1l) siteData.counters[0] = { number: c1n.value, label: c1l.value };
+      const c2n = document.getElementById('cnt-2-num'), c2l = document.getElementById('cnt-2-lbl');
+      if (c2n && c2l) siteData.counters[1] = { number: c2n.value, label: c2l.value };
+      const c3n = document.getElementById('cnt-3-num'), c3l = document.getElementById('cnt-3-lbl');
+      if (c3n && c3l) siteData.counters[2] = { number: c3n.value, label: c3l.value };
+
+      // Collect Featured Projects
+      (siteData.featured_projects || []).forEach((p, i) => {
+        const t = document.getElementById(`fp-title-${i}`); if (t) p.title = t.value;
+        const c = document.getElementById(`fp-cat-${i}`); if (c) p.category = c.value;
+        const d = document.getElementById(`fp-desc-${i}`); if (d) p.description = d.value;
+        const img = document.getElementById(`fp-img-${i}`); if (img) p.image = img.value;
+      });
+
+      // Collect More Projects
+      (siteData.more_projects || []).forEach((p, i) => {
+        const t = document.getElementById(`mp-title-${i}`); if (t) p.title = t.value;
+        const c = document.getElementById(`mp-cat-${i}`); if (c) p.category = c.value;
+        const d = document.getElementById(`mp-desc-${i}`); if (d) p.description = d.value;
+      });
+
+      // Collect Explore Stories
+      if (!siteData.explore_header) siteData.explore_header = {};
+      const ehh = document.getElementById('explore-header-heading'); if (ehh) siteData.explore_header.heading = ehh.value;
+      const ehi = document.getElementById('explore-header-intro'); if (ehi) siteData.explore_header.intro = ehi.value;
+
+      (siteData.explore_stories || []).forEach((s, i) => {
+        const t = document.getElementById(`exp-title-${i}`); if (t) s.title = t.value;
+        const c = document.getElementById(`exp-cat-${i}`); if (c) s.category = c.value;
+        const d = document.getElementById(`exp-date-${i}`); if (d) s.date = d.value;
+        const tg = document.getElementById(`exp-tag-${i}`); if (tg) s.tag = tg.value;
+        const exc = document.getElementById(`exp-exc-${i}`); if (exc) s.excerpt = exc.value;
+        const img = document.getElementById(`exp-img-${i}`); if (img) s.image = img.value;
+      });
+
+      // Collect FAQs
+      (siteData.faq || []).forEach((faq, i) => {
+        const q = document.getElementById(`faq-q-${i}`); if (q) faq.question = q.value;
+        const a = document.getElementById(`faq-a-${i}`); if (a) faq.answer = a.value;
+      });
+
+      // Collect About
+      if (!siteData.about) siteData.about = {};
+      const ap1 = document.getElementById('about-p1'); if (ap1) siteData.about.paragraph_1 = ap1.value;
+      const ap2 = document.getElementById('about-p2'); if (ap2) siteData.about.paragraph_2 = ap2.value;
+      const ali = document.getElementById('about-learn-intro'); if (ali) siteData.about.learning_stack_intro = ali.value;
+
+      (siteData.about.journey || []).forEach((j, i) => {
+        const t = document.getElementById(`j-title-${i}`); if (t) j.title = t.value;
+        const c = document.getElementById(`j-comp-${i}`); if (c) j.company = c.value;
+        const y = document.getElementById(`j-years-${i}`); if (y) j.years = y.value;
+      });
+
+      (siteData.about.learning_stack || []).forEach((ls, i) => {
+        const n = document.getElementById(`ls-name-${i}`); if (n) ls.name = n.value;
+        const d = document.getElementById(`ls-desc-${i}`); if (d) ls.description = d.value;
+      });
+
+      // Collect Contact & Footer
+      if (!siteData.contact) siteData.contact = {};
+      const ch = document.getElementById('contact-heading'); if (ch) siteData.contact.heading = ch.value;
+      const ci = document.getElementById('contact-intro'); if (ci) siteData.contact.intro = ci.value;
+      const ce = document.getElementById('contact-email'); if (ce) siteData.contact.email = ce.value;
+      const cp = document.getElementById('contact-phone'); if (cp) siteData.contact.phone = cp.value;
+      const cpi = document.getElementById('contact-portrait-img'); if (cpi) siteData.contact.portrait_image = cpi.value;
+
+      if (!siteData.footer) siteData.footer = {};
+      const fc = document.getElementById('footer-copyright'); if (fc) siteData.footer.copyright = fc.value;
+      const fcb = document.getElementById('footer-created-by'); if (fcb) siteData.footer.created_by = fcb.value;
+
+      if (!siteData.footer.social) siteData.footer.social = {};
+      const sx = document.getElementById('social-x'); if (sx) siteData.footer.social.x = sx.value;
+      const sig = document.getElementById('social-ig'); if (sig) siteData.footer.social.instagram = sig.value;
+      const sbe = document.getElementById('social-be'); if (sbe) siteData.footer.social.behance = sbe.value;
+      const sdr = document.getElementById('social-dr'); if (sdr) siteData.footer.social.dribbble = sdr.value;
+    }
+
     function populateForm() {
       const g = siteData.general || {};
       document.getElementById('gen-name').value = g.name || '';
@@ -1120,147 +1573,25 @@
       if (c[1]) { document.getElementById('cnt-2-num').value = c[1].number; document.getElementById('cnt-2-lbl').value = c[1].label; }
       if (c[2]) { document.getElementById('cnt-3-num').value = c[2].number; document.getElementById('cnt-3-lbl').value = c[2].label; }
 
-      // Featured Projects
-      const fpCont = document.getElementById('featured-projects-container');
-      fpCont.innerHTML = '';
-      (siteData.featured_projects || []).forEach((p, i) => {
-        const imgSrc = '../' + (p.image || '').replace('./', '');
-        fpCont.innerHTML += `
-          <div class="card-box">
-            <h3>Featured Project ${i+1}: ${p.title}</h3>
-            <div class="form-grid">
-              <div class="form-group">
-                <label>Project Title</label>
-                <input type="text" id="fp-title-${i}" value="${p.title}">
-              </div>
-              <div class="form-group">
-                <label>Category Tag</label>
-                <input type="text" id="fp-cat-${i}" value="${p.category}">
-              </div>
-              <div class="form-group full">
-                <label>Description</label>
-                <textarea id="fp-desc-${i}">${p.description}</textarea>
-              </div>
-              <div class="form-group full">
-                <label>Cover Image</label>
-                <div class="image-field-wrap">
-                  <img id="prev-fp-img-${i}" src="${imgSrc}" class="image-preview-thumb">
-                  <input type="text" id="fp-img-${i}" value="${p.image}" style="flex:1;">
-                  <label class="btn-upload">
-                    📁 Replace Photo
-                    <input type="file" accept="image/*" style="display:none;" onchange="uploadImageFile(this, 'fp-img-${i}', 'prev-fp-img-${i}')">
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-      });
+      // Dynamic Renderers
+      renderFeaturedProjects();
+      renderMoreProjects();
 
-      // More Projects
-      const mpCont = document.getElementById('more-projects-container');
-      mpCont.innerHTML = '';
-      (siteData.more_projects || []).forEach((p, i) => {
-        mpCont.innerHTML += `
-          <div class="card-box">
-            <h3>More Project ${i+1}: ${p.title}</h3>
-            <div class="form-grid">
-              <div class="form-group">
-                <label>Title</label>
-                <input type="text" id="mp-title-${i}" value="${p.title}">
-              </div>
-              <div class="form-group">
-                <label>Category</label>
-                <input type="text" id="mp-cat-${i}" value="${p.category}">
-              </div>
-              <div class="form-group full">
-                <label>Description</label>
-                <textarea id="mp-desc-${i}">${p.description}</textarea>
-              </div>
-            </div>
-          </div>
-        `;
-      });
-
-      // Explore Stories
       const expHead = siteData.explore_header || {};
       document.getElementById('explore-header-heading').value = expHead.heading || 'The World Is Too Alive to Stay in One Place';
-      document.getElementById('explore-header-intro').value = expHead.intro || 'I travel to see how people find clarity and purpose, collecting places, conversations, quiet moments and perspectives along the way.';
+      document.getElementById('explore-header-intro').value = expHead.intro || 'I travel to see how people find clarity and purpose...';
 
-      const expCont = document.getElementById('explore-stories-container');
-      expCont.innerHTML = '';
-      (siteData.explore_stories || []).forEach((s, i) => {
-        const imgSrc = '../' + (s.image || '').replace('./', '');
-        expCont.innerHTML += `
-          <div class="card-box">
-            <h3>Blog / Explore Story ${i+1}: ${s.title}</h3>
-            <div class="form-grid">
-              <div class="form-group">
-                <label>Story Title</label>
-                <input type="text" id="exp-title-${i}" value="${s.title}">
-              </div>
-              <div class="form-group">
-                <label>Category Tag</label>
-                <input type="text" id="exp-cat-${i}" value="${s.category}">
-              </div>
-              <div class="form-group">
-                <label>Date / Slot Label</label>
-                <input type="text" id="exp-date-${i}" value="${s.date}">
-              </div>
-              <div class="form-group">
-                <label>Top Badge Tag (e.g. Most Viewed)</label>
-                <input type="text" id="exp-tag-${i}" value="${s.tag || ''}">
-              </div>
-              <div class="form-group full">
-                <label>Story Excerpt / Paragraph</label>
-                <textarea id="exp-exc-${i}">${s.excerpt}</textarea>
-              </div>
-              <div class="form-group full">
-                <label>Blog Cover Image</label>
-                <div class="image-field-wrap">
-                  <img id="prev-exp-img-${i}" src="${imgSrc}" class="image-preview-thumb">
-                  <input type="text" id="exp-img-${i}" value="${s.image}" style="flex:1;">
-                  <label class="btn-upload">
-                    📁 Replace Photo
-                    <input type="file" accept="image/*" style="display:none;" onchange="uploadImageFile(this, 'exp-img-${i}', 'prev-exp-img-${i}')">
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-      });
+      renderExploreStories();
+      renderFAQs();
 
-      // About
       const ab = siteData.about || {};
       document.getElementById('about-p1').value = ab.paragraph_1 || '';
       document.getElementById('about-p2').value = ab.paragraph_2 || '';
       document.getElementById('about-learn-intro').value = ab.learning_stack_intro || '';
 
-      const jCont = document.getElementById('journey-container');
-      jCont.innerHTML = '';
-      (ab.journey || []).forEach((j, i) => {
-        jCont.innerHTML += `
-          <div class="form-grid" style="margin-bottom:12px; background:#0f1017; padding:12px; border-radius:8px;">
-            <div class="form-group"><label>Role / Title</label><input type="text" id="j-title-${i}" value="${j.title}"></div>
-            <div class="form-group"><label>Company / Category</label><input type="text" id="j-comp-${i}" value="${j.company}"></div>
-            <div class="form-group"><label>Years / Stat Line</label><input type="text" id="j-years-${i}" value="${j.years}"></div>
-          </div>
-        `;
-      });
+      renderJourney();
+      renderLearningStack();
 
-      const lCont = document.getElementById('learning-stack-container');
-      lCont.innerHTML = '';
-      (ab.learning_stack || []).forEach((item, i) => {
-        lCont.innerHTML += `
-          <div class="form-grid" style="margin-bottom:12px; background:#0f1017; padding:12px; border-radius:8px;">
-            <div class="form-group"><label>Skill / Area</label><input type="text" id="ls-name-${i}" value="${item.name}"></div>
-            <div class="form-group" style="flex:2;"><label>Description</label><input type="text" id="ls-desc-${i}" value="${item.description}"></div>
-          </div>
-        `;
-      });
-
-      // Contact & Footer
       const ct = siteData.contact || {};
       document.getElementById('contact-heading').value = ct.heading || '';
       document.getElementById('contact-intro').value = ct.intro || '';
@@ -1343,78 +1674,7 @@
 
     async function saveAll() {
       const token = sessionStorage.getItem('admin_token') || VALID_TOKEN;
-
-      // Gather General
-      siteData.general.name = document.getElementById('gen-name').value;
-      siteData.general.badge = document.getElementById('gen-badge').value;
-      siteData.general.headline_1 = document.getElementById('gen-h1').value;
-      siteData.general.headline_2 = document.getElementById('gen-h2').value;
-      siteData.general.tagline = document.getElementById('gen-tagline').value;
-      siteData.general.hero_front_image = document.getElementById('gen-hero-front').value;
-      siteData.general.hero_back_image = document.getElementById('gen-hero-back').value;
-
-      siteData.counters[0] = { number: document.getElementById('cnt-1-num').value, label: document.getElementById('cnt-1-lbl').value };
-      siteData.counters[1] = { number: document.getElementById('cnt-2-num').value, label: document.getElementById('cnt-2-lbl').value };
-      siteData.counters[2] = { number: document.getElementById('cnt-3-num').value, label: document.getElementById('cnt-3-lbl').value };
-
-      // Featured projects
-      siteData.featured_projects.forEach((p, i) => {
-        p.title = document.getElementById(`fp-title-${i}`).value;
-        p.category = document.getElementById(`fp-cat-${i}`).value;
-        p.description = document.getElementById(`fp-desc-${i}`).value;
-        p.image = document.getElementById(`fp-img-${i}`).value;
-      });
-
-      // More projects
-      siteData.more_projects.forEach((p, i) => {
-        p.title = document.getElementById(`mp-title-${i}`).value;
-        p.category = document.getElementById(`mp-cat-${i}`).value;
-        p.description = document.getElementById(`mp-desc-${i}`).value;
-      });
-
-      // Explore
-      if (!siteData.explore_header) siteData.explore_header = {};
-      siteData.explore_header.heading = document.getElementById('explore-header-heading').value;
-      siteData.explore_header.intro = document.getElementById('explore-header-intro').value;
-
-      siteData.explore_stories.forEach((s, i) => {
-        s.title = document.getElementById(`exp-title-${i}`).value;
-        s.category = document.getElementById(`exp-cat-${i}`).value;
-        s.date = document.getElementById(`exp-date-${i}`).value;
-        s.tag = document.getElementById(`exp-tag-${i}`).value;
-        s.excerpt = document.getElementById(`exp-exc-${i}`).value;
-        s.image = document.getElementById(`exp-img-${i}`).value;
-      });
-
-      // About
-      siteData.about.paragraph_1 = document.getElementById('about-p1').value;
-      siteData.about.paragraph_2 = document.getElementById('about-p2').value;
-      siteData.about.learning_stack_intro = document.getElementById('about-learn-intro').value;
-
-      siteData.about.journey.forEach((j, i) => {
-        j.title = document.getElementById(`j-title-${i}`).value;
-        j.company = document.getElementById(`j-comp-${i}`).value;
-        j.years = document.getElementById(`j-years-${i}`).value;
-      });
-
-      siteData.about.learning_stack.forEach((ls, i) => {
-        ls.name = document.getElementById(`ls-name-${i}`).value;
-        ls.description = document.getElementById(`ls-desc-${i}`).value;
-      });
-
-      // Contact & Footer
-      siteData.contact.heading = document.getElementById('contact-heading').value;
-      siteData.contact.intro = document.getElementById('contact-intro').value;
-      siteData.contact.email = document.getElementById('contact-email').value;
-      siteData.contact.phone = document.getElementById('contact-phone').value;
-      siteData.contact.portrait_image = document.getElementById('contact-portrait-img').value;
-
-      siteData.footer.copyright = document.getElementById('footer-copyright').value;
-      siteData.footer.created_by = document.getElementById('footer-created-by').value;
-      siteData.footer.social.x = document.getElementById('social-x').value;
-      siteData.footer.social.instagram = document.getElementById('social-ig').value;
-      siteData.footer.social.behance = document.getElementById('social-be').value;
-      siteData.footer.social.dribbble = document.getElementById('social-dr').value;
+      collectFormData();
 
       localStorage.setItem('site_content_data', JSON.stringify(siteData));
 
@@ -1436,20 +1696,19 @@
           return;
         }
       } catch (e) {
-        console.log('Saved locally to browser cache');
+        console.log('Saved to browser cache');
       }
 
-      showToast('Changes saved locally! Run sync script to publish.');
+      showToast('Changes saved locally! Click "Export JSON" to keep your backup.');
     }
 
     function showToast(msg) {
       const toast = document.getElementById('toast');
       toast.textContent = msg;
       toast.style.display = 'block';
-      setTimeout(() => { toast.style.display = 'none'; }, 3000);
+      setTimeout(() => { toast.style.display = 'none'; }, 3500);
     }
-
-    window.addEventListener('DOMContentLoaded', initAuth);
+window.addEventListener('DOMContentLoaded', initAuth);
   </script>
 </body>
 </html>

@@ -1,3 +1,4 @@
 /home / 301
 /blog /blogs/ 301
 /project /projects/ 301
+/explore/blogs/* /blogs/:splat 301

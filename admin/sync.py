@@ -2,12 +2,12 @@
 Comprehensive Static Site Synchronization Engine for Axel Karambizi Portfolio
 Created by Gacondo Labs.
 Synchronizes all data from admin/content.json across:
-- index.html (Home)
+- index.html (Home & FAQ)
 - projects/index.html (Projects)
 - explore/index.html & blogs/index.html (Explore / Blogs)
 - about/index.html (About & Timeline)
 - contact/index.html (Contact)
-- project-detail/index.html & blog-detail/index.html
+- all project-detail and blog-detail pages
 """
 
 import json
@@ -35,6 +35,7 @@ def sync_all():
     about = data.get('about', {})
     contact = data.get('contact', {})
     footer = data.get('footer', {})
+    faqs = data.get('faq', [])
 
     def replace_nth_match(pattern, repl_func, text):
         matches = list(re.finditer(pattern, text))
@@ -48,6 +49,12 @@ def sync_all():
         prefix = './' if is_root else '../'
         asset_prefix = './assets/' if is_root else '../assets/'
 
+        # Suppress creator avatar & Available for work badge
+        avatar_pattern = r'<div class="framer-brfihp" data-framer-name="Avatar &(?:amp;)? Button Wrap".*?</div></div></div></div></div>'
+        html = re.sub(avatar_pattern, '', html, flags=re.DOTALL)
+        if '.framer-brfihp' not in html:
+            html = html.replace('</head>', '<style>.framer-brfihp, [data-framer-name*="Avatar & Button Wrap"] { display: none !important; }</style>\n</head>')
+
         # Copyright & Creator
         copy_text = footer.get('copyright', '© Copyright 2026. All Rights Reserved by Axel Karambizi')
         created_by = footer.get('created_by', 'Gacondo Labs')
@@ -59,13 +66,14 @@ def sync_all():
         html = html.replace('Duncan Shen', created_by)
         html = re.sub(r'[©c\?]\s*Copyright\s*2026\.\s*All\s*Rights\s*Reserved\s*by\s*[^<]+', copy_text, html)
 
-        # Contact info
+        # Contact info & clean tel: links
         email = contact.get('email', 'hello@axelkarambizi.com')
         phone = contact.get('phone', '+250 788 749 709')
+        clean_tel = re.sub(r'[^\d+]', '', phone)
         html = re.sub(r'mailto:[^"\'>\s]+', f'mailto:{email}', html)
         html = re.sub(r'>[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}<', f'>{email}<', html)
-        html = re.sub(r'tel:[^"\'>\s]+', f'tel:{phone}', html)
-        html = re.sub(r'>\+250\s*788\s*749\s*709<', f'>{phone}<', html)
+        html = re.sub(r'href="tel:[^"]*"', f'href="tel:{clean_tel}"', html)
+        html = re.sub(r'>\+250\s*(?:788\s*749\s*709\s*)+<', f'>{phone}<', html)
 
         # Social links
         soc = footer.get('social', {})
@@ -101,6 +109,16 @@ def sync_all():
         html = re.sub(r'src="[^"]*(?:ONE90238|hero_front)[^"]*"', f'src="{front_img}"', html)
         html = re.sub(r'src="[^"]*(?:ONE90240|hero_back)[^"]*"', f'src="{back_img}"', html)
 
+        # Counters
+        if len(counters) >= 3:
+            cnt_pattern = r'(<h2 class="framer-text[^"]*" data-styles-preset="TTqvVnbYq"[^>]*>)(.*?)(</h2>)'
+            def cnt_repl(i, m):
+                c_idx = i % 3
+                if c_idx < len(counters):
+                    return m.group(1) + counters[c_idx].get('number', '') + m.group(3)
+                return m.group(0)
+            html = replace_nth_match(cnt_pattern, cnt_repl, html)
+
         # Featured Projects Images
         for p in fp:
             img_path = p.get('image', '')
@@ -113,6 +131,59 @@ def sync_all():
                 html = re.sub(r'src="[^"]*project_youth_uplift[^"]*"', f'src="{img_path}"', html)
             elif 'atomiq' in p_id:
                 html = re.sub(r'src="[^"]*project_atomiq[^"]*"', f'src="{img_path}"', html)
+
+        # FAQ Synchronization
+        if faqs:
+            faq_items_html = []
+            for i, faq in enumerate(faqs):
+                num = f"{i+1}."
+                q = faq.get('question', '')
+                a = faq.get('answer', '')
+                is_first = (i == 0)
+                active_class = "faq-active" if is_first else ""
+                chevron_rot = "rotate(0deg)" if is_first else "rotate(180deg)"
+                ans_style = "opacity: 1; max-height: 500px; padding: 12px 0 20px 36px;" if is_first else "opacity: 0; max-height: 0px; padding: 0 0 0 36px; overflow: hidden;"
+
+                item = f"""<div class="framer-1demp92-container faq-item {active_class}" style="opacity: 1; width: 100%;">
+  <div class="framer-2k6sY framer-vamxU framer-m8D3R framer-1d8qfhh framer-v-1d8qfhh" data-border="true" data-framer-name="Desktop / Closed" style="--border-bottom-width: 1px; --border-color: var(--token-a228d207-519c-4c30-ace3-fe8c17413ec0, rgb(218, 218, 218)); --border-left-width: 0px; --border-right-width: 0px; --border-style: solid; --border-top-width: 0px; width: 100%; opacity: 1;">
+    <div class="framer-xyut35 faq-trigger" data-framer-name="Top" data-highlight="true" style="opacity: 1; cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding: 22px 0;" tabindex="0" role="button" aria-expanded="{'true' if is_first else 'false'}">
+      <div class="framer-e6shww" data-framer-name="Text Wrap" style="opacity: 1; display: flex; align-items: baseline; gap: 16px;">
+        <div class="framer-118mxo5" data-framer-component-type="RichTextContainer" style="--extracted-1eung3n: var(--token-a9f688eb-778b-4a71-929e-ebf8a014b4cf, rgb(48, 48, 48)); min-width: 24px;">
+          <h4 class="framer-text framer-styles-preset-usoyrg" data-styles-preset="ilUlJnLkH" style="--framer-text-color:var(--extracted-1eung3n, var(--token-a9f688eb-778b-4a71-929e-ebf8a014b4cf, rgb(48, 48, 48)));">{num}</h4>
+        </div>
+        <div class="framer-eqt2pn" data-framer-component-type="RichTextContainer" style="--extracted-1eung3n: var(--token-a9f688eb-778b-4a71-929e-ebf8a014b4cf, rgb(48, 48, 48));">
+          <h4 class="framer-text framer-styles-preset-usoyrg" data-styles-preset="ilUlJnLkH" style="--framer-text-color:var(--extracted-1eung3n, var(--token-a9f688eb-778b-4a71-929e-ebf8a014b4cf, rgb(48, 48, 48)));">{q}</h4>
+        </div>
+      </div>
+      <div class="framer-1e2gxyp-container faq-chevron" style="transform: {chevron_rot}; opacity: 1; transition: transform 0.3s ease; flex-shrink: 0; margin-left: 16px;">
+        <div style="display:contents">
+          <svg color="var(--token-a9f688eb-778b-4a71-929e-ebf8a014b4cf, rgb(48, 48, 48))" fill="none" height="1.5em" stroke-width="1.5" style="width: 100%; height: 100%;" viewBox="0 0 24 24" width="100%" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="framer-1l7evow faq-answer" data-framer-name="Bottom" style="{ans_style}">
+      <p class="framer-text framer-styles-preset-17cdd8a" data-styles-preset="UezruUh9E" style="--framer-text-alignment:left; --framer-text-color:var(--token-8b92a8, #8e8d88); line-height: 1.65; font-size: 15px; margin: 0;">{a}</p>
+    </div>
+  </div>
+</div>"""
+                faq_items_html.append(item)
+
+            faq_rendered_str = "\n".join(faq_items_html)
+            new_faq_block = f"""<div class="ssr-variant faq-responsive-wrap" style="display: block !important; width: 100%;">
+  <div class="framer-1wntvpv-container" style="height: auto !important; min-height: auto; width: 100%;">
+    <div class="framer-FNjt9 framer-149pei4 framer-v-149pei4" data-framer-name="Desktop" style="width: 100%; opacity: 1; height: auto !important;">
+      <div class="framer-sicluc-container" style="transform: translateX(-50%); opacity: 1;"><!--$--><div></div><!--/$--></div>
+      {faq_rendered_str}
+    </div>
+  </div>
+</div>"""
+            html = re.sub(r'<div class="ssr-variant faq-responsive-wrap".*?</div>\s*</div>\s*</div>\s*</div>',
+                          new_faq_block, html, flags=re.DOTALL)
+
+        if 'assets/faq-accordion.js' not in html:
+            html = html.replace('</body>', '<script src="./assets/faq-accordion.js" defer></script>\n</body>')
 
         with open(index_path, 'w', encoding='utf-8') as f:
             f.write(html)
@@ -171,14 +242,18 @@ def sync_all():
             return m.group(0)
         html_exp = replace_nth_match(img_pattern, img_repl, html_exp)
 
+        # Fix relative links in explore
+        html_exp = html_exp.replace('href="./blogs/', 'href="../blogs/')
+
         with open(exp_path, 'w', encoding='utf-8') as f:
             f.write(html_exp)
         print("Updated: explore/index.html")
 
         # Also sync to blogs/index.html
         blogs_path = os.path.join(base_dir, 'blogs', 'index.html')
+        html_blogs = html_exp.replace('href="../blogs/', 'href="./')
         with open(blogs_path, 'w', encoding='utf-8') as f:
-            f.write(html_exp)
+            f.write(html_blogs)
         print("Updated: blogs/index.html")
 
     # ==========================================
@@ -276,17 +351,20 @@ def sync_all():
         print("Updated: contact/index.html")
 
     # ==========================================
-    # 6. Update all other HTML files (subpages)
+    # 6. Update all other HTML files (blogs & project details)
     # ==========================================
-    for sub in ['project-detail', 'blog-detail', 'work', '404']:
-        sub_file = os.path.join(base_dir, sub, 'index.html')
-        if os.path.exists(sub_file):
-            with open(sub_file, 'r', encoding='utf-8') as f:
-                html_sub = f.read()
-            html_sub = update_common(html_sub, is_root=False)
-            with open(sub_file, 'w', encoding='utf-8') as f:
-                f.write(html_sub)
-            print(f"Updated: {sub}/index.html")
+    for root, dirs, files in os.walk(base_dir):
+        for file in files:
+            if file.endswith('.html') and 'admin' not in root:
+                file_path = os.path.join(root, file)
+                rel_p = os.path.relpath(file_path, base_dir)
+                if rel_p in ['index.html', 'about/index.html', 'projects/index.html', 'explore/index.html', 'blogs/index.html']:
+                    continue
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                content = update_common(content, is_root=False)
+                with open(file_path, 'w', encoding='utf-8') as f:
+                    f.write(content)
 
     print("ALL SITE PAGES SYNCHRONIZED SUCCESSFULLY!")
     return True

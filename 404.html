@@ -145,6 +145,18 @@
       text-decoration: underline;
     }
   </style>
+<style>
+/* Remove navbar creator avatar & Available for work badge */
+.framer-brfihp, [data-framer-name="Avatar & Button Wrap"], [data-framer-name="Avatar &amp; Button Wrap"] {
+  display: none !important;
+}
+.faq-active .faq-chevron {
+  transform: rotate(0deg) !important;
+}
+.faq-item .faq-answer {
+  transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, padding 0.3s ease;
+}
+</style>
 </head>
 <body>
   <div class="error-container">
@@ -162,7 +174,7 @@
   </div>
 
   <div class="footer-note">
-    © Copyright 2026. All Rights Reserved by Axel Karambizi • Created by <a href="#" target="_blank">Gacondo Labs</a>
+    © Copyright 2026. All Rights Reserved by Axel Karambizi<a href="#" target="_blank">Gacondo Labs</a>
   </div>
 
   <script src="./assets/cookie-consent.js" defer></script>

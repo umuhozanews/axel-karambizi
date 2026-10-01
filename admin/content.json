@@ -4,7 +4,7 @@
     "badge": "Hi",
     "headline_1": "founder",
     "headline_2": "builder",
-    "tagline": "I’m a Kigali-based founder and builder of companies, communities and technology",
+    "tagline": "I\u2019m a Kigali-based founder and builder of companies, communities and technology",
     "hero_front_image": "./assets/hero_front_hd.jpg",
     "hero_back_image": "./assets/hero_back_hd.jpg",
     "avatar_image": "./assets/avatar.jpg",
@@ -92,7 +92,7 @@
       "id": "risevana",
       "title": "Risevana Foundation",
       "category": "Non-Profit / Education",
-      "description": "An accredited foundation that built classrooms and daily meals on the children’s side of the river, reaching 1,200+ children.",
+      "description": "An accredited foundation that built classrooms and daily meals on the children\u2019s side of the river, reaching 1,200+ children.",
       "image": "./assets/project_risevana.png",
       "link": "./project-detail/"
     },
@@ -160,7 +160,7 @@
     },
     {
       "id": "dubai-opportunity",
-      "title": "I Went to Dubai Looking for Opportunity. Here’s What I Found.",
+      "title": "I Went to Dubai Looking for Opportunity. Here\u2019s What I Found.",
       "category": "Field Notes",
       "date": "Apr 30, 2025",
       "tag": "",
@@ -194,7 +194,7 @@
       "category": "Movement",
       "date": "Apr 20, 2025",
       "tag": "",
-      "excerpt": "Out on the waters of Lake Kivu, taking in Rwanda’s natural beauty, adventure, fresh air and the freedom of boundless horizons.",
+      "excerpt": "Out on the waters of Lake Kivu, taking in Rwanda\u2019s natural beauty, adventure, fresh air and the freedom of boundless horizons.",
       "image": "./assets/explore_lake_kivu_jetski.png",
       "link": "./blog-detail/"
     },
@@ -210,32 +210,32 @@
     }
   ],
   "about": {
-    "paragraph_1": "I’m a founder and builder from Kigali, Rwanda, passionate about turning barriers into opportunity through companies, communities and technology.",
+    "paragraph_1": "I\u2019m a founder and builder from Kigali, Rwanda, passionate about turning barriers into opportunity through companies, communities and technology.",
     "paragraph_2": "I grew up believing opportunity could be on the other side of a barrier. Sometimes a river, sometimes access to technology. So I started building.",
     "portrait_image": "./assets/contact_portrait.jpg",
     "journey": [
       {
         "title": "Founder & Director",
         "company": "Risevana Foundation",
-        "years": "2021 – Present"
+        "years": "2021 \u2013 Present"
       },
       {
         "title": "Co-Founder & Tech Lead",
         "company": "Libblio",
-        "years": "2023 – Present"
+        "years": "2023 \u2013 Present"
       },
       {
         "title": "Founder & Lead Strategist",
         "company": "Atomiq Agency",
-        "years": "2022 – Present"
+        "years": "2022 \u2013 Present"
       },
       {
         "title": "Founder & Community Lead",
         "company": "Youth Uplift Initiative",
-        "years": "2021 – Present"
+        "years": "2021 \u2013 Present"
       }
     ],
-    "learning_stack_intro": "I learn by doing. Here is what I’m actively mastering across engineering, design, leadership, and operational scale.",
+    "learning_stack_intro": "I learn by doing. Here is what I\u2019m actively mastering across engineering, design, leadership, and operational scale.",
     "learning_stack": [
       {
         "name": "Full-Stack Software Architecture",
@@ -260,14 +260,14 @@
     ]
   },
   "contact": {
-    "heading": "Let’s build something.",
+    "heading": "Let\u2019s build something.",
     "intro": "Have a project in mind, an initiative you'd like to collaborate on, or just want to connect? Reach out below.",
     "email": "hello@axelkarambizi.com",
     "phone": "+250 788 749 709",
     "portrait_image": "./assets/contact_portrait.jpg"
   },
   "footer": {
-    "copyright": "© Copyright 2026. All Rights Reserved by Axel Karambizi",
+    "copyright": "\u00a9 Copyright 2026. All Rights Reserved by Axel Karambizi",
     "created_by": "Gacondo Labs",
     "created_by_url": "#",
     "social": {
@@ -276,5 +276,37 @@
       "behance": "https://www.behance.net/",
       "dribbble": "https://dribbble.com/"
     }
-  }
+  },
+  "faq": [
+    {
+      "id": "faq-1",
+      "question": "What do you build?",
+      "answer": "I build software products, accredited educational foundations, and digital ecosystems. My primary ventures include Risevana Foundation (rural education & nutrition for 1,200+ children), Libblio (school library intelligence software), and Atomiq (digital design, branding, and software agency)."
+    },
+    {
+      "id": "faq-2",
+      "question": "How do you approach a project?",
+      "answer": "I believe in conviction, velocity, and practical utility. Whether writing software or constructing school classrooms, I start with direct community and user needs, build working prototypes rapidly, and iterate based on real feedback."
+    },
+    {
+      "id": "faq-3",
+      "question": "Where are you based?",
+      "answer": "I am based in Kigali, Rwanda, but work with partners, founders, and institutions across East Africa, Central Africa, the Middle East, and Europe."
+    },
+    {
+      "id": "faq-4",
+      "question": "What are you learning right now?",
+      "answer": "I am constantly deepening my mastery of full-stack software architecture, AI-augmented developer workflows, distributed systems, and sustainable nonprofit governance."
+    },
+    {
+      "id": "faq-5",
+      "question": "Can we collaborate or hire Atomiq?",
+      "answer": "Yes. Atomiq collaborates with forward-thinking founders, tech companies, and community organizations looking to build world-class web applications, brands, and digital infrastructure."
+    },
+    {
+      "id": "faq-6",
+      "question": "How do I get started?",
+      "answer": "You can reach out directly via email at hello@axelkarambizi.com or phone at +250 788 749 709. Let us talk about your vision and how we can bring it to life."
+    }
+  ]
 }
