@@ -98,15 +98,29 @@
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(remeasure);
   }
 
+  var started = false;
+  function startOnce() {
+    if (started) return;
+    started = true;
+    start();
+  }
+
+  window.addEventListener('scroll', function onEarlyScroll() {
+    if (window.pageYOffset > 5) {
+      window.removeEventListener('scroll', onEarlyScroll);
+      startOnce();
+    }
+  }, { passive: true });
+
   // Let the card's intro flip play out before taking the transform over, otherwise
   // cancelling the effect cuts the entry animation short.
   var intro = transformAnimations().map(function (anim) { return anim.finished; });
   if (intro.length) {
     Promise.race([
       Promise.all(intro).catch(function () {}),
-      new Promise(function (res) { setTimeout(res, 1500); })
-    ]).then(start);
+      new Promise(function (res) { setTimeout(res, 1200); })
+    ]).then(startOnce);
   } else {
-    start();
+    startOnce();
   }
 })();

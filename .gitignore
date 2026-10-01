@@ -7,3 +7,5 @@ scratch_*.png
 *.original
 .DS_Store
 Thumbs.db
+
+.vercel

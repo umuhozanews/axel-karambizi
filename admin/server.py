@@ -63,7 +63,7 @@ class AdminHandler(http.server.SimpleHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(b'{"authenticated": false}')
             return
-        elif self.path == '/' or self.path == '/admin':
+        elif self.path == '/admin':
             self.send_response(301)
             self.send_header('Location', '/admin/')
             self.end_headers()
@@ -184,22 +184,30 @@ class AdminHandler(http.server.SimpleHTTPRequestHandler):
         self.send_response(404)
         self.end_headers()
 
+    def do_OPTIONS(self):
+        self.send_response(200)
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+        self.end_headers()
+
 def run_server():
     os.chdir(base_dir)
     socketserver.TCPServer.allow_reuse_address = True
     with socketserver.TCPServer(("", PORT), AdminHandler) as httpd:
         print(f"======================================================")
-        print(f" Axel Karambizi Portfolio Admin Server (Gacondo Labs) ")
+        print(f" Axel Karambizi Portfolio Server (Gacondo Labs)       ")
         print(f"======================================================")
+        print(f" Live Site:  http://localhost:{PORT}/")
         print(f" Admin URL:  http://localhost:{PORT}/admin/")
-        print(f" Live Site:  http://localhost:{PORT}/index.html")
         print(f" Admin Email: {ADMIN_EMAIL}")
         print(f" Password:    {ADMIN_PASSWORD}")
         print(f" Press Ctrl+C to stop the server.")
         print(f"======================================================")
         
+        target_url = f"http://localhost:{PORT}/admin/" if "--admin" in sys.argv else f"http://localhost:{PORT}/"
         try:
-            webbrowser.open(f"http://localhost:{PORT}/admin/")
+            webbrowser.open(target_url)
         except Exception:
             pass
 

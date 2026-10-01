@@ -28,8 +28,11 @@
 
   // Resolved from this script's own URL so nested pages load the right files.
   var BASE = (function () {
-    var self = document.currentScript;
-    return self ? self.src.replace(/[^/]+$/, '') : './assets/';
+    var self = document.currentScript || document.querySelector('script[src*="service-hover.js"]');
+    if (self && self.src) {
+      return self.src.replace(/[^/]+$/, '');
+    }
+    return '/assets/';
   })();
 
   var follower = document.querySelector(FOLLOWER);

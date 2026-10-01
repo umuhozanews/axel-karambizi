@@ -11,5 +11,5 @@ echo    Password: axel@12345
 echo.
 echo Starting local admin server on http://localhost:8000/admin/ ...
 echo.
-python admin\server.py
+python admin\server.py --admin
 pause
