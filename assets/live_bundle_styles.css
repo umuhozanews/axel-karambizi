@@ -88,7 +88,7 @@ body { --token-a9f688eb-778b-4a71-929e-ebf8a014b4cf: #303030; --token-54672876-0
 @supports (z-index:calc(infinity)) {
   #__framer-badge-container { --infinity: infinity; }
 }
-#__framer-badge-container { pointer-events: none; width: 100%; z-index: calc(var(--infinity,2147480000)); justify-content: flex-end; padding: 20px; display: flex; position: fixed; bottom: 0px; }
+#__framer-badge-container, .__framer-badge { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
 @supports (background:-webkit-named-image(i)) and (not (grid-template-rows:subgrid)) {
   body { --framer-will-change-override: transform; }
 }
