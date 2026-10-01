@@ -36,6 +36,7 @@ def sync_all():
     contact = data.get('contact', {})
     footer = data.get('footer', {})
     faqs = data.get('faq', [])
+    services = data.get('services', [])
 
     def replace_nth_match(pattern, repl_func, text):
         matches = list(re.finditer(pattern, text))
@@ -131,6 +132,24 @@ def sync_all():
                 html = re.sub(r'src="[^"]*project_youth_uplift[^"]*"', f'src="{img_path}"', html)
             elif 'atomiq' in p_id:
                 html = re.sub(r'src="[^"]*project_atomiq[^"]*"', f'src="{img_path}"', html)
+
+        
+        # Services Synchronization
+        if services and len(services) > 0:
+            s1 = services[0]
+            s1_title = s1.get('title', '1. ui/ux design')
+            s1_items = s1.get('items', [])
+            html = re.sub(r'>1\.\s*(?:software\s*&\s*design|ui/ux\s*design)<', f'>{s1_title}<', html, flags=re.IGNORECASE)
+            
+            old_item_defaults = [
+                r'Custom software systems and digital solutions|Wireframing and prototyping',
+                r'EdTech and library intelligence platforms|User Interface design for web and mobile apps',
+                r'Design and software agency work with Atomiq|Usability testing and user feedback analysis',
+                r'AI-powered tools built to be useful|Interaction design and micro-interactions'
+            ]
+            for idx, pat in enumerate(old_item_defaults):
+                if idx < len(s1_items):
+                    html = re.sub(f'>({pat})<', f'>{s1_items[idx]}<', html)
 
         # FAQ Synchronization
         if faqs:

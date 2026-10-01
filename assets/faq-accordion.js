@@ -6,7 +6,7 @@
   'use strict';
 
   function initAccordion() {
-    var faqItems = document.querySelectorAll('.faq-item, .framer-2k6sY, [data-framer-name*="Desktop / Closed"], [data-framer-name*="Desktop / Open"]');
+    var faqItems = document.querySelectorAll('.faq-item, .framer-2k6sY');
     if (!faqItems.length) return;
 
     faqItems.forEach(function(item, index) {

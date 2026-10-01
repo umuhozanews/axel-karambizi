@@ -51,12 +51,12 @@
   ],
   "services": [
     {
-      "title": "1. software & design",
+      "title": "1. ui/ux design",
       "items": [
-        "Custom software systems and digital solutions",
-        "EdTech and library intelligence platforms",
-        "Design and software agency work with Atomiq",
-        "AI-powered tools built to be useful"
+        "Wireframing and prototyping",
+        "User Interface design for web and mobile apps",
+        "Usability testing and user feedback analysis",
+        "Interaction design and micro-interactions"
       ]
     },
     {

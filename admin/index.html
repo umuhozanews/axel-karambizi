@@ -378,6 +378,7 @@
         <button class="tab-btn" data-tab="tab-projects" onclick="switchTab('tab-projects')">🚀 Featured Projects</button>
         <button class="tab-btn" data-tab="tab-more-projects" onclick="switchTab('tab-more-projects')">📁 More Projects</button>
         <button class="tab-btn" data-tab="tab-explore" onclick="switchTab('tab-explore')">🧭 Explore Stories</button>
+        <button class="tab-btn" data-tab="tab-services" onclick="switchTab('tab-services')">🛠️ Services</button>
         <button class="tab-btn" data-tab="tab-faq" onclick="switchTab('tab-faq')">❓ FAQ / Q&A</button>
         <button class="tab-btn" data-tab="tab-about" onclick="switchTab('tab-about')">📖 About & Timeline</button>
         <button class="tab-btn" data-tab="tab-contact" onclick="switchTab('tab-contact')">📞 Contact & Footer</button>
@@ -697,12 +698,12 @@
   ],
   "services": [
     {
-      "title": "1. software & design",
+      "title": "1. ui/ux design",
       "items": [
-        "Custom software systems and digital solutions",
-        "EdTech and library intelligence platforms",
-        "Design and software agency work with Atomiq",
-        "AI-powered tools built to be useful"
+        "Wireframing and prototyping",
+        "User Interface design for web and mobile apps",
+        "Usability testing and user feedback analysis",
+        "Interaction design and micro-interactions"
       ]
     },
     {
@@ -1123,6 +1124,60 @@
 
 
     // Dynamic List Management (Add & Delete)
+    
+    function renderServices() {
+      const cont = document.getElementById('services-container');
+      if (!cont) return;
+      cont.innerHTML = '';
+      const services = siteData.services || [];
+      services.forEach((s, i) => {
+        const itemsStr = (s.items || []).join('\n');
+        cont.innerHTML += `
+          <div class="card-box" style="margin-bottom:16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+              <h3 style="margin:0;">Service ${i+1}: ${s.title || 'Untitled'}</h3>
+              <button type="button" onclick="deleteServiceCategory(${i})" class="btn btn-danger" style="padding:6px 12px; font-size:12px;">🗑️ Delete</button>
+            </div>
+            <div class="form-grid">
+              <div class="form-group full">
+                <label>Service Title (e.g. "1. ui/ux design")</label>
+                <input type="text" id="svc-title-${i}" value="${s.title || ''}">
+              </div>
+              <div class="form-group full">
+                <label>Offerings / Checklist Items (one item per line)</label>
+                <textarea id="svc-items-${i}" rows="5" placeholder="Enter each offering on a new line">${itemsStr}</textarea>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function addServiceCategory() {
+      collectFormData();
+      if (!siteData.services) siteData.services = [];
+      const num = siteData.services.length + 1;
+      siteData.services.push({
+        title: `${num}. New Service`,
+        items: [
+          'Feature or offering 1',
+          'Feature or offering 2',
+          'Feature or offering 3'
+        ]
+      });
+      renderServices();
+      showToast('New service added!');
+    }
+
+    function deleteServiceCategory(index) {
+      collectFormData();
+      if (confirm('Delete this service?')) {
+        siteData.services.splice(index, 1);
+        renderServices();
+        showToast('Service deleted.');
+      }
+    }
+
     function renderFAQs() {
       const cont = document.getElementById('faq-items-container');
       if (!cont) return;
@@ -1162,6 +1217,7 @@
         question: 'New Question?',
         answer: 'Detailed answer goes here.'
       });
+      renderServices();
       renderFAQs();
       showToast('New FAQ added! Remember to save changes.');
     }
@@ -1170,7 +1226,8 @@
       collectFormData();
       if (confirm('Delete this question?')) {
         siteData.faq.splice(index, 1);
-        renderFAQs();
+        renderServices();
+      renderFAQs();
         showToast('FAQ deleted.');
       }
     }
@@ -1515,6 +1572,15 @@
       });
 
       // Collect FAQs
+      
+      (siteData.services || []).forEach((s, i) => {
+        const t = document.getElementById(`svc-title-${i}`); if (t) s.title = t.value;
+        const it = document.getElementById(`svc-items-${i}`);
+        if (it) {
+          s.items = it.value.split('\n').map(x => x.trim()).filter(Boolean);
+        }
+      });
+
       (siteData.faq || []).forEach((faq, i) => {
         const q = document.getElementById(`faq-q-${i}`); if (q) faq.question = q.value;
         const a = document.getElementById(`faq-a-${i}`); if (a) faq.answer = a.value;
@@ -1582,6 +1648,7 @@
       document.getElementById('explore-header-intro').value = expHead.intro || 'I travel to see how people find clarity and purpose...';
 
       renderExploreStories();
+      renderServices();
       renderFAQs();
 
       const ab = siteData.about || {};
