@@ -1,14 +1,13 @@
 /**
- * Axel Karambizi Portfolio — Professional Cookie Consent & Privacy Banner
+ * Axel Karambizi Portfolio — Professional Cookie & Privacy Consent
  * Created by Gacondo Labs.
- * GDPR/ePrivacy compliant, accessible, responsive, with dark/light mode integration.
+ * Wide, elegant layout, no emojis, full light & dark theme responsiveness.
  */
 (function () {
   'use strict';
 
   var STORAGE_KEY = 'axel_cookie_consent';
 
-  // Check if consent has already been recorded
   function getConsent() {
     try {
       var item = localStorage.getItem(STORAGE_KEY);
@@ -32,154 +31,301 @@
     }
   }
 
+  function isLightTheme() {
+    return document.documentElement.getAttribute('data-theme') === 'light' ||
+           document.body.getAttribute('data-theme') === 'light' ||
+           document.body.classList.contains('theme-light');
+  }
+
   function injectStyles() {
     if (document.getElementById('axel-cookie-styles')) return;
     var style = document.createElement('style');
     style.id = 'axel-cookie-styles';
     style.textContent = `
+      :root {
+        --acb-bg: rgba(18, 19, 25, 0.96);
+        --acb-text: #f3f1ec;
+        --acb-muted: #9c9a92;
+        --acb-border: rgba(255, 255, 255, 0.12);
+        --acb-card-bg: rgba(255, 255, 255, 0.04);
+        --acb-card-border: rgba(255, 255, 255, 0.08);
+        --acb-btn-sec-bg: rgba(255, 255, 255, 0.08);
+        --acb-btn-sec-text: #f3f1ec;
+        --acb-btn-sec-border: rgba(255, 255, 255, 0.16);
+        --acb-btn-sec-hover: rgba(255, 255, 255, 0.14);
+        --acb-shadow: 0 24px 60px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.08);
+        --acb-accent: #5e67e6;
+        --acb-accent-hover: #6e77f0;
+        --acb-badge-bg: rgba(94, 103, 230, 0.15);
+        --acb-badge-border: rgba(94, 103, 230, 0.35);
+        --acb-badge-text: #8b95f6;
+      }
+
+      [data-theme="light"], .theme-light {
+        --acb-bg: rgba(255, 255, 255, 0.97);
+        --acb-text: #141412;
+        --acb-muted: #62605b;
+        --acb-border: rgba(0, 0, 0, 0.12);
+        --acb-card-bg: rgba(0, 0, 0, 0.03);
+        --acb-card-border: rgba(0, 0, 0, 0.08);
+        --acb-btn-sec-bg: rgba(0, 0, 0, 0.05);
+        --acb-btn-sec-text: #141412;
+        --acb-btn-sec-border: rgba(0, 0, 0, 0.14);
+        --acb-btn-sec-hover: rgba(0, 0, 0, 0.1);
+        --acb-shadow: 0 24px 60px rgba(0, 0, 0, 0.14), 0 0 0 1px rgba(0, 0, 0, 0.06);
+        --acb-badge-bg: rgba(94, 103, 230, 0.1);
+        --acb-badge-border: rgba(94, 103, 230, 0.25);
+        --acb-badge-text: #4f59df;
+      }
+
       #axel-cookie-banner {
         position: fixed;
         bottom: 24px;
-        right: 24px;
-        max-width: 440px;
-        width: calc(100% - 48px);
-        background: rgba(18, 19, 26, 0.94);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        border-radius: 18px;
-        padding: 22px 24px;
-        color: #f3f1ec;
-        font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
-        box-shadow: 0 20px 48px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.05);
+        left: 50%;
+        transform: translateX(-50%) translateY(40px);
+        max-width: 860px;
+        width: calc(100% - 40px);
+        background: var(--acb-bg);
+        color: var(--acb-text);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border: 1px solid var(--acb-border);
+        border-radius: 24px;
+        padding: 26px 32px;
+        box-shadow: var(--acb-shadow);
         z-index: 999999;
-        transform: translateY(30px);
         opacity: 0;
         visibility: hidden;
-        transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease, visibility 0.4s;
-        line-height: 1.5;
+        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, visibility 0.3s, background 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+        font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
         box-sizing: border-box;
       }
+
       #axel-cookie-banner.is-visible {
-        transform: translateY(0);
+        transform: translateX(-50%) translateY(0);
         opacity: 1;
         visibility: visible;
       }
-      .acb-header {
+
+      .acb-inner {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .acb-top-row {
         display: flex;
         align-items: center;
-        gap: 10px;
-        margin-bottom: 10px;
+        justify-content: space-between;
+        gap: 16px;
       }
-      .acb-icon {
-        font-size: 20px;
-        line-height: 1;
+
+      .acb-title-group {
+        display: flex;
+        align-items: center;
+        gap: 12px;
       }
+
+      .acb-icon-shield {
+        width: 22px;
+        height: 22px;
+        color: var(--acb-accent);
+        flex-shrink: 0;
+      }
+
       .acb-title {
-        font-size: 15px;
-        font-weight: 600;
+        font-size: 18px;
+        font-weight: 700;
         letter-spacing: -0.01em;
-        color: #fff;
+        margin: 0;
+        color: var(--acb-text);
+      }
+
+      .acb-badge {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 4px 10px;
+        border-radius: 99px;
+        background: var(--acb-badge-bg);
+        border: 1px solid var(--acb-badge-border);
+        color: var(--acb-badge-text);
+      }
+
+      .acb-desc {
+        font-size: 14.5px;
+        line-height: 1.6;
+        color: var(--acb-muted);
         margin: 0;
       }
-      .acb-desc {
-        font-size: 13px;
-        color: #b0afab;
-        margin: 0 0 18px 0;
-        line-height: 1.55;
+
+      .acb-details-box {
+        display: none;
+        background: var(--acb-card-bg);
+        border: 1px solid var(--acb-card-border);
+        border-radius: 14px;
+        padding: 16px 20px;
+        margin-top: 4px;
+        animation: acbFadeIn 0.25s ease;
       }
-      .acb-desc a {
-        color: #8b95f6;
-        text-decoration: underline;
-        cursor: pointer;
+
+      @keyframes acbFadeIn {
+        from { opacity: 0; transform: translateY(-4px); }
+        to { opacity: 1; transform: translateY(0); }
       }
-      .acb-actions {
+
+      .acb-details-box.is-open {
+        display: block;
+      }
+
+      .acb-cat-item {
         display: flex;
-        gap: 10px;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--acb-card-border);
+      }
+
+      .acb-cat-item:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+
+      .acb-cat-item:first-child {
+        padding-top: 0;
+      }
+
+      .acb-cat-info h4 {
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--acb-text);
+        margin: 0 0 3px 0;
+      }
+
+      .acb-cat-info p {
+        font-size: 12.5px;
+        color: var(--acb-muted);
+        line-height: 1.5;
+        margin: 0;
+      }
+
+      .acb-cat-status {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 3px 8px;
+        border-radius: 6px;
+        background: var(--acb-card-bg);
+        color: var(--acb-muted);
+        border: 1px solid var(--acb-card-border);
+        flex-shrink: 0;
+      }
+
+      .acb-cat-status.is-required {
+        color: var(--acb-accent);
+        border-color: var(--acb-badge-border);
+      }
+
+      .acb-bottom-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding-top: 4px;
         flex-wrap: wrap;
       }
-      .acb-btn {
-        flex: 1;
-        min-width: 120px;
-        padding: 10px 16px;
-        border-radius: 99px;
+
+      .acb-toggle-link {
+        background: none;
+        border: none;
+        color: var(--acb-muted);
         font-size: 13px;
         font-weight: 500;
         cursor: pointer;
-        border: none;
+        padding: 6px 0;
+        text-decoration: underline;
+        transition: color 0.2s ease;
+      }
+
+      .acb-toggle-link:hover {
+        color: var(--acb-text);
+      }
+
+      .acb-btn-group {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .acb-btn {
+        padding: 11px 24px;
+        border-radius: 99px;
+        font-size: 13.5px;
+        font-weight: 600;
+        cursor: pointer;
         outline: none;
         transition: all 0.2s ease;
         text-align: center;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-      }
-      .acb-btn-primary {
-        background: #5e67e6;
-        color: #ffffff;
-      }
-      .acb-btn-primary:hover {
-        background: #6e77f0;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(94, 103, 230, 0.4);
-      }
-      .acb-btn-secondary {
-        background: rgba(255, 255, 255, 0.08);
-        color: #e4e3df;
-        border: 1px solid rgba(255, 255, 255, 0.15);
-      }
-      .acb-btn-secondary:hover {
-        background: rgba(255, 255, 255, 0.14);
-        color: #ffffff;
-      }
-      .acb-custom-toggle {
-        width: 100%;
-        text-align: center;
-        margin-top: 10px;
-        font-size: 12px;
-        color: #8a8880;
-        cursor: pointer;
-        background: none;
         border: none;
-        padding: 4px;
-        transition: color 0.2s ease;
       }
-      .acb-custom-toggle:hover {
-        color: #d1cfc7;
-        text-decoration: underline;
+
+      .acb-btn-primary {
+        background: var(--acb-accent);
+        color: #ffffff;
       }
-      .acb-details {
-        display: none;
-        margin-top: 14px;
-        padding-top: 14px;
-        border-top: 1px solid rgba(255, 255, 255, 0.08);
-        font-size: 12px;
+
+      .acb-btn-primary:hover {
+        background: var(--acb-accent-hover);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 16px rgba(94, 103, 230, 0.45);
       }
-      .acb-details.is-open {
-        display: block;
+
+      .acb-btn-secondary {
+        background: var(--acb-btn-sec-bg);
+        color: var(--acb-btn-sec-text);
+        border: 1px solid var(--acb-btn-sec-border);
       }
-      .acb-category {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 8px;
-        color: #d1cfc7;
+
+      .acb-btn-secondary:hover {
+        background: var(--acb-btn-sec-hover);
+        transform: translateY(-1px);
       }
-      .acb-category strong {
-        color: #fff;
-      }
-      .acb-category span {
-        font-size: 11px;
-        color: #8a8880;
-      }
-      @media (max-width: 600px) {
+
+      @media (max-width: 680px) {
         #axel-cookie-banner {
           bottom: 12px;
-          right: 12px;
           left: 12px;
+          right: 12px;
           width: calc(100% - 24px);
           max-width: none;
-          padding: 18px 20px;
+          transform: translateY(30px);
+          padding: 20px 20px;
+          border-radius: 18px;
+        }
+        #axel-cookie-banner.is-visible {
+          transform: translateY(0);
+        }
+        .acb-bottom-row {
+          flex-direction: column-reverse;
+          align-items: stretch;
+          gap: 12px;
+        }
+        .acb-btn-group {
+          flex-direction: column;
+          width: 100%;
+        }
+        .acb-btn {
+          width: 100%;
+          padding: 12px 18px;
+        }
+        .acb-toggle-link {
+          text-align: center;
         }
       }
     `;
@@ -193,89 +339,124 @@
     var banner = document.createElement('div');
     banner.id = 'axel-cookie-banner';
     banner.setAttribute('role', 'region');
-    banner.setAttribute('aria-label', 'Cookie Consent Preferences');
+    banner.setAttribute('aria-label', 'Privacy and Cookie Consent');
 
     banner.innerHTML = `
-      <div class="acb-header">
-        <span class="acb-icon">🍪</span>
-        <h3 class="acb-title">Cookie Preferences</h3>
-      </div>
-      <p class="acb-desc">
-        We use essential cookies to maintain system theme settings and optional performance analytics to improve your experience.
-      </p>
-      <div id="acb-details-box" class="acb-details">
-        <div class="acb-category">
-          <span><strong>Necessary:</strong> Session & dark/light theme tokens</span>
-          <span>Required</span>
+      <div class="acb-inner">
+        <div class="acb-top-row">
+          <div class="acb-title-group">
+            <svg class="acb-icon-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            <h3 class="acb-title">Privacy & Cookies</h3>
+          </div>
+          <span class="acb-badge">Consent Preferences</span>
         </div>
-        <div class="acb-category">
-          <span><strong>Analytics:</strong> Aggregated anonymous site statistics</span>
-          <span>Optional</span>
+
+        <p class="acb-desc">
+          We respect your privacy. This site uses essential cookies to remember your system theme preferences, and optional performance analytics to measure speed and reader engagement.
+        </p>
+
+        <div id="acb-details-box" class="acb-details-box">
+          <div class="acb-cat-item">
+            <div class="acb-cat-info">
+              <h4>Strictly Necessary</h4>
+              <p>Essential for basic functionality, page routing, and dark/light mode preference persistence.</p>
+            </div>
+            <span class="acb-cat-status is-required">Always Active</span>
+          </div>
+          <div class="acb-cat-item">
+            <div class="acb-cat-info">
+              <h4>Analytics & Performance</h4>
+              <p>Anonymous visitor metrics to understand content reading time, device viewports, and navigation speed.</p>
+            </div>
+            <span class="acb-cat-status">Optional</span>
+          </div>
+        </div>
+
+        <div class="acb-bottom-row">
+          <button type="button" class="acb-toggle-link" id="acb-toggle-details">View Details</button>
+          <div class="acb-btn-group">
+            <button type="button" class="acb-btn acb-btn-secondary" id="acb-necessary-only">Necessary Only</button>
+            <button type="button" class="acb-btn acb-btn-primary" id="acb-accept-all">Accept All</button>
+          </div>
         </div>
       </div>
-      <div class="acb-actions">
-        <button type="button" class="acb-btn acb-btn-primary" id="acb-accept-all">Accept All</button>
-        <button type="button" class="acb-btn acb-btn-secondary" id="acb-necessary-only">Necessary Only</button>
-      </div>
-      <button type="button" class="acb-custom-toggle" id="acb-toggle-details">View Cookie Details</button>
     `;
 
     document.body.appendChild(banner);
 
-    // Fade in
-    requestAnimationFrame(function () {
-      setTimeout(function () {
-        banner.classList.add('is-visible');
-      }, 300);
+    // Animate in after tiny delay
+    setTimeout(function () {
+      banner.classList.add('is-visible');
+    }, 450);
+
+    var detailsBox = document.getElementById('acb-details-box');
+    var toggleBtn = document.getElementById('acb-toggle-details');
+    var acceptAllBtn = document.getElementById('acb-accept-all');
+    var necOnlyBtn = document.getElementById('acb-necessary-only');
+
+    toggleBtn.addEventListener('click', function () {
+      var isOpen = detailsBox.classList.contains('is-open');
+      if (isOpen) {
+        detailsBox.classList.remove('is-open');
+        toggleBtn.textContent = 'View Details';
+      } else {
+        detailsBox.classList.add('is-open');
+        toggleBtn.textContent = 'Hide Details';
+      }
     });
 
-    // Button event listeners
-    document.getElementById('acb-accept-all').addEventListener('click', function () {
+    acceptAllBtn.addEventListener('click', function () {
       setConsent('all');
       closeBanner();
     });
 
-    document.getElementById('acb-necessary-only').addEventListener('click', function () {
+    necOnlyBtn.addEventListener('click', function () {
       setConsent('necessary');
       closeBanner();
     });
 
-    document.getElementById('acb-toggle-details').addEventListener('click', function () {
-      var details = document.getElementById('acb-details-box');
-      var isOpen = details.classList.toggle('is-open');
-      this.textContent = isOpen ? 'Hide Cookie Details' : 'View Cookie Details';
-    });
-  }
-
-  function closeBanner() {
-    var banner = document.getElementById('axel-cookie-banner');
-    if (!banner) return;
-    banner.classList.remove('is-visible');
-    setTimeout(function () {
-      if (banner && banner.parentElement) {
-        banner.parentElement.removeChild(banner);
-      }
-    }, 450);
-  }
-
-  // Allow reopening cookie banner from footer
-  window.openCookiePreferences = function () {
-    renderBanner();
-  };
-
-  // Auto initialize if consent not yet granted
-  function init() {
-    var consent = getConsent();
-    if (!consent) {
-      renderBanner();
-    } else {
-      window.dispatchEvent(new CustomEvent('cookie_consent_updated', { detail: consent }));
+    function closeBanner() {
+      banner.classList.remove('is-visible');
+      setTimeout(function () {
+        if (banner.parentNode) {
+          banner.parentNode.removeChild(banner);
+        }
+      }, 400);
     }
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
+  // Public method to reopen preferences from footer
+  window.openCookiePreferences = function () {
+    var existing = document.getElementById('axel-cookie-banner');
+    if (existing) {
+      existing.classList.add('is-visible');
+      var details = document.getElementById('acb-details-box');
+      if (details) details.classList.add('is-open');
+      var btn = document.getElementById('acb-toggle-details');
+      if (btn) btn.textContent = 'Hide Details';
+      return;
+    }
+    renderBanner();
+    setTimeout(function () {
+      var details = document.getElementById('acb-details-box');
+      if (details) details.classList.add('is-open');
+      var btn = document.getElementById('acb-toggle-details');
+      if (btn) btn.textContent = 'Hide Details';
+    }, 500);
+  };
+
+  function init() {
+    var consent = getConsent();
+    if (!consent) {
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', renderBanner);
+      } else {
+        renderBanner();
+      }
+    }
   }
+
+  init();
 })();
