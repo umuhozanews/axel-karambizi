@@ -1,0 +1,21 @@
+{
+  "name": "Axel Karambizi",
+  "short_name": "Axel K",
+  "description": "Kigali-based founder and builder of companies, communities and technology.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#14140f",
+  "theme_color": "#5e67e6",
+  "icons": [
+    {
+      "src": "/assets/avatar.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "/assets/hero_front_hd.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}

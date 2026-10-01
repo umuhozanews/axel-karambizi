@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>404 — Page Not Found · Axel Karambizi</title>
+  <meta name="description" content="The page you are looking for doesn't exist or has been moved.">
+  <meta name="robots" content="noindex, follow">
+  <meta name="theme-color" content="#14140f">
+  <link rel="icon" href="./assets/favicon.png">
+  <link rel="manifest" href="./site.webmanifest">
+  <link rel="stylesheet" href="./assets/live_bundle_styles.css">
+  <style>
+    :root {
+      --bg: #14140f;
+      --card-bg: rgba(26, 26, 27, 0.85);
+      --border: rgba(255, 255, 255, 0.1);
+      --text: #f3f1ec;
+      --text-muted: #8e8d88;
+      --accent: #5e67e6;
+      --accent-hover: #7078ea;
+      --font-display: "Antonio", -apple-system, sans-serif;
+      --font-body: "Inter", -apple-system, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      position: relative;
+      overflow-x: hidden;
+      background-image: url("./assets/inline_bg_1.gif");
+      background-repeat: repeat;
+      background-size: 250px auto;
+    }
+    .error-container {
+      max-width: 600px;
+      width: 100%;
+      background: var(--card-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: clamp(36px, 6vw, 64px) clamp(24px, 5vw, 48px);
+      text-align: center;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+      position: relative;
+      z-index: 2;
+    }
+    .error-badge {
+      display: inline-block;
+      padding: 6px 16px;
+      background: rgba(94, 103, 230, 0.15);
+      border: 1px solid rgba(94, 103, 230, 0.3);
+      color: var(--accent);
+      border-radius: 99px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .error-code {
+      font-family: var(--font-display);
+      font-size: clamp(80px, 18vw, 150px);
+      font-weight: 700;
+      line-height: 0.9;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+    .error-code span {
+      color: var(--accent);
+    }
+    .error-title {
+      font-family: var(--font-display);
+      font-size: clamp(24px, 4vw, 36px);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+    .error-desc {
+      font-size: clamp(15px, 2vw, 17px);
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 36px;
+      max-width: 440px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .error-actions {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: 99px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 4px 16px rgba(94, 103, 230, 0.35);
+    }
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(94, 103, 230, 0.45);
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+      transform: translateY(-2px);
+    }
+    .footer-note {
+      margin-top: 40px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .footer-note a {
+      color: inherit;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="error-container">
+    <div class="error-badge">Navigation Error</div>
+    <div class="error-code">4<span>0</span>4</div>
+    <h1 class="error-title">Page Not Found</h1>
+    <p class="error-desc">
+      The destination you were looking for doesn't exist, was moved, or has an updated path.
+    </p>
+    <div class="error-actions">
+      <a href="/" class="btn btn-primary">Return to Homepage</a>
+      <a href="/projects/" class="btn btn-secondary">Explore Projects</a>
+      <a href="/explore/" class="btn btn-secondary">Read Perspectives</a>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    © Copyright 2026. All Rights Reserved by Axel Karambizi • Created by <a href="#" target="_blank">Gacondo Labs</a>
+  </div>
+
+  <script src="./assets/cookie-consent.js" defer></script>
+  <script src="./assets/analytics.js" defer></script>
+</body>
+</html>
