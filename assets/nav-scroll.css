@@ -1,0 +1,79 @@
+/* ==========================================================================
+   Navigation Scroll Toggle
+   - Top of page (before scroll): Show menu only (Home, About, Projects, Blogs, Contact)
+   - Scrolled down: Show 'Available for work' pill (Avatar + status + green pulsing dot)
+   - Scrolled hover (desktop): Expand to reveal menu items
+   ========================================================================== */
+
+nav.framer-z7I7P {
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* 1. At Top (before scroll, scrollY < 60) */
+nav.framer-z7I7P.nav-at-top {
+  gap: 0px !important;
+  padding: 8px 12px 8px 24px !important;
+}
+
+nav.framer-z7I7P.nav-at-top .framer-brfihp {
+  display: none !important;
+  opacity: 0 !important;
+  width: 0 !important;
+  max-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  pointer-events: none !important;
+  overflow: hidden !important;
+}
+
+nav.framer-z7I7P.nav-at-top .framer-gs57e9 {
+  display: flex !important;
+  opacity: 1 !important;
+  width: auto !important;
+  max-width: none !important;
+  pointer-events: auto !important;
+  overflow: visible !important;
+}
+
+/* 2. When Scrolled Down (scrollY >= 60) */
+nav.framer-z7I7P.nav-scrolled {
+  gap: 0px !important;
+  padding: 8px 20px 8px 10px !important;
+}
+
+nav.framer-z7I7P.nav-scrolled .framer-brfihp {
+  display: flex !important;
+  opacity: 1 !important;
+  width: auto !important;
+  max-width: none !important;
+  pointer-events: auto !important;
+  overflow: visible !important;
+  transition: opacity 0.3s ease !important;
+}
+
+nav.framer-z7I7P.nav-scrolled .framer-gs57e9 {
+  display: flex !important;
+  opacity: 0 !important;
+  width: 0 !important;
+  max-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  pointer-events: none !important;
+  overflow: hidden !important;
+  transition: opacity 0.25s ease, max-width 0.35s cubic-bezier(0.16, 1, 0.3, 1), width 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Hover expansion on desktop when scrolled */
+@media (hover: hover) and (pointer: fine) {
+  nav.framer-z7I7P.nav-scrolled:hover {
+    gap: 30px !important;
+    padding: 8px 16px 8px 12px !important;
+  }
+  nav.framer-z7I7P.nav-scrolled:hover .framer-gs57e9 {
+    opacity: 1 !important;
+    width: auto !important;
+    max-width: 500px !important;
+    pointer-events: auto !important;
+    overflow: visible !important;
+  }
+}
