@@ -11,3 +11,4 @@ scratch_*.png
 Thumbs.db
 
 .vercel
+.env*
