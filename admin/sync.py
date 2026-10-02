@@ -50,11 +50,7 @@ def sync_all():
         prefix = './' if is_root else '../'
         asset_prefix = './assets/' if is_root else '../assets/'
 
-        # Suppress creator avatar & Available for work badge
-        avatar_pattern = r'<div class="framer-brfihp" data-framer-name="Avatar &(?:amp;)? Button Wrap".*?</div></div></div></div></div>'
-        html = re.sub(avatar_pattern, '', html, flags=re.DOTALL)
-        if '.framer-brfihp' not in html:
-            html = html.replace('</head>', '<style>.framer-brfihp, [data-framer-name*="Avatar & Button Wrap"] { display: none !important; }</style>\n</head>')
+        # Preserve avatar & navbar branding
 
         # Copyright & Creator
         copy_text = footer.get('copyright', '© Copyright 2026. All Rights Reserved by Axel Karambizi')
@@ -267,13 +263,6 @@ def sync_all():
         with open(exp_path, 'w', encoding='utf-8') as f:
             f.write(html_exp)
         print("Updated: explore/index.html")
-
-        # Also sync to blogs/index.html
-        blogs_path = os.path.join(base_dir, 'blogs', 'index.html')
-        html_blogs = html_exp.replace('href="../blogs/', 'href="./')
-        with open(blogs_path, 'w', encoding='utf-8') as f:
-            f.write(html_blogs)
-        print("Updated: blogs/index.html")
 
     # ==========================================
     # 3. Update projects/index.html

@@ -21,12 +21,12 @@
         "url": "./about/"
       },
       {
-        "label": "Project",
+        "label": "Projects",
         "url": "./projects/"
       },
       {
-        "label": "Explore",
-        "url": "./explore/"
+        "label": "Blogs",
+        "url": "./blogs/"
       }
     ],
     "button": {
