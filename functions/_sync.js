@@ -249,3 +249,28 @@ export function syncExplore(html, data) {
   html = html.replace(/href="\.\/blogs\//g, 'href="../blogs/');
   return html;
 }
+
+export function syncAbout(html, data) {
+  html = updateCommon(html, data, false);
+  const about = data.about || {};
+  const p1 = about.paragraph_1 || '';
+  const p2 = about.paragraph_2 || '';
+  if (p1) {
+    html = html.replace(/I’m a founder and builder from Kigali, Rwanda[^\<]*/g, p1);
+  }
+  if (p2) {
+    html = html.replace(/I grew up believing opportunity could be on the other side[^\<]*/g, p2);
+  }
+  const intro = about.learning_stack_intro || '';
+  if (intro) {
+    html = html.replace(/I learn by doing\. Here is what I’m actively mastering[^\<]*/g, intro);
+  }
+  const portrait = (about.portrait_image || './assets/contact_portrait.jpg').replace('./', '../');
+  html = html.replace(/src="[^"]*(?:ONE90235|contact_portrait)[^"]*"/g, `src="${portrait}"`);
+  return html;
+}
+
+export function syncBlogs(html, data) {
+  return syncExplore(html, data);
+}
+

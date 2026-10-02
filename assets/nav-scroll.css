@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Axel Karambizi — Navigation 3D Roll & Scroll Hover Interactions
+   Axel Karambizi — Navigation 3D Roll, Green Pointer & Hover Interactions
    Matches official Portavia / Framer interaction specs
    ========================================================================== */
 
@@ -162,4 +162,102 @@ nav.framer-z7I7P.nav-scrolled .framer-gs57e9 {
     pointer-events: auto !important;
     overflow: visible !important;
   }
+}
+
+/* 5. Vibrant Green Navbar Status Dot & Radar Pulse */
+.framer-y6vg2z {
+  background-color: var(--token-4baed98b-3751-4e60-b570-600a506f091e, #0bde66) !important;
+  box-shadow: 0 0 6px rgba(11, 222, 102, 0.7) !important;
+}
+
+.framer-13y1z4t {
+  background-color: var(--token-4baed98b-3751-4e60-b570-600a506f091e, #0bde66) !important;
+  border-radius: 50% !important;
+  animation: greenRadarPulse 2s cubic-bezier(0.2, 0.8, 0.2, 1) infinite !important;
+}
+
+@keyframes greenRadarPulse {
+  0% {
+    transform: translate(-50%, -50%) scale(0.6);
+    opacity: 0.9;
+  }
+  60% {
+    transform: translate(-50%, -50%) scale(2.8);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.8);
+    opacity: 0;
+  }
+}
+
+/* 6. Active Custom Green Pointer (Cursor Follower) */
+.framer-SsumL {
+  background-color: var(--token-4baed98b-3751-4e60-b570-600a506f091e, #0bde66) !important;
+  box-shadow: 0 0 12px rgba(11, 222, 102, 0.55) !important;
+  border-radius: 99px !important;
+  pointer-events: none !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  z-index: 999999 !important;
+  width: 16px !important;
+  height: 16px !important;
+  margin-top: -8px !important;
+  margin-left: -8px !important;
+  will-change: transform, opacity !important;
+  transition: opacity 0.25s ease, width 0.2s cubic-bezier(0.16, 1, 0.3, 1), height 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease !important;
+}
+
+.framer-SsumL.cursor-hover {
+  transform: translate(0, 0) scale(2.2) !important;
+  background-color: rgba(11, 222, 102, 0.8) !important;
+  box-shadow: 0 0 22px rgba(11, 222, 102, 0.85) !important;
+}
+
+.framer-SsumL.cursor-hidden {
+  opacity: 0 !important;
+}
+
+/* 7. Avatar Card Badge: Replacing 'Hi' Text with Animated Waving Hand */
+.framer-owsqmh-container {
+  z-index: 25 !important;
+}
+
+.framer-DCBRB {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.framer-DCBRB .framer-1txd3hn {
+  display: none !important;
+}
+
+.framer-DCBRB .framer-1rl3kp7-container {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  height: 100% !important;
+  transform: none !important;
+  opacity: 1 !important;
+}
+
+.framer-DCBRB .framer-1rl3kp7-container svg {
+  display: block !important;
+  width: 52px !important;
+  height: 52px !important;
+  transform-origin: 75% 75% !important;
+  animation: handWaving 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite !important;
+}
+
+@keyframes handWaving {
+  0%, 100% { transform: rotate(0deg); }
+  12% { transform: rotate(18deg); }
+  24% { transform: rotate(-10deg); }
+  36% { transform: rotate(18deg); }
+  48% { transform: rotate(-6deg); }
+  60% { transform: rotate(14deg); }
+  72% { transform: rotate(0deg); }
 }

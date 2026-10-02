@@ -2,9 +2,20 @@
   X-Content-Type-Options: nosniff
   Access-Control-Allow-Origin: *
 
-/assets/*
-  Cache-Control: public, max-age=31536000, immutable
+/assets/*.css
+  Cache-Control: public, max-age=0, must-revalidate
   Access-Control-Allow-Origin: *
+
+/assets/*.js
+  Cache-Control: public, max-age=0, must-revalidate
+  Access-Control-Allow-Origin: *
+
+/assets/*
+  Cache-Control: public, max-age=86400, must-revalidate
+  Access-Control-Allow-Origin: *
+
+/admin/*
+  Cache-Control: no-cache, no-store, must-revalidate
 
 /*.html
   Cache-Control: public, max-age=0, must-revalidate

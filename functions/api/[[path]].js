@@ -1,4 +1,4 @@
-import { syncIndex, syncProjects, syncExplore } from '../_sync.js';
+import { syncIndex, syncProjects, syncExplore, syncAbout, syncBlogs } from '../_sync.js';
 
 const ADMIN_EMAIL = 'nextech@gmail.com';
 const ADMIN_PASSWORD = 'axel@12345';
@@ -138,10 +138,12 @@ export async function onRequest(context) {
         return null;
       }
 
-      const [rawIndex, rawProjects, rawExplore] = await Promise.all([
+      const [rawIndex, rawProjects, rawExplore, rawAbout, rawBlogs] = await Promise.all([
         getRawFile('index.html'),
         getRawFile('projects/index.html'),
-        getRawFile('explore/index.html')
+        getRawFile('explore/index.html'),
+        getRawFile('about/index.html'),
+        getRawFile('blogs/index.html')
       ]);
 
       const filesToCommit = [
@@ -150,6 +152,8 @@ export async function onRequest(context) {
       if (rawIndex) filesToCommit.push({ path: 'index.html', content: syncIndex(rawIndex, siteData) });
       if (rawProjects) filesToCommit.push({ path: 'projects/index.html', content: syncProjects(rawProjects, siteData) });
       if (rawExplore) filesToCommit.push({ path: 'explore/index.html', content: syncExplore(rawExplore, siteData) });
+      if (rawAbout) filesToCommit.push({ path: 'about/index.html', content: syncAbout(rawAbout, siteData) });
+      if (rawBlogs) filesToCommit.push({ path: 'blogs/index.html', content: syncBlogs(rawBlogs, siteData) });
 
       // Create tree
       const treeRes = await fetch(`https://api.github.com/repos/${REPO}/git/trees`, {

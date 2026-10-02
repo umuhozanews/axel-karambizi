@@ -176,7 +176,7 @@ class AdminHandler(http.server.SimpleHTTPRequestHandler):
                 pushed_to_prod = False
                 try:
                     import subprocess
-                    subprocess.run(['git', 'add', 'admin/content.json', 'index.html', 'projects/index.html', 'about/index.html', 'explore/index.html'], cwd=base_dir, check=False)
+                    subprocess.run(['git', 'add', 'admin/content.json', 'index.html', 'projects/index.html', 'about/index.html', 'explore/index.html', 'blogs/index.html', 'assets/'], cwd=base_dir, check=False)
                     res = subprocess.run(['git', 'commit', '-m', 'Update site content via Admin Portal'], cwd=base_dir, capture_output=True, text=True)
                     push_res = subprocess.run(['git', 'push', 'origin', 'main'], cwd=base_dir, capture_output=True, text=True)
                     if push_res.returncode == 0:
