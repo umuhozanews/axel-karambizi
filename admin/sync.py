@@ -106,16 +106,6 @@ def sync_all():
         html = re.sub(r'src="[^"]*(?:ONE90238|hero_front)[^"]*"', f'src="{front_img}"', html)
         html = re.sub(r'src="[^"]*(?:ONE90240|hero_back)[^"]*"', f'src="{back_img}"', html)
 
-        # Counters
-        if len(counters) >= 3:
-            cnt_pattern = r'(<h2 class="framer-text[^"]*" data-styles-preset="TTqvVnbYq"[^>]*>)(.*?)(</h2>)'
-            def cnt_repl(i, m):
-                c_idx = i % 3
-                if c_idx < len(counters):
-                    return m.group(1) + counters[c_idx].get('number', '') + m.group(3)
-                return m.group(0)
-            html = replace_nth_match(cnt_pattern, cnt_repl, html)
-
         # Featured Projects Images
         for p in fp:
             img_path = p.get('image', '')
@@ -129,7 +119,6 @@ def sync_all():
             elif 'atomiq' in p_id:
                 html = re.sub(r'src="[^"]*project_atomiq[^"]*"', f'src="{img_path}"', html)
 
-        
         # Services Synchronization
         if services and len(services) > 0:
             s1 = services[0]
@@ -146,59 +135,6 @@ def sync_all():
             for idx, pat in enumerate(old_item_defaults):
                 if idx < len(s1_items):
                     html = re.sub(f'>({pat})<', f'>{s1_items[idx]}<', html)
-
-        # FAQ Synchronization
-        if faqs:
-            faq_items_html = []
-            for i, faq in enumerate(faqs):
-                num = f"{i+1}."
-                q = faq.get('question', '')
-                a = faq.get('answer', '')
-                is_first = (i == 0)
-                active_class = "faq-active" if is_first else ""
-                chevron_rot = "rotate(0deg)" if is_first else "rotate(180deg)"
-                ans_style = "opacity: 1; max-height: 500px; padding: 12px 0 20px 36px;" if is_first else "opacity: 0; max-height: 0px; padding: 0 0 0 36px; overflow: hidden;"
-
-                item = f"""<div class="framer-1demp92-container faq-item {active_class}" style="opacity: 1; width: 100%;">
-  <div class="framer-2k6sY framer-vamxU framer-m8D3R framer-1d8qfhh framer-v-1d8qfhh" data-border="true" data-framer-name="Desktop / Closed" style="--border-bottom-width: 1px; --border-color: var(--token-a228d207-519c-4c30-ace3-fe8c17413ec0, rgb(218, 218, 218)); --border-left-width: 0px; --border-right-width: 0px; --border-style: solid; --border-top-width: 0px; width: 100%; opacity: 1;">
-    <div class="framer-xyut35 faq-trigger" data-framer-name="Top" data-highlight="true" style="opacity: 1; cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding: 22px 0;" tabindex="0" role="button" aria-expanded="{'true' if is_first else 'false'}">
-      <div class="framer-e6shww" data-framer-name="Text Wrap" style="opacity: 1; display: flex; align-items: baseline; gap: 16px;">
-        <div class="framer-118mxo5" data-framer-component-type="RichTextContainer" style="--extracted-1eung3n: var(--token-a9f688eb-778b-4a71-929e-ebf8a014b4cf, rgb(48, 48, 48)); min-width: 24px;">
-          <h4 class="framer-text framer-styles-preset-usoyrg" data-styles-preset="ilUlJnLkH" style="--framer-text-color:var(--extracted-1eung3n, var(--token-a9f688eb-778b-4a71-929e-ebf8a014b4cf, rgb(48, 48, 48)));">{num}</h4>
-        </div>
-        <div class="framer-eqt2pn" data-framer-component-type="RichTextContainer" style="--extracted-1eung3n: var(--token-a9f688eb-778b-4a71-929e-ebf8a014b4cf, rgb(48, 48, 48));">
-          <h4 class="framer-text framer-styles-preset-usoyrg" data-styles-preset="ilUlJnLkH" style="--framer-text-color:var(--extracted-1eung3n, var(--token-a9f688eb-778b-4a71-929e-ebf8a014b4cf, rgb(48, 48, 48)));">{q}</h4>
-        </div>
-      </div>
-      <div class="framer-1e2gxyp-container faq-chevron" style="transform: {chevron_rot}; opacity: 1; transition: transform 0.3s ease; flex-shrink: 0; margin-left: 16px;">
-        <div style="display:contents">
-          <svg color="var(--token-a9f688eb-778b-4a71-929e-ebf8a014b4cf, rgb(48, 48, 48))" fill="none" height="1.5em" stroke-width="1.5" style="width: 100%; height: 100%;" viewBox="0 0 24 24" width="100%" xmlns="http://www.w3.org/2000/svg">
-            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
-          </svg>
-        </div>
-      </div>
-    </div>
-    <div class="framer-1l7evow faq-answer" data-framer-name="Bottom" style="{ans_style}">
-      <p class="framer-text framer-styles-preset-17cdd8a" data-styles-preset="UezruUh9E" style="--framer-text-alignment:left; --framer-text-color:var(--token-8b92a8, #8e8d88); line-height: 1.65; font-size: 15px; margin: 0;">{a}</p>
-    </div>
-  </div>
-</div>"""
-                faq_items_html.append(item)
-
-            faq_rendered_str = "\n".join(faq_items_html)
-            new_faq_block = f"""<div class="ssr-variant faq-responsive-wrap" style="display: block !important; width: 100%;">
-  <div class="framer-1wntvpv-container" style="height: auto !important; min-height: auto; width: 100%;">
-    <div class="framer-FNjt9 framer-149pei4 framer-v-149pei4" data-framer-name="Desktop" style="width: 100%; opacity: 1; height: auto !important;">
-      <div class="framer-sicluc-container" style="transform: translateX(-50%); opacity: 1;"><!--$--><div></div><!--/$--></div>
-      {faq_rendered_str}
-    </div>
-  </div>
-</div>"""
-            html = re.sub(r'<div class="ssr-variant faq-responsive-wrap".*?</div>\s*</div>\s*</div>\s*</div>',
-                          new_faq_block, html, flags=re.DOTALL)
-
-        if 'assets/faq-accordion.js' not in html:
-            html = html.replace('</body>', '<script src="./assets/faq-accordion.js" defer></script>\n</body>')
 
         with open(index_path, 'w', encoding='utf-8') as f:
             f.write(html)
