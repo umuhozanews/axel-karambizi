@@ -1,15 +1,101 @@
 /* ==========================================================================
-   Navigation Scroll Toggle
-   - Top of page (before scroll): Show menu only (Home, About, Projects, Blogs, Contact)
-   - Scrolled down: Show 'Available for work' pill (Avatar + status + green pulsing dot)
-   - Scrolled hover (desktop): Expand to reveal menu items
+   Axel Karambizi — Navigation 3D Roll & Scroll Hover Interactions
+   Matches official Portavia / Framer interaction specs
    ========================================================================== */
 
+/* 1. Base Navbar Transitions */
 nav.framer-z7I7P {
   transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
-/* 1. At Top (before scroll, scrollY < 60) */
+/* 2. 3D Rolling Flip Navigation Links (Home, About, Projects, Blogs, Available for work) */
+.framer-xFpDQ {
+  overflow: hidden !important;
+  perspective: 1200px !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+}
+
+.framer-xFpDQ .framer-glk0yt {
+  display: flex !important;
+  flex-direction: column !important;
+  transform-style: preserve-3d !important;
+  transform-origin: 50% 0% 0px !important;
+  transition: transform 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+  height: 24px !important;
+  transform: perspective(1200px) rotateX(0deg) !important;
+}
+
+/* Face 1: Front facing regular text */
+.framer-xFpDQ .framer-1kmmsyu {
+  height: 24px !important;
+  display: flex !important;
+  align-items: center !important;
+  backface-visibility: hidden !important;
+  transform: translateY(0px) rotateX(0deg) !important;
+  transition: opacity 0.25s ease !important;
+  opacity: 1 !important;
+}
+
+/* Face 2: Bottom facing accent-colored text */
+.framer-xFpDQ .framer-1f9aah8 {
+  height: 24px !important;
+  display: flex !important;
+  align-items: center !important;
+  transform: rotateX(90deg) !important;
+  transform-origin: 50% 0% 0px !important;
+  backface-visibility: hidden !important;
+  opacity: 1 !important;
+}
+
+.framer-xFpDQ .framer-1f9aah8 p,
+.framer-xFpDQ .framer-1f9aah8 span {
+  color: var(--token-54672876-03f0-4dca-8fdb-32c421a5c4d1, rgb(106, 113, 223)) !important;
+  --framer-text-color: var(--token-54672876-03f0-4dca-8fdb-32c421a5c4d1, rgb(106, 113, 223)) !important;
+  --extracted-r6o4lv: var(--token-54672876-03f0-4dca-8fdb-32c421a5c4d1, rgb(106, 113, 223)) !important;
+}
+
+/* On Link Hover: 3D Roll up by 90deg */
+.framer-xFpDQ:hover .framer-glk0yt,
+.framer-xFpDQ.hover .framer-glk0yt {
+  transform: perspective(1200px) rotateX(-90deg) !important;
+}
+
+/* 3. Contact Button Hover */
+.framer-gBieo {
+  position: relative !important;
+  overflow: hidden !important;
+  border-radius: 99px !important;
+  cursor: pointer !important;
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.framer-gBieo:hover,
+.framer-gBieo.hover {
+  transform: scale(1.04) !important;
+  box-shadow: 0 4px 14px rgba(106, 113, 223, 0.3) !important;
+}
+
+.framer-gBieo .framer-qveuzj {
+  border-radius: 99px !important;
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease !important;
+  transform: scale(0.85) !important;
+  opacity: 0 !important;
+}
+
+.framer-gBieo:hover .framer-qveuzj,
+.framer-gBieo.hover .framer-qveuzj {
+  transform: scale(1) !important;
+  opacity: 1 !important;
+}
+
+.framer-gBieo .framer-1djaxro {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* 4. Scroll States: At Top vs Scrolled */
+/* At Top (before scroll, scrollY < 60) */
 nav.framer-z7I7P.nav-at-top {
   gap: 0px !important;
   padding: 8px 12px 8px 24px !important;
@@ -35,7 +121,7 @@ nav.framer-z7I7P.nav-at-top .framer-gs57e9 {
   overflow: visible !important;
 }
 
-/* 2. When Scrolled Down (scrollY >= 60) */
+/* When Scrolled Down (scrollY >= 60) */
 nav.framer-z7I7P.nav-scrolled {
   gap: 0px !important;
   padding: 8px 20px 8px 10px !important;
@@ -63,7 +149,7 @@ nav.framer-z7I7P.nav-scrolled .framer-gs57e9 {
   transition: opacity 0.25s ease, max-width 0.35s cubic-bezier(0.16, 1, 0.3, 1), width 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
-/* Hover expansion on desktop when scrolled */
+/* Hover expansion when scrolled down: reveals all menu links on hover */
 @media (hover: hover) and (pointer: fine) {
   nav.framer-z7I7P.nav-scrolled:hover {
     gap: 30px !important;
@@ -72,7 +158,7 @@ nav.framer-z7I7P.nav-scrolled .framer-gs57e9 {
   nav.framer-z7I7P.nav-scrolled:hover .framer-gs57e9 {
     opacity: 1 !important;
     width: auto !important;
-    max-width: 500px !important;
+    max-width: 600px !important;
     pointer-events: auto !important;
     overflow: visible !important;
   }
