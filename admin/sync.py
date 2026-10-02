@@ -221,6 +221,17 @@ def sync_all():
             return m.group(0)
         html_proj = replace_nth_match(h2_pattern, h2_repl, html_proj)
 
+        # Featured projects category badges (first 12 matches of Category)
+        cat_pattern = r'(data-framer-name="Category"[^>]*><p class="framer-text[^"]*"[^>]*>)(.*?)(</p>)'
+        cat_matches = list(re.finditer(cat_pattern, html_proj))
+        for i in reversed(range(min(12, len(cat_matches)))):
+            m = cat_matches[i]
+            p_idx = i // 3
+            if p_idx < len(fp):
+                cat = fp[p_idx].get('category', '')
+                rep = m.group(1) + cat + m.group(3)
+                html_proj = html_proj[:m.start()] + rep + html_proj[m.end():]
+
         # Featured projects images
         for p in fp:
             img_path = p.get('image', '').replace('./', '../')
@@ -233,6 +244,22 @@ def sync_all():
                 html_proj = re.sub(r'src="[^"]*project_youth_uplift[^"]*"', f'src="{img_path}"', html_proj)
             elif 'atomiq' in p_id:
                 html_proj = re.sub(r'src="[^"]*project_atomiq[^"]*"', f'src="{img_path}"', html_proj)
+
+        # More Projects cards synchronization (36 matches)
+        card_pattern = r'(<p class="framer-text framer-styles-preset-a6ucvx"[^>]*>)[^<]+(</p></div></div><div class="framer-a27xm9" data-framer-name="Title"[^>]*><h3 class="framer-text framer-styles-preset-12q7ivy"[^>]*>)[^<]+(</h3></div><div class="framer-5wou89" data-framer-name="Description"[^>]*><p class="framer-text framer-styles-preset-a6ucvx"[^>]*>)[^<]+(</p></div>)'
+        card_matches = list(re.finditer(card_pattern, html_proj))
+        for i in reversed(range(len(card_matches))):
+            m = card_matches[i]
+            proj_idx = i % 4
+            if proj_idx < len(mp):
+                proj = mp[proj_idx]
+                rep = (
+                    m.group(1) + proj.get('category', '') +
+                    m.group(2) + proj.get('title', '') +
+                    m.group(3) + proj.get('description', '') +
+                    m.group(4)
+                )
+                html_proj = html_proj[:m.start()] + rep + html_proj[m.end():]
 
         with open(proj_path, 'w', encoding='utf-8') as f:
             f.write(html_proj)

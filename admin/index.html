@@ -406,9 +406,10 @@
         </div>
         <div class="top-actions" style="display:flex; gap:8px; align-items:center;">
           <a href="../index.html" target="_blank" class="btn btn-outline" style="text-decoration:none;">👁️ View Site</a>
+          <a href="https://axelkarambizi.com/" target="_blank" class="btn btn-outline" style="text-decoration:none; border-color: var(--accent); color: var(--accent);" title="Open live production website">🌐 Production Site</a>
           <button onclick="downloadContentJSON()" class="btn btn-outline" title="Download content.json">📥 Export JSON</button>
           <button onclick="copyContentJSON()" class="btn btn-outline" title="Copy JSON">📋 Copy JSON</button>
-          <button onclick="saveAll()" class="btn btn-primary">💾 Save All Changes</button>
+          <button onclick="saveAll()" class="btn btn-primary" id="save-btn">💾 Save All Changes</button>
         </div>
       </header>
 
@@ -1741,8 +1742,14 @@
 
     async function saveAll() {
       const token = sessionStorage.getItem('admin_token') || VALID_TOKEN;
-      collectFormData();
+      const saveBtn = document.getElementById('save-btn');
+      const origText = saveBtn ? saveBtn.textContent : '💾 Save All Changes';
+      if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.textContent = '⏳ Saving & Publishing...';
+      }
 
+      collectFormData();
       localStorage.setItem('site_content_data', JSON.stringify(siteData));
 
       try {
@@ -1754,19 +1761,34 @@
           },
           body: JSON.stringify(siteData)
         });
+
+        const resData = await response.json().catch(() => ({}));
+
         if (response.ok) {
-          showToast('Changes saved & published to all pages successfully!');
+          const msg = resData.message || 'Changes saved and published to production successfully!';
+          showToast(msg);
+          if (saveBtn) {
+            saveBtn.textContent = '✅ Published!';
+            setTimeout(() => { saveBtn.textContent = origText; saveBtn.disabled = false; }, 3500);
+          }
           return;
         } else if (response.status === 401) {
           showToast('Session expired. Please log in again.');
           logout();
+          if (saveBtn) { saveBtn.textContent = origText; saveBtn.disabled = false; }
           return;
+        } else {
+          showToast(resData.message || 'Failed to save changes. Please try again.');
         }
       } catch (e) {
-        console.log('Saved to browser cache');
+        console.error('Save error:', e);
+        showToast('Saved to browser cache. Network error connecting to server.');
       }
 
-      showToast('Changes saved locally! Click "Export JSON" to keep your backup.');
+      if (saveBtn) {
+        saveBtn.textContent = origText;
+        saveBtn.disabled = false;
+      }
     }
 
     function showToast(msg) {

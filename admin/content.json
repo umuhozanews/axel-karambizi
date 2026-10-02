@@ -4,7 +4,7 @@
     "badge": "Hi",
     "headline_1": "founder",
     "headline_2": "builder",
-    "tagline": "I\u2019m a Kigali-based founder and builder of companies, communities and technology",
+    "tagline": "I’m a Kigali-based founder and builder of companies, communities and technology",
     "hero_front_image": "./assets/hero_front_hd.jpg",
     "hero_back_image": "./assets/hero_back_hd.jpg",
     "avatar_image": "./assets/avatar.jpg",
@@ -92,7 +92,7 @@
       "id": "risevana",
       "title": "Risevana Foundation",
       "category": "Non-Profit / Education",
-      "description": "An accredited foundation that built classrooms and daily meals on the children\u2019s side of the river, reaching 1,200+ children.",
+      "description": "An accredited foundation that built classrooms and daily meals on the children’s side of the river, reaching 1,200+ children.",
       "image": "./assets/project_risevana.png",
       "link": "./project-detail/"
     },
@@ -124,17 +124,17 @@
   "more_projects": [
     {
       "title": "Mobile Classroom",
-      "category": "Education / Outreach",
-      "description": "A traveling learning lab bringing tech, books, and digital literacy workshops directly to remote communities."
+      "category": "Education",
+      "description": "Bringing technology and digital exposure to underserved areas."
     },
     {
       "title": "Community Mentorship",
-      "category": "Youth / Skills",
+      "category": "Youth",
       "description": "Pairing young builders and students with active practitioners across software, craft, and entrepreneurship."
     },
     {
       "title": "Car Free Day Runs & Blood Drives",
-      "category": "Civic / Health",
+      "category": "Community",
       "description": "Mobilizing thousands of Kigali residents for active fitness, community unity, and life-saving blood donation drives."
     },
     {
@@ -160,7 +160,7 @@
     },
     {
       "id": "dubai-opportunity",
-      "title": "I Went to Dubai Looking for Opportunity. Here\u2019s What I Found.",
+      "title": "I Went to Dubai Looking for Opportunity. Here’s What I Found.",
       "category": "Field Notes",
       "date": "Apr 30, 2025",
       "tag": "",
@@ -194,7 +194,7 @@
       "category": "Movement",
       "date": "Apr 20, 2025",
       "tag": "",
-      "excerpt": "Out on the waters of Lake Kivu, taking in Rwanda\u2019s natural beauty, adventure, fresh air and the freedom of boundless horizons.",
+      "excerpt": "Out on the waters of Lake Kivu, taking in Rwanda’s natural beauty, adventure, fresh air and the freedom of boundless horizons.",
       "image": "./assets/explore_lake_kivu_jetski.png",
       "link": "./blog-detail/"
     },
@@ -210,32 +210,32 @@
     }
   ],
   "about": {
-    "paragraph_1": "I\u2019m a founder and builder from Kigali, Rwanda, passionate about turning barriers into opportunity through companies, communities and technology.",
+    "paragraph_1": "I’m a founder and builder from Kigali, Rwanda, passionate about turning barriers into opportunity through companies, communities and technology.",
     "paragraph_2": "I grew up believing opportunity could be on the other side of a barrier. Sometimes a river, sometimes access to technology. So I started building.",
     "portrait_image": "./assets/contact_portrait.jpg",
     "journey": [
       {
         "title": "Founder & Director",
         "company": "Risevana Foundation",
-        "years": "2021 \u2013 Present"
+        "years": "2021 – Present"
       },
       {
         "title": "Co-Founder & Tech Lead",
         "company": "Libblio",
-        "years": "2023 \u2013 Present"
+        "years": "2023 – Present"
       },
       {
         "title": "Founder & Lead Strategist",
         "company": "Atomiq Agency",
-        "years": "2022 \u2013 Present"
+        "years": "2022 – Present"
       },
       {
         "title": "Founder & Community Lead",
         "company": "Youth Uplift Initiative",
-        "years": "2021 \u2013 Present"
+        "years": "2021 – Present"
       }
     ],
-    "learning_stack_intro": "I learn by doing. Here is what I\u2019m actively mastering across engineering, design, leadership, and operational scale.",
+    "learning_stack_intro": "I learn by doing. Here is what I’m actively mastering across engineering, design, leadership, and operational scale.",
     "learning_stack": [
       {
         "name": "Full-Stack Software Architecture",
@@ -260,14 +260,14 @@
     ]
   },
   "contact": {
-    "heading": "Let\u2019s build something.",
+    "heading": "Let’s build something.",
     "intro": "Have a project in mind, an initiative you'd like to collaborate on, or just want to connect? Reach out below.",
     "email": "hello@axelkarambizi.com",
     "phone": "+250 788 749 709",
     "portrait_image": "./assets/contact_portrait.jpg"
   },
   "footer": {
-    "copyright": "\u00a9 Copyright 2026. All Rights Reserved by Axel Karambizi",
+    "copyright": "© Copyright 2026. All Rights Reserved by Axel Karambizi",
     "created_by": "Gacondo Labs",
     "created_by_url": "#",
     "social": {

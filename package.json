@@ -1,0 +1,10 @@
+{
+  "name": "axel-karambizi-portfolio",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "python admin/server.py",
+    "sync": "python admin/sync.py"
+  }
+}

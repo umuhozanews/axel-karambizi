@@ -170,10 +170,24 @@ class AdminHandler(http.server.SimpleHTTPRequestHandler):
                 # Run full synchronization
                 sync_all()
 
+                # Also automatically push changes to GitHub origin main to deploy to production
+                pushed_to_prod = False
+                try:
+                    import subprocess
+                    subprocess.run(['git', 'add', 'admin/content.json', 'index.html', 'projects/index.html', 'about/index.html', 'explore/index.html'], cwd=base_dir, check=False)
+                    res = subprocess.run(['git', 'commit', '-m', 'Update site content via Admin Portal'], cwd=base_dir, capture_output=True, text=True)
+                    push_res = subprocess.run(['git', 'push', 'origin', 'main'], cwd=base_dir, capture_output=True, text=True)
+                    if push_res.returncode == 0:
+                        pushed_to_prod = True
+                        print("[Git] Successfully pushed updates to origin main!")
+                except Exception as git_err:
+                    print(f"[Git] Auto-push notice: {git_err}")
+
                 self.send_response(200)
                 self.send_header('Content-Type', 'application/json')
                 self.end_headers()
-                self.wfile.write(b'{"status": "ok", "message": "Saved and synchronized"}')
+                msg = "Changes saved and published to production (https://axelkarambizi.com/)!" if pushed_to_prod else "Changes saved and synchronized locally!"
+                self.wfile.write(json.dumps({"status": "ok", "message": msg}).encode('utf-8'))
             except Exception as e:
                 self.send_response(500)
                 self.send_header('Content-Type', 'application/json')
