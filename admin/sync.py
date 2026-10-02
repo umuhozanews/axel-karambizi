@@ -245,12 +245,12 @@ def sync_all():
             elif 'atomiq' in p_id:
                 html_proj = re.sub(r'src="[^"]*project_atomiq[^"]*"', f'src="{img_path}"', html_proj)
 
-        # More Projects cards synchronization (36 matches)
+        # More Projects cards synchronization (12 matches: 4 cards x 3 viewports)
         card_pattern = r'(<p class="framer-text framer-styles-preset-a6ucvx"[^>]*>)[^<]+(</p></div></div><div class="framer-a27xm9" data-framer-name="Title"[^>]*><h3 class="framer-text framer-styles-preset-12q7ivy"[^>]*>)[^<]+(</h3></div><div class="framer-5wou89" data-framer-name="Description"[^>]*><p class="framer-text framer-styles-preset-a6ucvx"[^>]*>)[^<]+(</p></div>)'
         card_matches = list(re.finditer(card_pattern, html_proj))
         for i in reversed(range(len(card_matches))):
             m = card_matches[i]
-            proj_idx = i % 4
+            proj_idx = (i // 3) % len(mp) if len(mp) > 0 else 0
             if proj_idx < len(mp):
                 proj = mp[proj_idx]
                 rep = (

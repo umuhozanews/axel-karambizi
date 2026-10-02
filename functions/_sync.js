@@ -177,7 +177,7 @@ export function syncProjects(html, data) {
 
   for (let i = cardMatches.length - 1; i >= 0; i--) {
     const item = cardMatches[i];
-    const projIdx = i % 4;
+    const projIdx = Math.floor(i / 3) % (mp.length || 1);
     if (projIdx < mp.length) {
       const proj = mp[projIdx];
       const rep = (
