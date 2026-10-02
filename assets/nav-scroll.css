@@ -261,3 +261,20 @@ nav.framer-z7I7P.nav-scrolled .framer-gs57e9 {
   60% { transform: rotate(14deg); }
   72% { transform: rotate(0deg); }
 }
+
+/* 8. Permanently Hide 'Get Template' & 'New Release' Floating Widgets */
+.framer-rcd755-container,
+.framer-1fin31n-container,
+[data-framer-name*="Get Template"],
+[data-framer-name*="New Release"],
+[name*="Get Template"],
+[name*="New Release"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
