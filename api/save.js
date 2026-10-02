@@ -22,7 +22,12 @@ export default async function handler(req, res) {
     return res.status(401).json({ status: 'error', message: 'Unauthorized. Please log in.' });
   }
 
-  const siteData = req.body;
+  let siteData = req.body;
+  if (typeof siteData === 'string') {
+    try {
+      siteData = JSON.parse(siteData);
+    } catch (_) {}
+  }
   if (!siteData || typeof siteData !== 'object') {
     return res.status(400).json({ status: 'error', message: 'Invalid payload.' });
   }

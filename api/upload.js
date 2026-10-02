@@ -21,7 +21,13 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { filename, data } = req.body || {};
+    let body = req.body || {};
+    if (typeof body === 'string') {
+      try {
+        body = JSON.parse(body);
+      } catch (_) {}
+    }
+    const { filename, data } = body;
     if (!data) {
       return res.status(400).json({ status: 'error', message: 'No file data received.' });
     }

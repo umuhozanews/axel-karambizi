@@ -11,7 +11,13 @@ export default function handler(req, res) {
     return res.status(405).json({ status: 'error', message: 'Method not allowed' });
   }
 
-  const { email, password } = req.body || {};
+  let body = req.body || {};
+  if (typeof body === 'string') {
+    try {
+      body = JSON.parse(body);
+    } catch (_) {}
+  }
+  const { email, password } = body;
   const cleanEmail = String(email || '').trim().toLowerCase();
   const cleanPass = String(password || '').trim();
 

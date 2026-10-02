@@ -35,7 +35,8 @@ class AdminHandler(http.server.SimpleHTTPRequestHandler):
         return False
 
     def do_GET(self):
-        if self.path == '/api/content':
+        clean_path = self.path.split('?')[0].rstrip('/')
+        if clean_path == '/api/content':
             content_path = os.path.join(current_dir, 'content.json')
             if os.path.exists(content_path):
                 self.send_response(200)
@@ -47,7 +48,7 @@ class AdminHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_response(404)
                 self.end_headers()
             return
-        elif self.path == '/api/verify':
+        elif clean_path == '/api/verify':
             if self.is_authenticated():
                 self.send_response(200)
                 self.send_header('Content-Type', 'application/json')
@@ -63,7 +64,7 @@ class AdminHandler(http.server.SimpleHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(b'{"authenticated": false}')
             return
-        elif self.path == '/admin':
+        elif clean_path == '/admin' or self.path == '/admin':
             self.send_response(301)
             self.send_header('Location', '/admin/')
             self.end_headers()
@@ -71,7 +72,8 @@ class AdminHandler(http.server.SimpleHTTPRequestHandler):
         return super().do_GET()
 
     def do_POST(self):
-        if self.path == '/api/login':
+        clean_path = self.path.split('?')[0].rstrip('/')
+        if clean_path == '/api/login':
             content_length = int(self.headers.get('Content-Length', 0))
             post_data = self.rfile.read(content_length)
             try:
@@ -109,7 +111,7 @@ class AdminHandler(http.server.SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps({"status": "error", "message": str(e)}).encode('utf-8'))
             return
 
-        elif self.path == '/api/upload':
+        elif clean_path == '/api/upload':
             if not self.is_authenticated():
                 self.send_response(401)
                 self.send_header('Content-Type', 'application/json')
@@ -150,7 +152,7 @@ class AdminHandler(http.server.SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps({"status": "error", "error": str(e)}).encode('utf-8'))
             return
 
-        elif self.path == '/api/save':
+        elif clean_path == '/api/save':
             # Check auth
             if not self.is_authenticated():
                 self.send_response(401)
