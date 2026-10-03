@@ -136,6 +136,16 @@ def sync_all():
                 if idx < len(s1_items):
                     html = re.sub(f'>({pat})<', f'>{s1_items[idx]}<', html)
 
+        # Ensure project cards link directly to authentic URLs
+        proj_url_map = [
+            (r'href="(?:\.\./)?(?:/)?projects/summer-vibes-festival-campaign/?"', 'href="https://risevana-foundation.vercel.app/" target="_blank" rel="noopener noreferrer"'),
+            (r'href="(?:\.\./)?(?:/)?projects/coral-spiral-abstract/?"', 'href="https://www.libblio.com/" target="_blank" rel="noopener noreferrer"'),
+            (r'href="(?:\.\./)?(?:/)?projects/shopease-redesign-sprint/?"', 'href="https://www.yupinitiative.com/" target="_blank" rel="noopener noreferrer"'),
+            (r'href="(?:\.\./)?(?:/)?projects/black-geometric-prisms/?"', 'href="https://www.atomiq.rw/" target="_blank" rel="noopener noreferrer"'),
+        ]
+        for pat, repl in proj_url_map:
+            html = re.sub(pat, repl, html)
+
         with open(index_path, 'w', encoding='utf-8') as f:
             f.write(html)
         print("Updated: index.html")
@@ -261,6 +271,9 @@ def sync_all():
                 )
                 html_proj = html_proj[:m.start()] + rep + html_proj[m.end():]
 
+        for pat, repl in proj_url_map:
+            html_proj = re.sub(pat, repl, html_proj)
+
         with open(proj_path, 'w', encoding='utf-8') as f:
             f.write(html_proj)
         print("Updated: projects/index.html")
@@ -291,6 +304,12 @@ def sync_all():
         # Portrait Image
         portrait = about.get('portrait_image', './assets/contact_portrait.jpg').replace('./', '../')
         html_about = re.sub(r'src="[^"]*(?:ONE90235|contact_portrait)[^"]*"', f'src="{portrait}"', html_about)
+
+        # External Live Journey Links
+        html_about = re.sub(r'>Risevana Foundation(?: ↗)?</h3>', '><a href="https://risevana-foundation.vercel.app/" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;display:inline-block">Risevana Foundation ↗</a></h3>', html_about)
+        html_about = re.sub(r'>Libblio(?: ↗)?</h3>', '><a href="https://www.libblio.com/" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;display:inline-block">Libblio ↗</a></h3>', html_about)
+        html_about = re.sub(r'>Atomiq(?: ↗)?</h3>', '><a href="https://www.atomiq.rw/" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;display:inline-block">Atomiq ↗</a></h3>', html_about)
+        html_about = re.sub(r'>Youth Uplift Initiative(?: ↗)?</h3>', '><a href="https://www.yupinitiative.com/" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;display:inline-block">Youth Uplift Initiative ↗</a></h3>', html_about)
 
         with open(about_path, 'w', encoding='utf-8') as f:
             f.write(html_about)

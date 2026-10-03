@@ -75,6 +75,27 @@ class AdminHandler(http.server.SimpleHTTPRequestHandler):
             self.send_header('Location', redirect_path)
             self.end_headers()
             return
+        
+        # Defensive redirects for project detail URLs to live authentic websites
+        project_match = re.match(r'^/projects/([^/?#]+)/?$', clean_path)
+        if project_match:
+            slug = project_match.group(1).lower()
+            PROJECT_LIVE_MAP = {
+                'summer-vibes-festival-campaign': 'https://risevana-foundation.vercel.app/',
+                'risevana-foundation': 'https://risevana-foundation.vercel.app/',
+                'coral-spiral-abstract': 'https://www.libblio.com/',
+                'libblio': 'https://www.libblio.com/',
+                'shopease-redesign-sprint': 'https://www.yupinitiative.com/',
+                'youth-uplift-initiative': 'https://www.yupinitiative.com/',
+                'black-geometric-prisms': 'https://www.atomiq.rw/',
+                'atomiq': 'https://www.atomiq.rw/'
+            }
+            if slug in PROJECT_LIVE_MAP:
+                self.send_response(301)
+                self.send_header('Location', PROJECT_LIVE_MAP[slug])
+                self.end_headers()
+                return
+
         return super().do_GET()
 
     def do_POST(self):

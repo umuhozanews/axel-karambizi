@@ -567,3 +567,32 @@ nav.framer-z7I7P {
     margin-top: 8px !important;
   }
 }
+
+/* 11. Permanently Visible Floating Theme Toggle (Dark & Light Mode) */
+.framer-1978dwj-container {
+  position: fixed !important;
+  bottom: 24px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 99999 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.4)) !important;
+  cursor: pointer !important;
+}
+
+.framer-1978dwj-container .framer-fidmwm {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+
+@media (max-width: 809.98px) {
+  .framer-1978dwj-container {
+    bottom: 20px !important;
+  }
+}
+

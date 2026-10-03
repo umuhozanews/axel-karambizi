@@ -94,7 +94,7 @@
       "category": "Non-Profit / Education",
       "description": "An accredited foundation that built classrooms and daily meals on the children’s side of the river, reaching 1,200+ children.",
       "image": "./assets/risevana_ecd_6.jpeg",
-      "link": "./project-detail/"
+      "link": "https://risevana-foundation.vercel.app/"
     },
     {
       "id": "libblio",
@@ -102,7 +102,7 @@
       "category": "EdTech / Software",
       "description": "School library software and reader intelligence for Rwandan schools, transforming how institutions organize knowledge.",
       "image": "./assets/project_libblio.png",
-      "link": "./project-detail/"
+      "link": "https://www.libblio.com/"
     },
     {
       "id": "youth-uplift",
@@ -110,7 +110,7 @@
       "category": "Community / Youth",
       "description": "Youth empowerment initiatives spanning mentorship, community runs, blood donation drives, and environmental restoration across Kigali.",
       "image": "./assets/project_youth_uplift.png",
-      "link": "./project-detail/"
+      "link": "https://www.yupinitiative.com/"
     },
     {
       "id": "atomiq",
@@ -118,7 +118,7 @@
       "category": "Agency / Technology",
       "description": "A design, branding, and software agency helping founders, creators, and institutions build world-class digital products and stories.",
       "image": "./assets/project_atomiq.png",
-      "link": "./project-detail/"
+      "link": "https://www.atomiq.rw/"
     }
   ],
   "more_projects": [

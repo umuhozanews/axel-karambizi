@@ -80,10 +80,6 @@
       '    margin-top: 12px !important;',
       '  }',
       '}',
-      '.ssr-variant:has(.framer-1id3mzr),',
-      '.services-accordion-wrap {',
-      '  display: block !important;',
-      '}',
       '.framer-1pu3wi0-container {',
       '  height: auto !important;',
       '  min-height: 332px;',
@@ -168,12 +164,7 @@
       c.style.height = 'auto';
     });
 
-    // Make sure parent variant is visible
-    document.querySelectorAll('.ssr-variant').forEach(function (v) {
-      if (v.querySelector('.framer-1id3mzr')) {
-        v.classList.add('services-accordion-wrap');
-      }
-    });
+
 
     var rows = Array.from(document.querySelectorAll('.framer-1id3mzr'));
     if (!rows.length) return;
