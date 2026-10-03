@@ -1,6 +1,6 @@
 /**
  * Interactive Services Accordion Controller
- * Axel Karambizi Portfolio - Gacondo Labs
+ * Axel Karambizi Portfolio
  * Enables expanding/collapsing service categories on Desktop, Tablet & Mobile.
  */
 (function () {
@@ -29,19 +29,21 @@
       '.framer-1id3mzr {',
       '  cursor: pointer !important;',
       '  width: 100% !important;',
+      '  box-sizing: border-box !important;',
       '}',
       '.framer-1id3mzr .framer-nrx7op,',
       '.framer-1id3mzr [data-framer-name="Top"] {',
       '  cursor: pointer !important;',
       '  user-select: none;',
+      '  width: 100% !important;',
       '}',
       '.framer-1id3mzr .framer-i1pcpi-container {',
-      '  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;',
+      '  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;',
       '  transform-origin: center center;',
       '}',
       '.framer-1id3mzr .framer-of9a55,',
       '.framer-1id3mzr [data-framer-name="Bottom"] {',
-      '  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, padding 0.3s ease !important;',
+      '  transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, padding 0.3s ease !important;',
       '  box-sizing: border-box;',
       '  width: 100% !important;',
       '}',
@@ -54,10 +56,10 @@
       '  overflow: hidden !important;',
       '  padding-top: 0px !important;',
       '  padding-bottom: 0px !important;',
-      '  pointer-events: none;',
+      '  pointer-events: none !important;',
       '}',
       '.framer-1id3mzr:not(.service-open) .framer-i1pcpi-container {',
-      '  transform: rotate(180deg) !important;',
+      '  transform: rotate(0deg) !important;',
       '}',
       '/* Open state */',
       '.framer-1id3mzr.service-open .framer-of9a55,',
@@ -66,17 +68,20 @@
       '  height: auto !important;',
       '  opacity: 1 !important;',
       '  overflow: visible !important;',
-      '  padding-top: 10px !important;',
+      '  padding-top: 14px !important;',
       '  padding-bottom: 24px !important;',
-      '  pointer-events: auto;',
+      '  pointer-events: auto !important;',
+      '  display: flex !important;',
+      '  flex-direction: column !important;',
+      '  gap: 16px !important;',
       '}',
       '.framer-1id3mzr.service-open .framer-i1pcpi-container {',
-      '  transform: rotate(0deg) !important;',
+      '  transform: rotate(180deg) !important;',
       '}',
       '.framer-1id3mzr.service-open h3 {',
       '  color: var(--token-54672876-03f0-4dca-8fdb-32c421a5c4d1, #5e67e6) !important;',
       '}',
-      '/* Hover effects on individual service items */',
+      '/* Sub-items hover effect */',
       '.framer-1id3mzr .framer-eaudrf {',
       '  transition: transform 0.2s ease, opacity 0.2s ease;',
       '}',
@@ -105,7 +110,7 @@
     var rows = Array.from(document.querySelectorAll('.framer-1id3mzr'));
     if (!rows.length) return;
 
-    // Group rows by their common parent so that desktop and mobile variants operate independently
+    // Group rows by common parent
     var rowGroups = [];
     var seenParents = new Set();
 
@@ -123,25 +128,24 @@
     rowGroups.forEach(function (group) {
       group.forEach(function (row, idx) {
         var trigger = row.querySelector('.framer-nrx7op, [data-framer-name="Top"]') || row;
-        var content = row.querySelector('.framer-of9a55, [data-framer-name="Bottom"]');
         var chevron = row.querySelector('.framer-i1pcpi-container');
 
         row.setAttribute('role', 'button');
         row.setAttribute('tabindex', '0');
 
-        // First item open by default
+        // First item (1. ui/ux design) open by default to showcase offerings
         if (idx === 0) {
           row.classList.add('service-open');
           row.classList.add('framer-v-1t0b5g1');
           row.classList.remove('framer-v-1id3mzr');
           row.setAttribute('aria-expanded', 'true');
-          if (chevron) chevron.style.transform = 'rotate(0deg)';
+          if (chevron) chevron.style.transform = 'rotate(180deg)';
         } else {
           row.classList.remove('service-open');
           row.classList.remove('framer-v-1t0b5g1');
           row.classList.add('framer-v-1id3mzr');
           row.setAttribute('aria-expanded', 'false');
-          if (chevron) chevron.style.transform = 'rotate(180deg)';
+          if (chevron) chevron.style.transform = 'rotate(0deg)';
         }
 
         function toggleRow() {
@@ -153,7 +157,7 @@
             row.classList.remove('framer-v-1t0b5g1');
             row.classList.add('framer-v-1id3mzr');
             row.setAttribute('aria-expanded', 'false');
-            if (chevron) chevron.style.transform = 'rotate(180deg)';
+            if (chevron) chevron.style.transform = 'rotate(0deg)';
           } else {
             // Close other rows in this group
             group.forEach(function (other) {
@@ -163,7 +167,7 @@
                 other.classList.add('framer-v-1id3mzr');
                 other.setAttribute('aria-expanded', 'false');
                 var otherChevron = other.querySelector('.framer-i1pcpi-container');
-                if (otherChevron) otherChevron.style.transform = 'rotate(180deg)';
+                if (otherChevron) otherChevron.style.transform = 'rotate(0deg)';
               }
             });
 
@@ -172,7 +176,7 @@
             row.classList.add('framer-v-1t0b5g1');
             row.classList.remove('framer-v-1id3mzr');
             row.setAttribute('aria-expanded', 'true');
-            if (chevron) chevron.style.transform = 'rotate(0deg)';
+            if (chevron) chevron.style.transform = 'rotate(180deg)';
           }
         }
 

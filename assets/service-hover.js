@@ -37,7 +37,9 @@
 
   var follower = document.querySelector(FOLLOWER);
   var rows = [].slice.call(document.querySelectorAll(ROW)).slice(0, SLOTS.length);
-  if (!follower || !rows.length) return;
+  // Only enable hover preview on desktop devices that support hover
+  if (window.matchMedia && window.matchMedia('(hover: none), (pointer: coarse)').matches) return;
+  if (window.innerWidth < 810) return;
 
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 

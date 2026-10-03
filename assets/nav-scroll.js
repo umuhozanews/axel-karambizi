@@ -1,9 +1,10 @@
 /**
- * Axel Karambizi — Navigation Scroll, 3D Roll & Green Pointer Engine
+ * Axel Karambizi — Navigation Scroll, 3D Roll, Mobile Menu Toggle & Green Pointer Engine
  * Matches Portavia & Framer interactive specs:
- * 1. Scroll states (menu at top, status pill when scrolled, expand on hover)
- * 2. 3D cube rolling flip on menu links
- * 3. Smooth green trailing cursor follower with hover-target scaling and glow
+ * 1. Mobile menu toggle with hamburger (=) to close (✕) animation & full dropdown overlay
+ * 2. Desktop scroll states (menu at top, status pill when scrolled, expand on hover)
+ * 3. 3D cube rolling flip on menu links
+ * 4. Smooth green trailing cursor follower with hover-target scaling and glow
  */
 (function () {
   'use strict';
@@ -17,7 +18,80 @@
 
     var THRESHOLD = 60;
 
+    // 1. Initialize Mobile Toggle Button for every Nav
+    navs.forEach(function (nav) {
+      var brfihp = nav.querySelector('.framer-brfihp');
+      if (brfihp) {
+        var tb = brfihp.querySelector('.framer-180qzzk');
+        if (!tb) {
+          tb = document.createElement('div');
+          tb.className = 'framer-180qzzk';
+          tb.setAttribute('data-framer-name', 'Toggle Button');
+          tb.setAttribute('tabindex', '0');
+          tb.setAttribute('role', 'button');
+          tb.setAttribute('aria-label', 'Toggle navigation menu');
+          tb.innerHTML = '<div class="framer-1ddt0if" data-framer-name="Line / Top"></div><div class="framer-nk32ao" data-framer-name="Line / Bottom"></div>';
+          brfihp.appendChild(tb);
+        }
+
+        // Toggle Click Listener
+        tb.addEventListener('click', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          var isOpen = nav.classList.toggle('mobile-nav-open');
+          if (isOpen) {
+            nav.setAttribute('data-framer-name', 'Tablet & Phone / Open');
+          } else {
+            nav.setAttribute('data-framer-name', 'Tablet & Phone / Closed');
+          }
+        });
+      }
+
+      // Nav Links Click Listener: close mobile menu upon navigation
+      var allLinks = nav.querySelectorAll('a, .framer-xFpDQ, .framer-gBieo');
+      allLinks.forEach(function (link) {
+        link.addEventListener('click', function () {
+          if (nav.classList.contains('mobile-nav-open')) {
+            nav.classList.remove('mobile-nav-open');
+            nav.setAttribute('data-framer-name', 'Tablet & Phone / Closed');
+          }
+        });
+      });
+    });
+
+    // Close mobile menu on click outside
+    document.addEventListener('click', function (e) {
+      navs.forEach(function (nav) {
+        if (nav.classList.contains('mobile-nav-open') && !nav.contains(e.target)) {
+          nav.classList.remove('mobile-nav-open');
+          nav.setAttribute('data-framer-name', 'Tablet & Phone / Closed');
+        }
+      });
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        navs.forEach(function (nav) {
+          if (nav.classList.contains('mobile-nav-open')) {
+            nav.classList.remove('mobile-nav-open');
+            nav.setAttribute('data-framer-name', 'Tablet & Phone / Closed');
+          }
+        });
+      }
+    });
+
+    // Desktop scroll-collapse handler
     function onScroll() {
+      // On mobile / tablet (< 810px), keep mobile layout and don't apply desktop classes
+      if (window.innerWidth < 810) {
+        navs.forEach(function (nav) {
+          nav.classList.remove('nav-scrolled');
+          nav.classList.remove('nav-at-top');
+        });
+        return;
+      }
+
       var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
       navs.forEach(function (nav) {
         if (scrollY >= THRESHOLD) {
@@ -38,7 +112,7 @@
     window.addEventListener('resize', onScroll, { passive: true });
     onScroll();
 
-    // 3D Rolling Hover listeners for nav link elements
+    // 3D Rolling Hover listeners for nav link elements (Desktop)
     navs.forEach(function (nav) {
       var links = nav.querySelectorAll('.framer-xFpDQ, .framer-gBieo');
       links.forEach(function (link) {
@@ -97,6 +171,7 @@
         target.closest('[role="button"]') ||
         target.closest('.framer-gBieo') ||
         target.closest('.framer-xFpDQ') ||
+        target.closest('.framer-180qzzk') ||
         target.closest('.framer-1fin31n-container') ||
         target.closest('.framer-1978dwj-container')
       );
