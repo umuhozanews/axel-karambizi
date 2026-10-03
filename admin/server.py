@@ -101,6 +101,30 @@ class AdminHandler(http.server.SimpleHTTPRequestHandler):
                 self.end_headers()
                 return
 
+        # Defensive redirects for legacy blog detail URLs to authentic story URLs
+        blog_match = re.match(r'^/blogs/([^/?#]+)/?$', clean_path)
+        if blog_match:
+            slug = blog_match.group(1).lower()
+            BLOG_STORY_MAP = {
+                'how-to-streamline-your-design-workflow': '/blogs/lake-kivu-stillness/',
+                '5-design-trends-that-will-define-2024': '/blogs/dubai-opportunity/',
+                'the-power-of-typography-in-web-design': '/blogs/cross-border-founders/',
+                'the-role-of-color-psychology-in-branding': '/blogs/people-i-met/',
+                'mastering-ui-ux-design-key-principles-for-success': '/blogs/lake-kivu-speed/',
+                'balancing-creativity-and-functionality-in-design': '/blogs/places-and-perspectives/',
+            }
+            if slug in BLOG_STORY_MAP:
+                self.send_response(301)
+                self.send_header('Location', BLOG_STORY_MAP[slug])
+                self.end_headers()
+                return
+
+        if clean_path == '/explore':
+            self.send_response(301)
+            self.send_header('Location', '/blogs/')
+            self.end_headers()
+            return
+
         return super().do_GET()
 
     def do_POST(self):

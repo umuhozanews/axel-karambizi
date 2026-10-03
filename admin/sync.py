@@ -153,18 +153,21 @@ def sync_all():
     # ==========================================
     # 2. Update explore/index.html & blogs/index.html
     # ==========================================
-    exp_path = os.path.join(base_dir, 'explore', 'index.html')
-    if os.path.exists(exp_path):
-        with open(exp_path, 'r', encoding='utf-8') as f:
-            html_exp = f.read()
+    for target_rel, is_blogs_page in [('explore/index.html', False), ('blogs/index.html', True)]:
+        target_path = os.path.join(base_dir, *target_rel.split('/'))
+        if not os.path.exists(target_path):
+            continue
 
-        html_exp = update_common(html_exp, is_root=False)
+        with open(target_path, 'r', encoding='utf-8') as f:
+            html_page = f.read()
+
+        html_page = update_common(html_page, is_root=False)
 
         # Header Title & Subtitle
         h_title = exp_h.get('heading', 'The World Is Too Alive to Stay in One Place')
         h_intro = exp_h.get('intro', 'I travel to see how people find clarity and purpose...')
-        html_exp = re.sub(r'>The World Is Too Alive to Stay in One Place<', f'>{h_title}<', html_exp)
-        html_exp = re.sub(r'I travel to see how people find clarity and purpose[^<]*', h_intro, html_exp)
+        html_page = re.sub(r'>The World Is Too Alive to Stay in One Place<', f'>{h_title}<', html_page)
+        html_page = re.sub(r'I travel to see how people find clarity and purpose[^<]*', h_intro, html_page)
 
         # Dates (54 matches, (i % 18) // 3)
         date_pattern = r'(<div class="[^"]*" data-framer-name="Date"[^>]*><p class="[^"]*"[^>]*>)(.*?)(</p></div>)'
@@ -173,7 +176,7 @@ def sync_all():
             if s_idx < len(exp):
                 return m.group(1) + exp[s_idx].get('date', '') + m.group(3)
             return m.group(0)
-        html_exp = replace_nth_match(date_pattern, date_repl, html_exp)
+        html_page = replace_nth_match(date_pattern, date_repl, html_page)
 
         # Titles (54 matches)
         title_pattern = r'(<div class="[^"]*" data-framer-name="Title"[^>]*><h3 class="[^"]*"[^>]*>)(.*?)(</h3></div>)'
@@ -182,7 +185,7 @@ def sync_all():
             if s_idx < len(exp):
                 return m.group(1) + exp[s_idx].get('title', '') + m.group(3)
             return m.group(0)
-        html_exp = replace_nth_match(title_pattern, title_repl, html_exp)
+        html_page = replace_nth_match(title_pattern, title_repl, html_page)
 
         # Descriptions (54 matches)
         desc_pattern = r'(<div class="[^"]*" data-framer-name="Description"[^>]*><p class="[^"]*"[^>]*>)(.*?)(</p></div>)'
@@ -191,24 +194,24 @@ def sync_all():
             if s_idx < len(exp):
                 return m.group(1) + exp[s_idx].get('excerpt', '') + m.group(3)
             return m.group(0)
-        html_exp = replace_nth_match(desc_pattern, desc_repl, html_exp)
+        html_page = replace_nth_match(desc_pattern, desc_repl, html_page)
 
-        # Images (27 matches)
-        img_pattern = r'(<img[^>]+src=")([^"]*)("[^>]*alt="Blog Cover Image"[^>]*>)'
+        # Images
+        img_pattern = r'(<img[^>]+src=")([^"]*)("[^>]*alt="[^"]*"[^>]*>)'
         def img_repl(i, m):
             s_idx = (i % 18) // 3
             if s_idx < len(exp):
                 img_path = exp[s_idx].get('image', '').replace('./', '../')
                 return m.group(1) + img_path + m.group(3)
             return m.group(0)
-        html_exp = replace_nth_match(img_pattern, img_repl, html_exp)
+        html_page = replace_nth_match(img_pattern, img_repl, html_page)
 
-        # Fix relative links in explore
-        html_exp = html_exp.replace('href="./blogs/', 'href="../blogs/')
+        # Strip any Framer bundle module script to prevent template hydration
+        html_page = re.sub(r'<script[^>]*data-framer-bundle="main"[^>]*>.*?</script>', '', html_page)
 
-        with open(exp_path, 'w', encoding='utf-8') as f:
-            f.write(html_exp)
-        print("Updated: explore/index.html")
+        with open(target_path, 'w', encoding='utf-8') as f:
+            f.write(html_page)
+        print(f"Updated: {target_rel}")
 
     # ==========================================
     # 3. Update projects/index.html

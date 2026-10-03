@@ -263,8 +263,33 @@
     }, true);
   }
 
-  // Run route guard immediately
+  function initAnchorSmoothScroll() {
+    // Intercept clicks on "My Story" or any anchor pointing to #contact
+    document.addEventListener('click', function (e) {
+      var link = e.target.closest('a');
+      if (!link) return;
+      var text = (link.textContent || '').trim().toLowerCase();
+      var href = (link.getAttribute('href') || '').toLowerCase();
+
+      if (text === 'my story' || href === '#contact' || href === './#contact' || href.endsWith('/#contact')) {
+        var contactEl = document.getElementById('contact');
+        if (contactEl) {
+          e.preventDefault();
+          e.stopPropagation();
+          contactEl.scrollIntoView({ behavior: 'smooth' });
+          if (window.history && window.history.pushState) {
+            window.history.pushState(null, null, '#contact');
+          } else {
+            window.location.hash = '#contact';
+          }
+        }
+      }
+    }, true);
+  }
+
+  // Run route guards immediately
   initProjectRouteGuards();
+  initAnchorSmoothScroll();
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () {
