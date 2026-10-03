@@ -212,6 +212,60 @@
     requestAnimationFrame(renderLoop);
   }
 
+  function initProjectRouteGuards() {
+    // 1. Immediate path guard
+    var p = window.location.pathname.toLowerCase();
+    if (p.includes('pantone') || p.includes('vistahaven')) {
+      window.location.replace('/projects/');
+      return;
+    } else if (p.includes('summer-vibes')) {
+      window.location.replace('https://risevana-foundation.vercel.app/');
+      return;
+    } else if (p.includes('coral-spiral')) {
+      window.location.replace('https://www.libblio.com/');
+      return;
+    } else if (p.includes('shopease')) {
+      window.location.replace('https://www.yupinitiative.com/');
+      return;
+    } else if (p.includes('black-geometric')) {
+      window.location.replace('https://www.atomiq.rw/');
+      return;
+    }
+
+    // 2. Click interception in capture phase to prevent Framer router from hydrating demo templates
+    document.addEventListener('click', function (e) {
+      var link = e.target.closest('a');
+      if (!link) return;
+      var href = (link.getAttribute('href') || '').toLowerCase();
+      if (!href) return;
+
+      if (href.includes('pantone') || href.includes('vistahaven')) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.location.href = '/projects/';
+      } else if (href.includes('summer-vibes') || (href.includes('projects') && href.includes('risevana'))) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.open('https://risevana-foundation.vercel.app/', '_blank', 'noopener,noreferrer');
+      } else if (href.includes('coral-spiral') || (href.includes('projects') && href.includes('libblio'))) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.open('https://www.libblio.com/', '_blank', 'noopener,noreferrer');
+      } else if (href.includes('shopease') || (href.includes('projects') && href.includes('youth'))) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.open('https://www.yupinitiative.com/', '_blank', 'noopener,noreferrer');
+      } else if (href.includes('black-geometric') || (href.includes('projects') && href.includes('atomiq'))) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.open('https://www.atomiq.rw/', '_blank', 'noopener,noreferrer');
+      }
+    }, true);
+  }
+
+  // Run route guard immediately
+  initProjectRouteGuards();
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () {
       initNavScroll();

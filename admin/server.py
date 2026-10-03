@@ -95,6 +95,11 @@ class AdminHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_header('Location', PROJECT_LIVE_MAP[slug])
                 self.end_headers()
                 return
+            elif slug not in ['', 'index', 'index.html']:
+                self.send_response(301)
+                self.send_header('Location', '/projects/')
+                self.end_headers()
+                return
 
         return super().do_GET()
 
