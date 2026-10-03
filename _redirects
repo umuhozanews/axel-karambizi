@@ -2,3 +2,4 @@
 /blog /blogs/ 301
 /project /projects/ 301
 /explore/blogs/* /blogs/:splat 301
+/projects/projects/* /projects/:splat 301

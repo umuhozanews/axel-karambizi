@@ -69,6 +69,12 @@ class AdminHandler(http.server.SimpleHTTPRequestHandler):
             self.send_header('Location', '/admin/')
             self.end_headers()
             return
+        elif self.path.startswith('/projects/projects/'):
+            redirect_path = self.path.replace('/projects/projects/', '/projects/', 1)
+            self.send_response(301)
+            self.send_header('Location', redirect_path)
+            self.end_headers()
+            return
         return super().do_GET()
 
     def do_POST(self):
@@ -207,10 +213,13 @@ class AdminHandler(http.server.SimpleHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
         self.end_headers()
 
+class ThreadedTCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
+    allow_reuse_address = True
+    daemon_threads = True
+
 def run_server():
     os.chdir(base_dir)
-    socketserver.TCPServer.allow_reuse_address = True
-    with socketserver.TCPServer(("", PORT), AdminHandler) as httpd:
+    with ThreadedTCPServer(("", PORT), AdminHandler) as httpd:
         print(f"======================================================")
         print(f" Axel Karambizi Portfolio Server (Gacondo Labs)       ")
         print(f"======================================================")

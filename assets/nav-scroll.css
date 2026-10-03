@@ -490,3 +490,80 @@ nav.framer-z7I7P {
   height: 0 !important;
   overflow: hidden !important;
 }
+
+/* 10. Services Section & What I Can Do For You Layout & Typography Fixes */
+#service,
+.framer-1mkj5ho {
+  height: auto !important;
+  min-height: 100vh !important;
+  overflow: visible !important;
+  padding-top: 160px !important;
+  padding-bottom: 120px !important;
+  scroll-margin-top: 110px !important;
+}
+
+#service .framer-cby2j3,
+.framer-1mkj5ho .framer-cby2j3 {
+  height: auto !important;
+  min-height: min-content !important;
+  overflow: visible !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+#service .framer-aukzsn,
+.framer-1mkj5ho .framer-aukzsn {
+  height: auto !important;
+  overflow: visible !important;
+  width: 100% !important;
+  max-width: 650px !important;
+}
+
+#service .framer-8g10km,
+.framer-1mkj5ho .framer-8g10km {
+  height: auto !important;
+  overflow: visible !important;
+  margin-bottom: 24px !important;
+}
+
+#service .framer-1qlmjyg,
+.framer-1mkj5ho .framer-1qlmjyg {
+  height: auto !important;
+  overflow: visible !important;
+  width: 100% !important;
+}
+
+/* Ensure the heading never gets sliced or clipped, and scales gracefully */
+#service h2.framer-text,
+.framer-1mkj5ho h2.framer-text {
+  overflow: visible !important;
+  font-size: clamp(32px, 4.5vw, 54px) !important;
+  line-height: 1.25 !important;
+  letter-spacing: 0.01em !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+  margin: 0 !important;
+  word-break: break-word !important;
+  white-space: normal !important;
+}
+
+#service .framer-dhjg6f,
+.framer-1mkj5ho .framer-dhjg6f {
+  overflow: visible !important;
+  height: auto !important;
+}
+
+@media (max-width: 809.98px) {
+  #service,
+  .framer-1mkj5ho {
+    padding-top: 150px !important;
+    padding-bottom: 70px !important;
+    scroll-margin-top: 90px !important;
+  }
+  #service h2.framer-text,
+  .framer-1mkj5ho h2.framer-text {
+    font-size: clamp(26px, 7.2vw, 36px) !important;
+    line-height: 1.25 !important;
+    margin-top: 8px !important;
+  }
+}
