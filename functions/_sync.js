@@ -32,7 +32,7 @@ export function updateCommon(html, data, isRoot = true) {
     /Created by<\/p><\/div><div[^>]*>.*?<\/div><div[^>]*><p[^>]*><!--\$--><a[^>]*>[^<]*<\/a><!--\/\$-->/s,
     `Created by</p></div><div class="framer-1oj5jgg"><div data-framer-background-image-wrapper="true" style="position:absolute;border-radius:inherit;top:0;right:0;bottom:0;left:0"><img alt="Creator Logo" decoding="auto" height="500" loading="eager" src="${assetPrefix}img_14.png" style="display:block;width:100%;height:100%;object-fit:contain" width="500"/></div></div><div class="framer-o6x19g" data-framer-component-type="RichTextContainer"><p class="framer-text framer-styles-preset-a6ucvx"><!--$--><a class="framer-text framer-styles-preset-14dsmp1" href="#" target="_blank">${createdBy}</a><!--/$-->`
   );
-  html = html.replace(/Duncan Shen/g, createdBy);
+  html = html.replace(/Gacondo Labs/g, createdBy);
   html = html.replace(/[©c\?]\s*Copyright\s*2026\.\s*All\s*Rights\s*Reserved\s*by\s*[^<]+/g, copyText);
 
   // Contact info

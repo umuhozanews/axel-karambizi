@@ -1,6 +1,6 @@
 /**
  * Axel Karambizi — Navigation Scroll, 3D Roll, Mobile Menu Toggle & Green Pointer Engine
- * Matches Portavia & Framer interactive specs:
+ * Matches Axel Karambizi Portfolio interactive specs:
  * 1. Mobile menu toggle with hamburger (=) to close (✕) animation & full dropdown overlay
  * 2. Desktop scroll states (menu at top, status pill when scrolled, expand on hover)
  * 3. 3D cube rolling flip on menu links
