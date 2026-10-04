@@ -91,17 +91,17 @@
     {
       "id": "risevana",
       "title": "Risevana Foundation",
-      "category": "Non-Profit / Education",
-      "description": "An accredited foundation that built classrooms and daily meals on the children’s side of the river, reaching 1,200+ children.",
-      "image": "./assets/risevana_ecd_6.jpeg",
+      "category": "Education · Social Impact",
+      "description": "A community-led education initiative making learning accessible to children in underserved rural communities. What started with one room in Nyamasheke is growing into a model for early childhood education, digital learning, and opportunity. ",
+      "image": "./assets/Screenshot_2026-10-04_at_2.53.39_PM.png",
       "link": "https://risevana-foundation.vercel.app/"
     },
     {
       "id": "libblio",
-      "title": "Libblio",
-      "category": "EdTech / Software",
-      "description": "School library software and reader intelligence for Rwandan schools, transforming how institutions organize knowledge.",
-      "image": "./assets/project_libblio.png",
+      "title": "Atomiq",
+      "category": "Design · Technology",
+      "description": "A software and design agency built by young Rwandan founders to help startups and companies turn ideas into real products—from brand identity and digital experiences to AI, mobile apps, and full software systems. ",
+      "image": "./assets/Screenshot_2026-10-04_at_2.42.02_PM.png",
       "link": "https://www.libblio.com/"
     },
     {
@@ -109,15 +109,15 @@
       "title": "Youth Uplift Initiative",
       "category": "Community / Youth",
       "description": "Youth empowerment initiatives spanning mentorship, community runs, blood donation drives, and environmental restoration across Kigali.",
-      "image": "./assets/project_youth_uplift.png",
+      "image": "./assets/Screenshot_2026-10-04_at_2.43.47_PM.png",
       "link": "https://www.yupinitiative.com/"
     },
     {
       "id": "atomiq",
-      "title": "Atomiq Agency",
-      "category": "Agency / Technology",
-      "description": "A design, branding, and software agency helping founders, creators, and institutions build world-class digital products and stories.",
-      "image": "./assets/project_atomiq.png",
+      "title": "Libblio",
+      "category": "EdTech · SaaS",
+      "description": "A digital library management platform helping schools move from paper-based libraries to smarter, more accessible systems. Built as a student-led startup, Libblio went on to win AwardX East Africa and TICON Africa Startup of the Year. LinkedIn",
+      "image": "./assets/Smiling_Founder_Presenting_African_Startup_Trophy.png",
       "link": "https://www.atomiq.rw/"
     }
   ],
