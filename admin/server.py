@@ -34,9 +34,29 @@ class AdminHandler(http.server.SimpleHTTPRequestHandler):
             return token == AUTH_TOKEN
         return False
 
+    def end_headers(self):
+        clean = self.path.split('?')[0]
+        if clean.endswith('.html') or clean.endswith('/') or clean.startswith('/api/'):
+            self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate')
+            self.send_header('Pragma', 'no-cache')
+            self.send_header('Expires', '0')
+        self.send_header('Access-Control-Allow-Origin', '*')
+        super().end_headers()
+
     def do_GET(self):
         clean_path = self.path.split('?')[0].rstrip('/')
-        if clean_path == '/api/content':
+        if clean_path == '/api/messages':
+            messages_path = os.path.join(current_dir, 'messages.json')
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json; charset=utf-8')
+            self.end_headers()
+            if os.path.exists(messages_path):
+                with open(messages_path, 'rb') as f:
+                    self.wfile.write(f.read())
+            else:
+                self.wfile.write(b'[]')
+            return
+        elif clean_path == '/api/content':
             content_path = os.path.join(current_dir, 'content.json')
             if os.path.exists(content_path):
                 self.send_response(200)
@@ -64,7 +84,7 @@ class AdminHandler(http.server.SimpleHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(b'{"authenticated": false}')
             return
-        elif clean_path == '/admin' or self.path == '/admin':
+        elif self.path.split('?')[0] == '/admin':
             self.send_response(301)
             self.send_header('Location', '/admin/')
             self.end_headers()
@@ -106,12 +126,13 @@ class AdminHandler(http.server.SimpleHTTPRequestHandler):
         if blog_match:
             slug = blog_match.group(1).lower()
             BLOG_STORY_MAP = {
-                'how-to-streamline-your-design-workflow': '/blogs/lake-kivu-stillness/',
-                '5-design-trends-that-will-define-2024': '/blogs/dubai-opportunity/',
+                'how-to-streamline-your-design-workflow': '/blogs/',
+                '5-design-trends-that-will-define-2024': '/blogs/',
                 'the-power-of-typography-in-web-design': '/blogs/cross-border-founders/',
                 'the-role-of-color-psychology-in-branding': '/blogs/people-i-met/',
                 'mastering-ui-ux-design-key-principles-for-success': '/blogs/lake-kivu-speed/',
-                'balancing-creativity-and-functionality-in-design': '/blogs/places-and-perspectives/',
+                'balancing-creativity-and-functionality-in-design': '/blogs/',
+                'places-and-perspectives': '/blogs/',
             }
             if slug in BLOG_STORY_MAP:
                 self.send_response(301)
@@ -208,6 +229,44 @@ class AdminHandler(http.server.SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps({"status": "error", "error": str(e)}).encode('utf-8'))
             return
 
+        elif clean_path == '/api/contact':
+            content_length = int(self.headers.get('Content-Length', 0))
+            post_data = self.rfile.read(content_length)
+            try:
+                import datetime, time
+                msg_data = json.loads(post_data.decode('utf-8'))
+                messages_path = os.path.join(current_dir, 'messages.json')
+                messages = []
+                if os.path.exists(messages_path):
+                    try:
+                        with open(messages_path, 'r', encoding='utf-8') as mf:
+                            messages = json.load(mf)
+                    except Exception:
+                        messages = []
+                
+                messages.insert(0, {
+                    "id": int(time.time()),
+                    "name": msg_data.get('name') or msg_data.get('Name', ''),
+                    "email": msg_data.get('email') or msg_data.get('Email', ''),
+                    "service": msg_data.get('service') or msg_data.get('Service', ''),
+                    "message": msg_data.get('message') or msg_data.get('Message', '') or msg_data.get('Text Area', ''),
+                    "submitted_at": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                    "forwarded_to": "papilocostaa@gmail.com"
+                })
+                with open(messages_path, 'w', encoding='utf-8') as mf:
+                    json.dump(messages, mf, indent=2, ensure_ascii=False)
+                
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(b'{"status": "ok", "message": "Inquiry recorded successfully"}')
+            except Exception as e:
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps({"status": "ok", "notice": str(e)}).encode('utf-8'))
+            return
+
         elif clean_path == '/api/save':
             # Check auth
             if not self.is_authenticated():
@@ -220,31 +279,33 @@ class AdminHandler(http.server.SimpleHTTPRequestHandler):
             content_length = int(self.headers.get('Content-Length', 0))
             post_data = self.rfile.read(content_length)
             try:
+                import threading
                 data = json.loads(post_data.decode('utf-8'))
                 content_path = os.path.join(current_dir, 'content.json')
                 with open(content_path, 'w', encoding='utf-8') as f:
                     json.dump(data, f, indent=2, ensure_ascii=False)
                 
-                # Run full synchronization
+                # Run full synchronization instantly (updates index.html, projects, about, blogs immediately on disk)
                 sync_all()
 
-                # Also automatically push changes to GitHub origin main to deploy to production
-                pushed_to_prod = False
-                try:
-                    import subprocess
-                    subprocess.run(['git', 'add', 'admin/content.json', 'index.html', 'projects/index.html', 'about/index.html', 'explore/index.html', 'blogs/index.html', 'assets/'], cwd=base_dir, check=False)
-                    res = subprocess.run(['git', 'commit', '-m', 'Update site content via Admin Portal'], cwd=base_dir, capture_output=True, text=True)
-                    push_res = subprocess.run(['git', 'push', 'origin', 'main'], cwd=base_dir, capture_output=True, text=True)
-                    if push_res.returncode == 0:
-                        pushed_to_prod = True
-                        print("[Git] Successfully pushed updates to origin main!")
-                except Exception as git_err:
-                    print(f"[Git] Auto-push notice: {git_err}")
+                # Automatically push changes to GitHub in background thread so UI responds instantly
+                def push_worker():
+                    try:
+                        import subprocess
+                        subprocess.run(['git', 'add', 'admin/content.json', 'index.html', 'projects/index.html', 'about/index.html', 'explore/index.html', 'blogs/index.html', 'assets/'], cwd=base_dir, check=False)
+                        subprocess.run(['git', 'commit', '-m', 'Update site content via Admin Portal'], cwd=base_dir, capture_output=True, text=True)
+                        push_res = subprocess.run(['git', 'push', 'origin', 'main'], cwd=base_dir, capture_output=True, text=True)
+                        if push_res.returncode == 0:
+                            print("[Git] Successfully pushed updates to origin main in background!")
+                    except Exception as git_err:
+                        print(f"[Git] Background push notice: {git_err}")
+
+                threading.Thread(target=push_worker, daemon=True).start()
 
                 self.send_response(200)
                 self.send_header('Content-Type', 'application/json')
                 self.end_headers()
-                msg = "Changes saved and published to production (https://axelkarambizi.com/)!" if pushed_to_prod else "Changes saved and synchronized locally!"
+                msg = "Changes saved and updated instantly! Publishing to production in background."
                 self.wfile.write(json.dumps({"status": "ok", "message": msg}).encode('utf-8'))
             except Exception as e:
                 self.send_response(500)

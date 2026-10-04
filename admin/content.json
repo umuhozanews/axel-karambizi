@@ -197,16 +197,6 @@
       "excerpt": "Out on the waters of Lake Kivu, taking in Rwanda’s natural beauty, adventure, fresh air and the freedom of boundless horizons.",
       "image": "./assets/explore_lake_kivu_jetski.png",
       "link": "./blog-detail/"
-    },
-    {
-      "id": "places-and-perspectives",
-      "title": "Places & Perspectives",
-      "category": "Journeys",
-      "date": "Apr 15, 2025",
-      "tag": "",
-      "excerpt": "From Rwanda to Switzerland, Paris, Uganda, DR Congo and Dubai, every journey offers a new lens to understand people and possibility.",
-      "image": "./assets/explore_places_perspectives.jpg",
-      "link": "./blog-detail/"
     }
   ],
   "about": {

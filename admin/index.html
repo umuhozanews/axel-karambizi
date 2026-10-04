@@ -325,6 +325,63 @@
       display: none;
       z-index: 10001;
     }
+
+    .message-card {
+      background: #0f1017;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 18px 22px;
+      margin-bottom: 14px;
+      transition: border-color 0.2s;
+    }
+    .message-card:hover {
+      border-color: var(--primary);
+    }
+    .message-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .message-author {
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--text);
+    }
+    .message-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      background: rgba(99, 102, 241, 0.15);
+      color: var(--primary);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+    }
+    .message-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .message-body {
+      font-size: 14px;
+      line-height: 1.55;
+      color: #d1d5db;
+      white-space: pre-wrap;
+      background: #090a0f;
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 6px;
+      padding: 12px 14px;
+      margin-top: 10px;
+    }
+    .message-actions {
+      margin-top: 12px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
   </style>
 </head>
 <body>
@@ -383,6 +440,7 @@
         <button class="tab-btn" data-tab="tab-about" onclick="switchTab('tab-about')">📖 About & Timeline</button>
         <button class="tab-btn" data-tab="tab-contact" onclick="switchTab('tab-contact')">📞 Contact & Footer</button>
         <button class="tab-btn" data-tab="tab-media" onclick="switchTab('tab-media')">🖼️ Media & Photos</button>
+        <button class="tab-btn" data-tab="tab-messages" onclick="switchTab('tab-messages')">📬 Inquiries & Messages</button>
       </nav>
 
       <div class="aside-actions">
@@ -405,7 +463,7 @@
           </p>
         </div>
         <div class="top-actions" style="display:flex; gap:8px; align-items:center;">
-          <a href="../index.html" target="_blank" class="btn btn-outline" style="text-decoration:none;">👁️ View Site</a>
+          <a href="/" target="_blank" class="btn btn-outline" style="text-decoration:none;" onclick="this.href='/?t=' + Date.now()">👁️ View Live Site</a>
           <a href="https://axelkarambizi.com/" target="_blank" class="btn btn-outline" style="text-decoration:none; border-color: var(--accent); color: var(--accent);" title="Open live production website">🌐 Production Site</a>
           <button onclick="downloadContentJSON()" class="btn btn-outline" title="Download content.json">📥 Export JSON</button>
           <button onclick="copyContentJSON()" class="btn btn-outline" title="Copy JSON">📋 Copy JSON</button>
@@ -640,6 +698,24 @@
         </div>
       </div>
 
+      <!-- Client Inquiries / Contact Messages Tab -->
+      <div id="tab-messages" class="panel">
+        <div class="card-box">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:12px;">
+            <div>
+              <h3 style="margin:0;">Client Inquiries & Contact Submissions</h3>
+              <p style="color:var(--text-muted); font-size:13px; margin:4px 0 0 0;">
+                Submissions from the "Let's work together" contact forms (automatically routed to <strong>papilocostaa@gmail.com</strong>).
+              </p>
+            </div>
+            <button class="btn btn-secondary" onclick="loadMessages()">🔄 Refresh Messages</button>
+          </div>
+          <div id="inquiries-container">
+            <p style="color:var(--text-muted);">Loading inquiries...</p>
+          </div>
+        </div>
+      </div>
+
     </main>
   </div>
 
@@ -844,16 +920,6 @@
       "tag": "",
       "excerpt": "Out on the waters of Lake Kivu, taking in Rwanda’s natural beauty, adventure, fresh air and the freedom of boundless horizons.",
       "image": "./assets/explore_lake_kivu_jetski.png",
-      "link": "./blog-detail/"
-    },
-    {
-      "id": "places-and-perspectives",
-      "title": "Places & Perspectives",
-      "category": "Journeys",
-      "date": "Apr 15, 2025",
-      "tag": "",
-      "excerpt": "From Rwanda to Switzerland, Paris, Uganda, DR Congo and Dubai, every journey offers a new lens to understand people and possibility.",
-      "image": "./assets/explore_places_perspectives.jpg",
       "link": "./blog-detail/"
     }
   ],
@@ -1732,12 +1798,78 @@
         'tab-hero': 'General & Hero Settings',
         'tab-projects': 'Featured Projects (4 Cards)',
         'tab-more-projects': 'More Projects (4 Cards)',
-        'tab-explore': 'Explore & Blog Stories (6 Cards)',
+        'tab-explore': 'Explore & Blog Stories (5 Cards)',
+        'tab-services': 'Services Offered',
+        'tab-faq': 'FAQ & Frequently Asked Questions',
         'tab-about': 'About Page, Timeline & Learning Stack',
         'tab-contact': 'Contact Form & Footer Settings',
-        'tab-media': 'Media, Photos & Asset Uploader'
+        'tab-media': 'Media, Photos & Asset Uploader',
+        'tab-messages': 'Client Inquiries & Contact Submissions'
       };
       document.getElementById('tab-title').textContent = titles[tabId] || 'Admin Dashboard';
+
+      if (tabId === 'tab-messages') {
+        loadMessages();
+      }
+    }
+
+    async function loadMessages() {
+      const container = document.getElementById('inquiries-container');
+      if (!container) return;
+      container.innerHTML = '<p style="color:var(--text-muted); padding:16px 0;">⏳ Fetching client inquiries...</p>';
+      try {
+        const res = await fetch('/api/messages?t=' + Date.now());
+        if (!res.ok) throw new Error('Status code ' + res.status);
+        const list = await res.json();
+        if (!list || list.length === 0) {
+          container.innerHTML = `
+            <div style="text-align:center; padding:48px 20px; color:var(--text-muted);">
+              <div style="font-size:40px; margin-bottom:12px;">📭</div>
+              <div style="font-size:16px; font-weight:600; color:var(--text);">No inquiries yet</div>
+              <div style="font-size:13px; margin-top:6px; max-width:440px; margin-left:auto; margin-right:auto; line-height:1.5;">
+                Client messages submitted through the "Let's work together" form will appear here in real time and are automatically delivered to <strong>papilocostaa@gmail.com</strong>.
+              </div>
+            </div>`;
+          return;
+        }
+
+        container.innerHTML = list.map(m => `
+          <div class="message-card">
+            <div class="message-header">
+              <div>
+                <span class="message-author">${escapeHtml(m.name || 'Anonymous Client')}</span>
+                <span style="color:var(--text-muted); font-size:13px; margin-left:8px;">
+                  &lt;<a href="mailto:${escapeHtml(m.email || '')}" style="color:var(--primary); text-decoration:none;">${escapeHtml(m.email || 'No email provided')}</a>&gt;
+                </span>
+              </div>
+              <div style="display:flex; align-items:center; gap:10px;">
+                ${m.service ? `<span class="message-badge">${escapeHtml(m.service)}</span>` : ''}
+                <span class="message-meta">🕒 ${escapeHtml(m.submitted_at || 'Recently')}</span>
+              </div>
+            </div>
+            <div class="message-body">${escapeHtml(m.message || '(No message content provided)')}</div>
+            <div class="message-actions">
+              <a href="mailto:${encodeURIComponent(m.email || '')}?subject=${encodeURIComponent('Re: ' + (m.service || 'Inquiry') + ' - Axel Karambizi')}" class="btn btn-secondary" style="font-size:12px; padding:6px 14px; text-decoration:none;">
+                ✉️ Reply directly via Email
+              </a>
+              <span style="font-size:12px; color:#10b981;">✓ Routed to papilocostaa@gmail.com</span>
+            </div>
+          </div>
+        `).join('');
+      } catch (err) {
+        console.error('Error loading inquiries:', err);
+        container.innerHTML = '<p style="color:#ef4444; padding:12px 0;">⚠️ Could not load messages. Please ensure the admin server is running.</p>';
+      }
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
     }
 
     async function saveAll() {

@@ -25,17 +25,19 @@
 /projects/vistahaven /projects/ 301
 /explore /blogs/ 301
 /explore/* /blogs/:splat 301
-/blogs/how-to-streamline-your-design-workflow/* /blogs/lake-kivu-stillness/ 301
-/blogs/how-to-streamline-your-design-workflow /blogs/lake-kivu-stillness/ 301
-/blogs/5-design-trends-that-will-define-2024/* /blogs/dubai-opportunity/ 301
-/blogs/5-design-trends-that-will-define-2024 /blogs/dubai-opportunity/ 301
+/blogs/how-to-streamline-your-design-workflow/* /blogs/ 301
+/blogs/how-to-streamline-your-design-workflow /blogs/ 301
+/blogs/5-design-trends-that-will-define-2024/* /blogs/ 301
+/blogs/5-design-trends-that-will-define-2024 /blogs/ 301
 /blogs/the-power-of-typography-in-web-design/* /blogs/cross-border-founders/ 301
 /blogs/the-power-of-typography-in-web-design /blogs/cross-border-founders/ 301
 /blogs/the-role-of-color-psychology-in-branding/* /blogs/people-i-met/ 301
 /blogs/the-role-of-color-psychology-in-branding /blogs/people-i-met/ 301
 /blogs/mastering-ui-ux-design-key-principles-for-success/* /blogs/lake-kivu-speed/ 301
 /blogs/mastering-ui-ux-design-key-principles-for-success /blogs/lake-kivu-speed/ 301
-/blogs/balancing-creativity-and-functionality-in-design/* /blogs/places-and-perspectives/ 301
-/blogs/balancing-creativity-and-functionality-in-design /blogs/places-and-perspectives/ 301
 
 
+/blogs/balancing-creativity-and-functionality-in-design/* /blogs/ 301
+/blogs/balancing-creativity-and-functionality-in-design /blogs/ 301
+/blogs/places-and-perspectives/* /blogs/ 301
+/blogs/places-and-perspectives /blogs/ 301

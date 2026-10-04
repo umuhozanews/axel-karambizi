@@ -169,28 +169,29 @@ def sync_all():
         html_page = re.sub(r'>The World Is Too Alive to Stay in One Place<', f'>{h_title}<', html_page)
         html_page = re.sub(r'I travel to see how people find clarity and purpose[^<]*', h_intro, html_page)
 
-        # Dates (54 matches, (i % 18) // 3)
-        date_pattern = r'(<div class="[^"]*" data-framer-name="Date"[^>]*><p class="[^"]*"[^>]*>)(.*?)(</p></div>)'
+        # Dates (dynamic matches based on len(exp) * 3 breakpoints)
+        modulo = max(1, len(exp) * 3) if len(exp) > 0 else 15
+        date_pattern = r'(<div[^>]*data-framer-name="Date"[^>]*><p[^>]*>)(.*?)(</p></div>)'
         def date_repl(i, m):
-            s_idx = (i % 18) // 3
+            s_idx = (i % modulo) // 3
             if s_idx < len(exp):
                 return m.group(1) + exp[s_idx].get('date', '') + m.group(3)
             return m.group(0)
         html_page = replace_nth_match(date_pattern, date_repl, html_page)
 
-        # Titles (54 matches)
-        title_pattern = r'(<div class="[^"]*" data-framer-name="Title"[^>]*><h3 class="[^"]*"[^>]*>)(.*?)(</h3></div>)'
+        # Titles
+        title_pattern = r'(<div[^>]*data-framer-name="Title"[^>]*><h3[^>]*>)(.*?)(</h3></div>)'
         def title_repl(i, m):
-            s_idx = (i % 18) // 3
+            s_idx = (i % modulo) // 3
             if s_idx < len(exp):
                 return m.group(1) + exp[s_idx].get('title', '') + m.group(3)
             return m.group(0)
         html_page = replace_nth_match(title_pattern, title_repl, html_page)
 
-        # Descriptions (54 matches)
-        desc_pattern = r'(<div class="[^"]*" data-framer-name="Description"[^>]*><p class="[^"]*"[^>]*>)(.*?)(</p></div>)'
+        # Descriptions
+        desc_pattern = r'(<div[^>]*data-framer-name="Description"[^>]*><p[^>]*>)(.*?)(</p></div>)'
         def desc_repl(i, m):
-            s_idx = (i % 18) // 3
+            s_idx = (i % modulo) // 3
             if s_idx < len(exp):
                 return m.group(1) + exp[s_idx].get('excerpt', '') + m.group(3)
             return m.group(0)
@@ -199,7 +200,7 @@ def sync_all():
         # Images
         img_pattern = r'(<img[^>]+src=")([^"]*)("[^>]*alt="[^"]*"[^>]*>)'
         def img_repl(i, m):
-            s_idx = (i % 18) // 3
+            s_idx = (i % modulo) // 3
             if s_idx < len(exp):
                 img_path = exp[s_idx].get('image', '').replace('./', '../')
                 return m.group(1) + img_path + m.group(3)
@@ -208,6 +209,9 @@ def sync_all():
 
         # Strip any Framer bundle module script to prevent template hydration
         html_page = re.sub(r'<script[^>]*data-framer-bundle="main"[^>]*>.*?</script>', '', html_page)
+
+        # Replace residual Insights pills with Field Notes
+        html_page = html_page.replace('>Insights<', '>Field Notes<')
 
         with open(target_path, 'w', encoding='utf-8') as f:
             f.write(html_page)
@@ -347,6 +351,7 @@ def sync_all():
     # 6. Update all other HTML files (blogs & project details)
     # ==========================================
     for root, dirs, files in os.walk(base_dir):
+        dirs[:] = [d for d in dirs if d not in ['.git', '.vercel', '.wrangler', 'node_modules', 'admin']]
         for file in files:
             if file.endswith('.html') and 'admin' not in root:
                 file_path = os.path.join(root, file)
