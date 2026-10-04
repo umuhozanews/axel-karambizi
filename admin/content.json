@@ -4,7 +4,7 @@
     "badge": "Hi",
     "headline_1": "founder",
     "headline_2": "builder",
-    "tagline": "I’m a Kigali-based founder and builder of companies, communities and technology",
+    "tagline": "I build businesses, create opportunities and tell the stories along the way.",
     "hero_front_image": "./assets/hero_front_hd.jpg",
     "hero_back_image": "./assets/hero_back_hd.jpg",
     "avatar_image": "./assets/avatar.jpg",
@@ -42,7 +42,7 @@
     },
     {
       "number": "20+",
-      "label": "Schools Deployed"
+      "label": "Products Deployed"
     },
     {
       "number": "1,000+",
