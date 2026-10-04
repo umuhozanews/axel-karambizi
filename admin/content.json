@@ -145,42 +145,12 @@
   "explore_stories": [
     {
       "id": "lake-kivu-stillness",
-      "title": "Reading by the Water: Agisere & The Art of Stillness",
+      "title": "Reading by the Water: Naval Ravikant's Reflections",
       "category": "Field Notes",
       "date": "May 2, 2025",
       "tag": "Most Viewed",
       "excerpt": "Pausing on the shores of Lake Kivu with The Almanack of Naval Ravikant, and why making space to reflect matters as much as building.",
       "image": "./assets/explore_reading_water.png",
-      "link": "./blog-detail/"
-    },
-    {
-      "id": "dubai-opportunity",
-      "title": "I Went to Dubai Looking for Opportunity. Here’s What I Found.",
-      "category": "Field Notes",
-      "date": "Apr 30, 2025",
-      "tag": "",
-      "excerpt": "I went looking for founders, capital and a little bit of chaos, and found that world-class ambition begins with local conviction.",
-      "image": "./assets/explore_dubai.jpg",
-      "link": "./blog-detail/"
-    },
-    {
-      "id": "cross-border-founders",
-      "title": "What I Learned From Talking to Founders in Another Country",
-      "category": "Travel",
-      "date": "Apr 27, 2025",
-      "tag": "",
-      "excerpt": "Cross-border lessons from Switzerland, Paris, Uganda and the DRC on how founders see constraint, speed and market boundaries.",
-      "image": "./assets/explore_founder_lessons.jpg",
-      "link": "./blog-detail/"
-    },
-    {
-      "id": "people-i-met",
-      "title": "The People I Met on the Way",
-      "category": "Field Notes",
-      "date": "Apr 24, 2025",
-      "tag": "",
-      "excerpt": "From Car Free Day runners in Kigali to community elders in rural villages, the journey is measured in the stories people trust you with.",
-      "image": "./assets/explore_people_met.jpg",
       "link": "./blog-detail/"
     },
     {
