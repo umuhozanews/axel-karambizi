@@ -19,9 +19,10 @@
   var BASE_OPACITY = 0.1;
   var BASE_ROTATION = 3;   // deg, straightens to 0
   var BLUR = 4;            // px, clears to 0
-  var WORD_MS = 520;       // how long one word takes to resolve
-  var STAGGER = 34;        // ms between consecutive words
-  var MAX_STAGGER = 900;   // cap so long paragraphs do not crawl
+  // Deliberately unhurried: the blur and the lift should be readable.
+  var WORD_MS = 1100;      // how long one word takes to resolve
+  var STAGGER = 95;        // ms between consecutive words
+  var MAX_STAGGER = 2400;  // cap so long paragraphs do not crawl
 
   function wrapWords(el) {
     var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);

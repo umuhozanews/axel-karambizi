@@ -14,11 +14,13 @@
   // final glyph, so borrowing from a wider alphabet makes the cipher spill
   // over its neighbours
   var CIPHER = 'AXELKRMBIZ';
-  var TICK = 34;            // ms between scramble frames
-  var FRAMES_PER_LETTER = 2; // how long the reveal front takes to cross a letter
-  var HOLD = 340;           // ms the finished name holds before the fade
-  var FADE = 460;           // ms cover fade-out
-  var SAFETY = 5000;        // hard ceiling: uncover no matter what
+  // Tuned slow on purpose so the decrypt is readable rather than a flicker.
+  // Total cover time is roughly TICK * FRAMES_PER_LETTER * 13 + HOLD + FADE.
+  var TICK = 55;            // ms between scramble frames
+  var FRAMES_PER_LETTER = 4; // how long the reveal front takes to cross a letter
+  var HOLD = 650;           // ms the finished name holds before the fade
+  var FADE = 600;           // ms cover fade-out
+  var SAFETY = 9000;        // hard ceiling: uncover no matter what
   var KEY = 'axel-preloader-seen';
 
   var root = document.documentElement;
