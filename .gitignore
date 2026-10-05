@@ -13,3 +13,9 @@ Thumbs.db
 .vercel
 .env*
 admin/messages.json
+
+node_modules/
+package-lock.json
+shots/
+_*.py
+_*.cjs
