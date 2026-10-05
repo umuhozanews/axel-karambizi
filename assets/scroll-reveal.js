@@ -50,11 +50,14 @@
     return words;
   }
 
+  // True once the block has risen into the viewport, and it stays true after
+  // the block has scrolled off the top: a jump scroll or an anchor link can
+  // skip clean over a block, which must not leave it stuck in its base state.
   function inView(el) {
     var r = el.getBoundingClientRect();
     if (!r.width && !r.height) return false;
     var vh = window.innerHeight || document.documentElement.clientHeight;
-    return r.top < vh * 0.92 && r.bottom > 0;
+    return r.top < vh * 0.92;
   }
 
   function init() {
