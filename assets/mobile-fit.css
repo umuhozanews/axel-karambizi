@@ -73,7 +73,7 @@
   .framer-OzlK9 .framer-1y3f9q6,
   .framer-OzlK9 .framer-174865s,
   .framer-OzlK9 .framer-5cjz9e {
-    width: min(78vw, 340px) !important;
+    width: min(92vw, 400px) !important;
     height: auto !important;
   }
 
@@ -83,7 +83,9 @@
      rather than outside it. */
   .framer-owsqmh-container {
     top: 66% !important;
-    left: 0 !important;
+    /* the card's 3D perspective shifts this ~30px further left than its
+       computed offset, so inset it enough to stay inside the viewport */
+    left: 40px !important;
     right: auto !important;
     bottom: auto !important;
   }

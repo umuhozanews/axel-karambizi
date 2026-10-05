@@ -18,6 +18,27 @@
 
     var THRESHOLD = 60;
 
+    // 0. Backfill the menu links on nav variants exported without them.
+    //    /about/ ships a phone variant whose nav has the toggle button but no
+    //    link list, so tapping the hamburger opened an empty panel.
+    var LINK_HOST = '.framer-gs57e9';
+    var donor = null;
+    navs.forEach(function (nav) {
+      var host = nav.querySelector(LINK_HOST);
+      if (!donor && host && host.querySelector('a[href]')) donor = host;
+    });
+    if (donor) {
+      navs.forEach(function (nav) {
+        if (nav.querySelector(LINK_HOST + ' a[href]')) return;
+        var empty = nav.querySelector(LINK_HOST);
+        if (empty) empty.remove();
+        var pill = nav.querySelector('.framer-brfihp');
+        var clone = donor.cloneNode(true);
+        if (pill) pill.insertAdjacentElement('afterend', clone);
+        else nav.insertBefore(clone, nav.firstChild);
+      });
+    }
+
     // 1. Initialize Mobile Toggle Button for every Nav
     navs.forEach(function (nav) {
       var brfihp = nav.querySelector('.framer-brfihp');
