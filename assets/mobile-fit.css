@@ -1,0 +1,90 @@
+/**
+ * Phone-width corrections for layout the Framer export only solved for desktop.
+ * Loaded after the page's own styles, so every rule here has to outrank the
+ * generated breakpoint rules with !important.
+ */
+
+@media (max-width: 809.98px) {
+  /* ----------------------------------------------------------------
+     Footer contact row
+
+     The export keeps three side-by-side columns at every width. On a
+     390px screen each column slot is ~97px while its contents are
+     199px (email), 141px (phone) and 126px (social icons), so all
+     three overlap. Stack them instead and let the text wrap.
+     ---------------------------------------------------------------- */
+  .framer-1kf0g8a,
+  .framer-55e6gk {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 20px !important;
+    height: auto !important;
+  }
+
+  .framer-1tae0xk,
+  .framer-l3m5rn,
+  .framer-1rqfqsr,
+  .framer-1xsdui6,
+  .framer-8ap9o0 {
+    width: 100% !important;
+    /* the bottom-bar slots carry max-width: 50% for the two-up desktop row */
+    max-width: 100% !important;
+    height: auto !important;
+    align-items: flex-start !important;
+  }
+
+  .framer-ag8ogu,
+  .framer-ej8lng,
+  .framer-81mo0s,
+  .framer-ppwbyj,
+  .framer-dos27s {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+  }
+
+  /* white-space: pre on the generated text blocks stops the long email and
+     copyright lines from wrapping, pushing them past the viewport edge. */
+  .framer-ag8ogu p,
+  .framer-ej8lng p,
+  .framer-81mo0s p,
+  .framer-ppwbyj p,
+  .framer-ppwbyj div,
+  .framer-o6x19g p,
+  .framer-nehj0r p {
+    white-space: normal !important;
+  }
+
+  .framer-7icq1w,
+  .framer-55e6gk > div {
+    height: auto !important;
+  }
+
+  /* ----------------------------------------------------------------
+     Home hero portrait
+
+     Framer pins the card to 180x252 on phones (340x476 on desktop),
+     leaving it adrift in a 100vh section. Scale it with the viewport
+     and let the card's aspect-ratio derive the height.
+     ---------------------------------------------------------------- */
+  .framer-1526o8l,
+  .framer-OzlK9 .framer-1y3f9q6,
+  .framer-OzlK9 .framer-174865s,
+  .framer-OzlK9 .framer-5cjz9e {
+    width: min(78vw, 340px) !important;
+    height: auto !important;
+  }
+
+  /* The badge overlay sits at a fixed 172px down a 252px card, which lands
+     mid-portrait once the card grows. The card's 3D perspective also drags
+     anything left of centre further left, so anchor it on the card edge
+     rather than outside it. */
+  .framer-owsqmh-container {
+    top: 66% !important;
+    left: 0 !important;
+    right: auto !important;
+    bottom: auto !important;
+  }
+}
