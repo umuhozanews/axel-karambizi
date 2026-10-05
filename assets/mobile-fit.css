@@ -77,6 +77,85 @@
     height: auto !important;
   }
 
+  /* The portrait's natural 0.71 aspect makes a full-width card 500px tall,
+     which leaves no room for the name and titles on one screen. Keep the card
+     wide but give it whatever height is left after the text block (~240px)
+     and the floating theme toggle, and crop towards the top of the frame. */
+  .framer-OzlK9 .framer-43x9nz,
+  .framer-OzlK9 .framer-43x9nz .framer-1526o8l,
+  .framer-OzlK9 .framer-43x9nz .framer-1y3f9q6,
+  .framer-OzlK9 .framer-43x9nz .framer-174865s {
+    height: clamp(230px, calc(100vh - 400px), 460px) !important;
+  }
+
+  .framer-OzlK9 .framer-43x9nz img {
+    object-fit: cover !important;
+    object-position: 50% 12% !important;
+  }
+
+  /* ----------------------------------------------------------------
+     Home hero composition
+
+     On desktop the portrait is an overlay centred between the FOUNDER and
+     BUILDER columns, and the whole landing fits one 900px screen. The same
+     markup unfolds into four full-height blocks on a phone, which left the
+     portrait alone on the first screen and pushed the name ~1000px down.
+     Collapse those blocks so the landing reads as one stacked unit.
+     ---------------------------------------------------------------- */
+  .framer-OzlK9 .framer-10wy60n,
+  .framer-OzlK9 .framer-o0zby,
+  .framer-OzlK9 .framer-m09soj,
+  .framer-OzlK9 .framer-iesngu,
+  .framer-OzlK9 .framer-bo4nxh,
+  .framer-OzlK9 .framer-bmwyn,
+  .framer-OzlK9 .framer-14gfby1 {
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  /* the pin has no travel left once the block is content-sized, and
+     scroll-flip.js already no-ops at zero travel */
+  .framer-OzlK9 .framer-m09soj {
+    position: static !important;
+    padding-top: clamp(86px, 12.5vh, 110px) !important;
+  }
+
+  /* the two text columns were spaced apart across the 100vh block */
+  .framer-OzlK9 .framer-bo4nxh {
+    justify-content: flex-start !important;
+    gap: 6px !important;
+    padding-top: 0 !important;
+    padding-bottom: 72px !important;
+  }
+
+  /* ----------------------------------------------------------------
+     Waving-hand badge
+
+     The hand SVG is pinned to 52px at every breakpoint, but on phones its
+     clipping parent shrinks to 25px, so only the top-left corner of the
+     hand survived. Let the SVG scale with its box instead.
+     ---------------------------------------------------------------- */
+  .framer-owsqmh-container,
+  .framer-owsqmh-container > .framer-1b429fx {
+    width: 76px !important;
+    height: 76px !important;
+  }
+
+  .framer-owsqmh-container .framer-1t4im-container,
+  .framer-owsqmh-container .framer-jctaa,
+  .framer-owsqmh-container .framer-1rl3kp7-container,
+  .framer-owsqmh-container .framer-1rl3kp7-container > div {
+    width: 38px !important;
+    height: 38px !important;
+  }
+
+  /* the export ships both a 26px and a 52px !important rule for this svg and
+     the 52px one wins on source order, so out-specify them both */
+  .framer-owsqmh-container .framer-jctaa .framer-1rl3kp7-container svg {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
   /* The badge overlay sits at a fixed 172px down a 252px card, which lands
      mid-portrait once the card grows. The card's 3D perspective also drags
      anything left of centre further left, so anchor it on the card edge
