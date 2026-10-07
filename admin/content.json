@@ -119,6 +119,14 @@
       "description": "A digital library management platform helping schools move from paper-based libraries to smarter, more accessible systems. Built as a student-led startup, Libblio went on to win AwardX East Africa and TICON Africa Startup of the Year. LinkedIn",
       "image": "./assets/Smiling_Founder_Presenting_African_Startup_Trophy.png",
       "link": "https://www.atomiq.rw/"
+    },
+    {
+      "id": "project-1791365220085",
+      "title": "Hippo Technology",
+      "category": "E-commerce · Business",
+      "description": "East Africa's most trusted tech gadget's delivery store. Premium quality gadgets paid after inspection with a delivery time below 20 minutes",
+      "image": "./assets/hipooooo.jpeg",
+      "link": "https://www.hippotech.rw/"
     }
   ],
   "more_projects": [
