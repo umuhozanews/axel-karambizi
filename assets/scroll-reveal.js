@@ -20,9 +20,14 @@
   var BASE_ROTATION = 3;   // deg, straightens to 0
   var BLUR = 4;            // px, clears to 0
   // Deliberately unhurried: the blur and the lift should be readable.
-  var WORD_MS = 1100;      // how long one word takes to resolve
-  var STAGGER = 95;        // ms between consecutive words
-  var MAX_STAGGER = 2400;  // cap so long paragraphs do not crawl
+  var WORD_MS = 1800;      // how long one word takes to resolve
+  var STAGGER = 160;       // ms between consecutive words
+  var MAX_STAGGER = 4200;  // cap so long paragraphs do not crawl
+
+  function isPainted(el) {
+    var r = el.getBoundingClientRect();
+    return r.width > 0 && r.height > 0;
+  }
 
   function wrapWords(el) {
     var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
@@ -34,12 +39,10 @@
     texts.forEach(function (text) {
       var frag = document.createDocumentFragment();
       // keep the separators so wrapping and pre-wrap behaviour are unchanged
-      text.nodeValue.split(/(\s+)/).forEach(function (part) {
-        if (!part) return;
-        if (/^\s+$/.test(part)) {
-          frag.appendChild(document.createTextNode(part));
-          return;
-        }
+      // Keep the trailing space inside the span. A space sitting between two
+      // filtered/inline-block words is dropped and "About me" becomes ABOUTME.
+      var chunks = text.nodeValue.match(/\S+\s*/g) || [text.nodeValue];
+      chunks.forEach(function (part) {
         var span = document.createElement('span');
         span.className = 'sr-word';
         span.textContent = part;
@@ -64,15 +67,23 @@
   function init() {
     var targets = [];
     BLOCKS.forEach(function (sel) {
-      // /about/ ships one copy of the block per breakpoint variant
+      // /about/ ships one copy of the block per breakpoint variant — only
+      // wrap the painted copy so hidden variants cannot leak overlapping text
       [].forEach.call(document.querySelectorAll(sel), function (block) {
+        if (!isPainted(block)) return;
         var el = block.matches(TEXT_NODES) ? block : block.querySelector(TEXT_NODES);
+        if (!el) el = block;
         if (!el || el.dataset.srReady) return;
-        var words = wrapWords(el);
-        if (!words.length) return;
         el.dataset.srReady = '1';
         targets.push(el);
 
+        // Display headings use tight letter-spacing; splitting them into
+        // inline-block words collapses "About me" into ABOUTME. Fade the
+        // whole line and keep word-by-word for body copy only.
+        if (el.tagName === 'H1' || el.tagName === 'H2' || el.tagName === 'H3') return;
+
+        var words = wrapWords(el);
+        if (!words.length) return;
         var step = Math.min(STAGGER, MAX_STAGGER / words.length);
         words.forEach(function (w, i) { w.style.transitionDelay = Math.round(i * step) + 'ms'; });
       });
@@ -86,7 +97,16 @@
       '  transform: rotate(' + BASE_ROTATION + 'deg);',
       '  transition: transform ' + (WORD_MS + 320) + 'ms cubic-bezier(0.16, 1, 0.3, 1);',
       '}',
+      'h1[data-sr-ready], h2[data-sr-ready], h3[data-sr-ready] {',
+      '  transform: none;',
+      '  opacity: ' + BASE_OPACITY + ';',
+      '  filter: blur(' + BLUR + 'px);',
+      '  transition: opacity ' + WORD_MS + 'ms ease-out, filter ' + WORD_MS + 'ms ease-out;',
+      '}',
       '[data-sr-ready].sr-in { transform: none; }',
+      'h1[data-sr-ready].sr-in, h2[data-sr-ready].sr-in, h3[data-sr-ready].sr-in {',
+      '  opacity: 1; filter: none;',
+      '}',
       '.sr-word {',
       '  display: inline-block;',
       '  opacity: ' + BASE_OPACITY + ';',

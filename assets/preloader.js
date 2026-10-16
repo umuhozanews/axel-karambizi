@@ -14,14 +14,13 @@
   // final glyph, so borrowing from a wider alphabet makes the cipher spill
   // over its neighbours
   var CIPHER = 'AXELKRMBIZ';
-  // Tuned slow on purpose so the decrypt is readable rather than a flicker.
-  // Total cover time is roughly TICK * FRAMES_PER_LETTER * 13 + HOLD + FADE.
-  var TICK = 55;            // ms between scramble frames
-  var FRAMES_PER_LETTER = 4; // how long the reveal front takes to cross a letter
-  var HOLD = 650;           // ms the finished name holds before the fade
-  var FADE = 600;           // ms cover fade-out
-  var SAFETY = 9000;        // hard ceiling: uncover no matter what
-  var KEY = 'axel-preloader-seen';
+  // Decrypt as fast as a frame can flip; the cover itself stays up MIN_MS.
+  var TICK = 16;             // one display frame
+  var FRAMES_PER_LETTER = 2; // lock the next letter every two frames
+  var MIN_MS = 3000;         // cover visible at least this long
+  var FADE = 220;            // snap the cover off once the name is done
+  var SAFETY = 5000;         // hard ceiling: uncover no matter what
+  var KEY = 'axel-preloader-seen-v3';
 
   var root = document.documentElement;
 
@@ -62,7 +61,7 @@
     // each cell is sized by an invisible copy of its final letter and the
     // live glyph is overlaid, so cycling through cipher characters of
     // different widths never shifts the name around
-    '#axel-preloader .axel-preloader-name .cell { position: relative; display: inline-block; }',
+    '#axel-preloader .axel-preloader-name .cell { position: relative; display: inline-block; overflow: hidden; }',
     '#axel-preloader .axel-preloader-name .sizer,',
     '#axel-preloader .axel-preloader-name .glyph { font-style: normal; }',
     '#axel-preloader .axel-preloader-name .sizer { visibility: hidden; }',
@@ -136,30 +135,49 @@
       cover.appendChild(name);
       document.body.appendChild(cover);
 
+      var startedAt = (window.performance && performance.now()) || Date.now();
+      var finish = function () {
+        var now = (window.performance && performance.now()) || Date.now();
+        setTimeout(uncover, Math.max(0, MIN_MS - (now - startedAt)));
+      };
+
       if (reduced) {
-        setTimeout(uncover, HOLD);
+        finish();
         return;
       }
 
-      var frame = 0;
-      var timer = setInterval(function () {
-        frame++;
-        var settled = Math.floor(frame / FRAMES_PER_LETTER);
-        for (var k = 0; k < letters.length; k++) {
-          if (k < settled) {
-            if (letters[k].glyph.textContent !== letters[k].ch) {
-              letters[k].glyph.textContent = letters[k].ch;
-              letters[k].cell.classList.remove('is-cipher');
+      var startScramble = function () {
+        var frame = 0;
+        var timer = setInterval(function () {
+          frame++;
+          var settled = Math.floor(frame / FRAMES_PER_LETTER);
+          for (var k = 0; k < letters.length; k++) {
+            if (k < settled) {
+              if (letters[k].glyph.textContent !== letters[k].ch) {
+                letters[k].glyph.textContent = letters[k].ch;
+                letters[k].cell.classList.remove('is-cipher');
+              }
+            } else {
+              letters[k].glyph.textContent = CIPHER[(Math.random() * CIPHER.length) | 0];
             }
-          } else {
-            letters[k].glyph.textContent = CIPHER[(Math.random() * CIPHER.length) | 0];
           }
-        }
-        if (settled >= letters.length) {
-          clearInterval(timer);
-          setTimeout(uncover, HOLD);
-        }
-      }, TICK);
+          if (settled >= letters.length) {
+            clearInterval(timer);
+            finish();
+          }
+        }, TICK);
+      };
+
+      // Antonio is still swapping in on the heavy /about/ page; wait so each
+      // cell is sized to the real glyph and the cipher cannot spill next door.
+      if (document.fonts && document.fonts.ready) {
+        var started = false;
+        var go = function () { if (started) return; started = true; startScramble(); };
+        document.fonts.ready.then(go);
+        setTimeout(go, 120);
+      } else {
+        startScramble();
+      }
     } catch (e) {
       uncover();
     }

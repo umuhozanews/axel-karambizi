@@ -1,0 +1,11 @@
+{
+  "name": "axel-karambizi",
+  "pages_build_output_dir": ".deploy",
+  "compatibility_date": "2026-07-08",
+  "kv_namespaces": [
+    {
+      "binding": "CONTENT",
+      "id": "9b5a8aeaaef04f82b5495b212848dc73"
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-__pycache__/
+            __pycache__/
 *.pyc
 .vercel
 Screenshot*.png
@@ -19,3 +19,8 @@ package-lock.json
 shots/
 _*.py
 _*.cjs
+.wrangler/
+.deploy/
+_deploy.zip
+_dev.log
+_dump.txt

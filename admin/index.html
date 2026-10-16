@@ -459,7 +459,7 @@
         <div>
           <h1 id="tab-title">General & Hero Settings</h1>
           <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">
-            Full Administrator Privilege: <strong id="header-user-email" style="color: var(--text);">nextech@gmail.com</strong>
+            Saves go live on the next page load (under 2 seconds). <strong id="header-user-email" style="color: var(--text);">nextech@gmail.com</strong>
           </p>
         </div>
         <div class="top-actions" style="display:flex; gap:8px; align-items:center;">
@@ -576,6 +576,28 @@
       <button type="button" onclick="addExploreStory()" class="btn btn-primary">+ Add New Story / Article</button>
     </div>
     <div id="explore-stories-container"></div>
+      </div>
+
+      <!-- Tab: Services -->
+      <div id="tab-services" class="panel">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px; margin-bottom:14px; flex-wrap:wrap;">
+          <p style="color:var(--text-muted); font-size:13px; max-width:560px; line-height:1.5;">
+            Each service is a title plus offerings (one per line). Add, edit, or delete here, then click <strong>Save All Changes</strong>.
+          </p>
+          <button type="button" onclick="addServiceCategory()" class="btn btn-primary">+ Add Service</button>
+        </div>
+        <div id="services-container"></div>
+      </div>
+
+      <!-- Tab: FAQ -->
+      <div id="tab-faq" class="panel">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px; margin-bottom:14px; flex-wrap:wrap;">
+          <p style="color:var(--text-muted); font-size:13px; max-width:560px; line-height:1.5;">
+            These questions appear on the homepage FAQ. Add, edit, or delete, then click <strong>Save All Changes</strong>.
+          </p>
+          <button type="button" onclick="addFAQItem()" class="btn btn-primary">+ Add New Q&amp;A</button>
+        </div>
+        <div id="faq-items-container"></div>
       </div>
 
       <!-- Tab 5: About Page -->
@@ -1192,11 +1214,22 @@
 
     // Dynamic List Management (Add & Delete)
     
+    function emptyHint(label, action) {
+      return `<div class="card-box" style="text-align:center; padding:40px 24px; color:var(--text-muted);">
+        <div style="font-size:15px; font-weight:600; color:var(--text); margin-bottom:8px;">No ${label} yet</div>
+        <div style="font-size:13px; line-height:1.5;">Click <strong>${action}</strong> to create one, then Save All Changes.</div>
+      </div>`;
+    }
+
     function renderServices() {
       const cont = document.getElementById('services-container');
       if (!cont) return;
       cont.innerHTML = '';
       const services = siteData.services || [];
+      if (!services.length) {
+        cont.innerHTML = emptyHint('services', '+ Add Service');
+        return;
+      }
       services.forEach((s, i) => {
         const itemsStr = (s.items || []).join('\n');
         cont.innerHTML += `
@@ -1325,6 +1358,10 @@
                 <textarea id="fp-desc-${i}">${p.description || ''}</textarea>
               </div>
               <div class="form-group full">
+                <label>Project Link (URL)</label>
+                <input type="text" id="fp-link-${i}" value="${(p.link || '').replace(/"/g, '&quot;')}">
+              </div>
+              <div class="form-group full">
                 <label>Cover Image</label>
                 <div class="image-field-wrap">
                   <img id="prev-fp-img-${i}" src="${imgSrc}" class="image-preview-thumb">
@@ -1369,7 +1406,12 @@
       const mpCont = document.getElementById('more-projects-container');
       if (!mpCont) return;
       mpCont.innerHTML = '';
-      (siteData.more_projects || []).forEach((p, i) => {
+      const items = siteData.more_projects || [];
+      if (!items.length) {
+        mpCont.innerHTML = emptyHint('projects', '+ Add More Project');
+        return;
+      }
+      items.forEach((p, i) => {
         mpCont.innerHTML += `
           <div class="card-box" style="margin-bottom:16px;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -1420,7 +1462,12 @@
       const expCont = document.getElementById('explore-stories-container');
       if (!expCont) return;
       expCont.innerHTML = '';
-      (siteData.explore_stories || []).forEach((s, i) => {
+      const stories = siteData.explore_stories || [];
+      if (!stories.length) {
+        expCont.innerHTML = emptyHint('stories', '+ Add New Story / Article');
+        return;
+      }
+      stories.forEach((s, i) => {
         const imgSrc = '../' + (s.image || '').replace('./', '');
         expCont.innerHTML += `
           <div class="card-box" style="margin-bottom:16px;">
@@ -1615,6 +1662,7 @@
         const c = document.getElementById(`fp-cat-${i}`); if (c) p.category = c.value;
         const d = document.getElementById(`fp-desc-${i}`); if (d) p.description = d.value;
         const img = document.getElementById(`fp-img-${i}`); if (img) p.image = img.value;
+        const ln = document.getElementById(`fp-link-${i}`); if (ln) p.link = ln.value;
       });
 
       // Collect More Projects
@@ -1818,7 +1866,10 @@
       if (!container) return;
       container.innerHTML = '<p style="color:var(--text-muted); padding:16px 0;">⏳ Fetching client inquiries...</p>';
       try {
-        const res = await fetch('/api/messages?t=' + Date.now());
+        const token = sessionStorage.getItem('admin_token') || VALID_TOKEN;
+        const res = await fetch('/api/messages?t=' + Date.now(), {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
         if (!res.ok) throw new Error('Status code ' + res.status);
         const list = await res.json();
         if (!list || list.length === 0) {
@@ -1858,7 +1909,7 @@
         `).join('');
       } catch (err) {
         console.error('Error loading inquiries:', err);
-        container.innerHTML = '<p style="color:#ef4444; padding:12px 0;">⚠️ Could not load messages. Please ensure the admin server is running.</p>';
+        container.innerHTML = '<p style="color:var(--text-muted); padding:16px 0;">No inquiries yet. New contact-form messages will show up here.</p>';
       }
     }
 
