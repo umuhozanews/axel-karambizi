@@ -578,11 +578,24 @@
           if (a.textContent.includes('+')) a.textContent = ct.phone;
         });
       }
+      if (ct.whatsapp) {
+        document.querySelectorAll('a[href*="wa.me"]').forEach(a => {
+          a.href = ct.whatsapp;
+        });
+      }
+      if (ct.form_action) {
+        document.querySelectorAll('form[action*="formsubmit.co"]').forEach(form => {
+          form.action = ct.form_action;
+        });
+      }
       if (ct.portrait_image) {
         document.querySelectorAll('.framer-1mflr40 img, img[alt*="Contact Portrait"]').forEach(img => {
           setSafeImage(img, ct.portrait_image);
         });
       }
+
+      // Enhanced Contact Quick-Connect Actions Injection (WhatsApp, Email Copy, Call)
+      injectEnhancedContactBar(ct);
     }
 
     if (data.footer) {
@@ -603,11 +616,106 @@
         if (s.x) document.querySelectorAll('.framer-16ft3t1, a[href*="x.com"], a[href*="twitter.com"]').forEach(a => a.href = s.x);
         if (s.instagram) document.querySelectorAll('.framer-5grdll, a[href*="instagram.com"]').forEach(a => a.href = s.instagram);
         if (s.behance) document.querySelectorAll('.framer-1yo788g, a[href*="behance.net"]').forEach(a => a.href = s.behance);
-        if (s.dribbble) document.querySelectorAll('.framer-15j1vxj, a[href*="dribbble.com"]').forEach(a => a.href = s.dribbble);
-        if (s.linkedin) document.querySelectorAll('a[href*="linkedin.com"]').forEach(a => a.href = s.linkedin);
         if (s.github) document.querySelectorAll('a[href*="github.com"]').forEach(a => a.href = s.github);
+        if (s.whatsapp) document.querySelectorAll('a[href*="wa.me"]').forEach(a => a.href = s.whatsapp);
+
+        // Permanently transform or remove any Dribbble elements to LinkedIn
+        const linkedinUrl = s.linkedin || (data.contact && data.contact.linkedin) || "https://www.linkedin.com/in/axel-karambizi-1633922a7/";
+        document.querySelectorAll('.framer-15j1vxj, .framer-1gzurvg, .framer-1e8f6cw, a[href*="dribbble.com"]').forEach(a => {
+          if (linkedinUrl) {
+            a.href = linkedinUrl;
+            a.target = "_blank";
+            a.rel = "noopener noreferrer";
+            a.setAttribute('aria-label', 'LinkedIn');
+            a.title = 'Connect on LinkedIn';
+            const svg = a.querySelector('svg');
+            if (svg) {
+              svg.innerHTML = '<g weight="fill"><path d="M216,24H40A16,16,0,0,0,24,40V216a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V40A16,16,0,0,0,216,24ZM96,192a8,8,0,0,1-16,0V112a8,8,0,0,1,16,0Zm-8-96a12,12,0,1,1,12-12A12,12,0,0,1,88,96Zm112,96a8,8,0,0,1-16,0V144c0-13.23-10.77-24-24-24s-24,10.77-24,24v48a8,8,0,0,1-16,0V112a8,8,0,0,1,16,0v8.69A39.81,39.81,0,0,1,176,104c22.06,0,40,17.94,40,40Z"></path></g>';
+            }
+          } else {
+            a.remove();
+          }
+        });
+        if (s.linkedin) {
+          document.querySelectorAll('a[href*="linkedin.com"]').forEach(a => a.href = s.linkedin);
+        }
       }
     }
+
+    // Ensure floating quick admin badge is present
+    injectAdminQuickBadge();
+  }
+
+  function injectEnhancedContactBar(ct) {
+    if (document.getElementById('enhanced-contact-bar')) return;
+    const contactSection = document.getElementById('contact');
+    if (!contactSection) return;
+
+    const email = ct.email || 'hello@axelkarambizi.com';
+    const phone = ct.phone || '+250 788 749 709';
+    const whatsapp = ct.whatsapp || 'https://wa.me/250788749709';
+    const location = ct.location || 'Kigali, Rwanda';
+
+    const bar = document.createElement('div');
+    bar.id = 'enhanced-contact-bar';
+    bar.style.cssText = 'margin-top:24px; padding:18px 22px; background:rgba(21, 23, 34, 0.75); border:1px solid rgba(255, 255, 255, 0.1); border-radius:14px; backdrop-filter:blur(16px); display:flex; flex-wrap:wrap; gap:14px; align-items:center; justify-content:space-between; z-index:10;';
+
+    bar.innerHTML = `
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+        <span style="display:inline-flex; align-items:center; gap:6px; font-size:12.5px; font-weight:600; color:#27d974; background:rgba(39, 217, 116, 0.12); padding:4px 10px; border-radius:20px; border:1px solid rgba(39, 217, 116, 0.25);">
+          <span style="width:7px; height:7px; border-radius:50%; background:#27d974; display:inline-block; box-shadow:0 0 6px #27d974;"></span>
+          Available for new projects
+        </span>
+        <span style="font-size:12.5px; color:#8b92a8; display:inline-flex; align-items:center; gap:4px;">
+          📍 ${location} · GMT+2
+        </span>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+        <a href="${whatsapp}" target="_blank" rel="noopener noreferrer" style="text-decoration:none; display:inline-flex; align-items:center; gap:7px; background:#25d366; color:#0c0d12; font-weight:700; font-size:12.5px; padding:8px 16px; border-radius:8px; transition:transform 0.2s, box-shadow 0.2s; box-shadow:0 4px 14px rgba(37, 211, 102, 0.3);">
+          <svg style="width:16px; height:16px; fill:currentColor;" viewBox="0 0 256 256"><path d="M207.2,48.8A111.4,111.4,0,0,0,128,16,112,112,0,0,0,31,169.5L16,224l55.8-14.6A111.9,111.9,0,0,0,128,240h0a112,112,0,0,0,79.2-191.2ZM128,224a95.8,95.8,0,0,1-48.9-13.4l-3.5-2.1-36.4,9.5,9.7-35.4-2.3-3.7A96,96,0,1,1,128,224Zm52.6-70.1c-2.9-1.4-17-8.4-19.6-9.3s-4.5-1.4-6.4,1.4-7.4,9.3-9.1,11.2-3.4,2.1-6.3.7a79.5,79.5,0,0,1-23.4-14.4,87.6,87.6,0,0,1-16.2-20.2c-1.7-2.9-.2-4.5,1.3-5.9s2.9-3.4,4.3-5.1a19.4,19.4,0,0,0,2.9-4.8,5.4,5.4,0,0,0-.3-5.1c-.7-1.4-6.4-15.4-8.8-21.1s-4.7-4.8-6.4-4.9-3.6-.1-5.5-.1a10.6,10.6,0,0,0-7.7,3.6,32.4,32.4,0,0,0-10.1,24.1c0,14.2,10.3,27.9,11.8,29.9s20.3,31,49.2,43.5c6.9,3,12.2,4.8,16.4,6.1a39.4,39.4,0,0,0,18.1,1.1c5.5-.8,17-6.9,19.4-13.6s2.4-12.4,1.7-13.6C184,156,182.1,155.3,180.6,153.9Z"></path></svg>
+          Chat on WhatsApp
+        </a>
+        <button type="button" id="btn-copy-email" onclick="copyContactEmail('${email}')" style="cursor:pointer; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:8px; display:inline-flex; align-items:center; gap:6px; transition:all 0.2s;">
+          ✉️ Copy Email
+        </button>
+        <a href="tel:${phone.replace(/[^\d+]/g, '')}" style="text-decoration:none; background:rgba(106, 113, 223, 0.15); border:1px solid rgba(106, 113, 223, 0.4); color:#fff; font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:8px; display:inline-flex; align-items:center; gap:6px;">
+          📞 Call
+        </a>
+      </div>
+    `;
+
+    const contactCol = contactSection.querySelector('.framer-3nw2d6, [data-framer-name="Contact Column"]') || contactSection;
+    contactCol.appendChild(bar);
+  }
+
+  window.copyContactEmail = function(email) {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(email).then(() => {
+        const btn = document.getElementById('btn-copy-email');
+        if (btn) {
+          const old = btn.innerHTML;
+          btn.innerHTML = '✓ Copied!';
+          btn.style.borderColor = '#27d974';
+          btn.style.color = '#27d974';
+          setTimeout(() => { btn.innerHTML = old; btn.style.borderColor = ''; btn.style.color = ''; }, 2500);
+        }
+      });
+    } else {
+      prompt('Axel Karambizi verified email:', email);
+    }
+  };
+
+  function injectAdminQuickBadge() {
+    if (document.getElementById('floating-admin-badge')) return;
+    const badge = document.createElement('a');
+    badge.id = 'floating-admin-badge';
+    badge.href = '/admin/';
+    badge.title = 'Open Admin CMS & Universal Content Editor';
+    badge.style.cssText = 'position:fixed; bottom:20px; right:20px; z-index:99999; background:rgba(12, 13, 18, 0.88); border:1px solid rgba(106, 113, 223, 0.45); color:#fff; padding:7px 14px; border-radius:30px; font-size:12px; font-family:-apple-system, sans-serif; display:flex; align-items:center; gap:6px; text-decoration:none; box-shadow:0 8px 24px rgba(0,0,0,0.6); backdrop-filter:blur(12px); transition:transform 0.2s, border-color 0.2s; opacity:0.85;';
+    badge.onmouseenter = () => { badge.style.opacity = '1'; badge.style.transform = 'translateY(-2px)'; badge.style.borderColor = '#27d974'; };
+    badge.onmouseleave = () => { badge.style.opacity = '0.85'; badge.style.transform = 'translateY(0)'; badge.style.borderColor = 'rgba(106, 113, 223, 0.45)'; };
+    badge.innerHTML = '<span style="color:#27d974; font-size:14px;">⚡</span> <strong style="font-weight:600;">Edit Site</strong>';
+    document.body.appendChild(badge);
   }
 
   // Run on initial load

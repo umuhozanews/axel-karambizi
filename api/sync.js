@@ -51,7 +51,16 @@ export function updateCommon(html, data, isRoot = true) {
   if (soc.x) html = html.replace(/href="https:\/\/x\.com\/[^"]*"/g, `href="${soc.x}"`);
   if (soc.instagram) html = html.replace(/href="https:\/\/www\.instagram\.com\/[^"]*"/g, `href="${soc.instagram}"`);
   if (soc.behance) html = html.replace(/href="https:\/\/www\.behance\.net\/[^"]*"/g, `href="${soc.behance}"`);
-  if (soc.dribbble) html = html.replace(/href="https:\/\/dribbble\.com\/[^"]*"/g, `href="${soc.dribbble}"`);
+  if (soc.github) html = html.replace(/href="https:\/\/github\.com\/[^"]*"/g, `href="${soc.github}"`);
+  if (soc.whatsapp) html = html.replace(/href="https:\/\/wa\.me\/[^"]*"/g, `href="${soc.whatsapp}"`);
+
+  // Permanently eliminate Dribbble and convert all Dribbble slots to LinkedIn
+  const linkedinUrl = soc.linkedin || 'https://www.linkedin.com/in/axel-karambizi-1633922a7/';
+  html = html.replace(/href="https:\/\/dribbble\.com\/[^"]*"/g, `href="${linkedinUrl}"`);
+  html = html.replace(/"https:\/\/dribbble\.com\/"/g, `"${linkedinUrl}"`);
+  const linkedinPath = 'M216,24H40A16,16,0,0,0,24,40V216a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V40A16,16,0,0,0,216,24ZM96,192a8,8,0,0,1-16,0V112a8,8,0,0,1,16,0Zm-8-96a12,12,0,1,1,12-12A12,12,0,0,1,88,96Zm112,96a8,8,0,0,1-16,0V144c0-13.23-10.77-24-24-24s-24,10.77-24,24v48a8,8,0,0,1-16,0V112a8,8,0,0,1,16,0v8.69A39.81,39.81,0,0,1,176,104c22.06,0,40,17.94,40,40Z';
+  html = html.replace(/d="M93\.27,36\.86a4,4,0,0,1[^"]+75\.69,213\.25Z"/g, `d="${linkedinPath}"`);
+  if (soc.linkedin) html = html.replace(/href="https:\/\/www\.linkedin\.com\/[^"]*"/g, `href="${soc.linkedin}"`);
 
   // Avatar
   const avatar = gen.avatar_image || './assets/avatar.jpg';

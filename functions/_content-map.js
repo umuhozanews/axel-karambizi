@@ -277,7 +277,7 @@ export const CONTENT_MAP = {
     "kind": "href",
     "sel": ".framer-1yo788g"
    },
-   "footer.social.dribbble": {
+   "footer.social.linkedin": {
     "kind": "href",
     "sel": ".framer-15j1vxj"
    }
@@ -411,7 +411,7 @@ export const CONTENT_MAP = {
     "kind": "href",
     "sel": ".framer-1yo788g"
    },
-   "footer.social.dribbble": {
+   "footer.social.linkedin": {
     "kind": "href",
     "sel": ".framer-15j1vxj"
    }
@@ -557,7 +557,7 @@ export const CONTENT_MAP = {
     "kind": "href",
     "sel": ".framer-1yo788g"
    },
-   "footer.social.dribbble": {
+   "footer.social.linkedin": {
     "kind": "href",
     "sel": ".framer-15j1vxj"
    }

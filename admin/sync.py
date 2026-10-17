@@ -100,12 +100,19 @@ def sync_all():
             html = re.sub(r'href="https://(?:www\.)?instagram\.com(?:/[^"]*)?"', f'href="{soc.get("instagram")}"', html)
         if soc.get('behance'):
             html = re.sub(r'href="https://(?:www\.)?behance\.net(?:/[^"]*)?"', f'href="{soc.get("behance")}"', html)
-        if soc.get('dribbble'):
-            html = re.sub(r'href="https://(?:www\.)?dribbble\.com(?:/[^"]*)?"', f'href="{soc.get("dribbble")}"', html)
-        if soc.get('linkedin'):
-            html = re.sub(r'href="https://(?:www\.)?linkedin\.com(?:/[^"]*)?"', f'href="{soc.get("linkedin")}"', html)
         if soc.get('github'):
             html = re.sub(r'href="https://(?:www\.)?github\.com(?:/[^"]*)?"', f'href="{soc.get("github")}"', html)
+        if soc.get('whatsapp'):
+            html = re.sub(r'href="https://wa\.me/[^"]*"', f'href="{soc.get("whatsapp")}"', html)
+
+        # Permanently eliminate Dribbble and convert all Dribbble slots to LinkedIn
+        linkedin_url = soc.get('linkedin', 'https://www.linkedin.com/in/axel-karambizi-1633922a7/')
+        html = re.sub(r'href="https://(?:www\.)?dribbble\.com(?:/[^"]*)?"', f'href="{linkedin_url}"', html)
+        html = html.replace('"https://dribbble.com/"', f'"{linkedin_url}"')
+        linkedin_path = 'M216,24H40A16,16,0,0,0,24,40V216a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V40A16,16,0,0,0,216,24ZM96,192a8,8,0,0,1-16,0V112a8,8,0,0,1,16,0Zm-8-96a12,12,0,1,1,12-12A12,12,0,0,1,88,96Zm112,96a8,8,0,0,1-16,0V144c0-13.23-10.77-24-24-24s-24,10.77-24,24v48a8,8,0,0,1-16,0V112a8,8,0,0,1,16,0v8.69A39.81,39.81,0,0,1,176,104c22.06,0,40,17.94,40,40Z'
+        html = re.sub(r'd="M93\.27,36\.86a4,4,0,0,1[^"]+75\.69,213\.25Z"', f'd="{linkedin_path}"', html)
+        if soc.get('linkedin'):
+            html = re.sub(r'href="https://(?:www\.)?linkedin\.com(?:/[^"]*)?"', f'href="{soc.get("linkedin")}"', html)
 
         # Avatar
         avatar = gen.get('avatar_image', './assets/avatar.jpg')

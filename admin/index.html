@@ -439,6 +439,7 @@
         <button class="tab-btn" data-tab="tab-faq" onclick="switchTab('tab-faq')">❓ FAQ / Q&A</button>
         <button class="tab-btn" data-tab="tab-about" onclick="switchTab('tab-about')">📖 About & Timeline</button>
         <button class="tab-btn" data-tab="tab-contact" onclick="switchTab('tab-contact')">📞 Contact & Footer</button>
+        <button class="tab-btn" data-tab="tab-universal" onclick="switchTab('tab-universal')" style="color:#27d974; font-weight:600;">⚡ Universal Site Editor</button>
         <button class="tab-btn" data-tab="tab-media" onclick="switchTab('tab-media')">🖼️ Media & Photos</button>
         <button class="tab-btn" data-tab="tab-messages" onclick="switchTab('tab-messages')">📬 Inquiries & Messages</button>
       </nav>
@@ -824,19 +825,43 @@
       <!-- Tab 6: Contact & Footer -->
       <div id="tab-contact" class="panel">
         <div class="card-box">
-          <h3>Contact Section</h3>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
+            <div>
+              <h3 style="margin:0;">📞 Contact Section & Quick Connect</h3>
+              <p style="color:var(--text-muted); font-size:13px; margin-top:4px;">Manage contact details across the website with direct WhatsApp chat, verified email, call, and location.</p>
+            </div>
+            <a id="btn-test-whatsapp" href="https://wa.me/250788749709" target="_blank" class="btn btn-outline" style="border-color:#25d366; color:#25d366; font-size:12px; padding:6px 12px; text-decoration:none;">
+              💬 Test WhatsApp Chat
+            </a>
+          </div>
           <div class="form-grid">
             <div class="form-group">
               <label>Heading</label>
-              <input type="text" id="contact-heading">
+              <input type="text" id="contact-heading" placeholder="Let’s build something.">
             </div>
             <div class="form-group">
               <label>Email Address</label>
-              <input type="email" id="contact-email">
+              <input type="email" id="contact-email" placeholder="hello@axelkarambizi.com">
             </div>
             <div class="form-group">
-              <label>Phone / WhatsApp</label>
-              <input type="text" id="contact-phone">
+              <label>Phone Number (Call)</label>
+              <input type="text" id="contact-phone" placeholder="+250 788 749 709">
+            </div>
+            <div class="form-group">
+              <label>WhatsApp Link / Number</label>
+              <input type="text" id="contact-whatsapp" placeholder="https://wa.me/250788749709" oninput="document.getElementById('btn-test-whatsapp').href=this.value;">
+            </div>
+            <div class="form-group">
+              <label>Location / City</label>
+              <input type="text" id="contact-location" placeholder="Kigali, Rwanda">
+            </div>
+            <div class="form-group">
+              <label>Availability / Status Tag</label>
+              <input type="text" id="contact-status" placeholder="Available for new projects & ventures">
+            </div>
+            <div class="form-group full">
+              <label>Contact Form Submission Target (Email / Endpoint)</label>
+              <input type="text" id="contact-form-action" placeholder="https://formsubmit.co/papilocostaa@gmail.com">
             </div>
             <div class="form-group full">
               <label>Intro Text</label>
@@ -888,13 +913,54 @@
               <input type="text" id="social-ig">
             </div>
             <div class="form-group">
+              <label>WhatsApp Link</label>
+              <input type="text" id="social-wa" placeholder="https://wa.me/250788749709">
+            </div>
+            <div class="form-group">
               <label>Behance URL</label>
               <input type="text" id="social-be">
             </div>
-            <div class="form-group">
-              <label>Dribbble URL</label>
-              <input type="text" id="social-dr">
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Universal Site Content Editor (100% Dynamic) -->
+      <div id="tab-universal" class="panel">
+        <div class="card-box" style="border:1px solid #27d974; background: rgba(39, 217, 116, 0.04);">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:14px;">
+            <div>
+              <h3 style="margin:0; color:#27d974; font-size:18px;">⚡ Universal Site Content Editor (100% Dynamic)</h3>
+              <p style="color:var(--text-muted); font-size:13px; margin-top:4px;">
+                Every single line of text, heading, card, image URL, and link on the entire website is editable here in real-time. Changes sync directly to Supabase and deploy live immediately.
+              </p>
             </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button type="button" onclick="formatUniversalJSON()" class="btn btn-secondary" style="font-size:12px; padding:7px 14px;">✨ Format JSON</button>
+              <button type="button" onclick="validateUniversalJSON()" class="btn btn-secondary" style="font-size:12px; padding:7px 14px;">✔️ Validate Syntax</button>
+              <button type="button" onclick="saveUniversalContent()" class="btn btn-primary" style="background:#27d974; color:#090a0f; font-weight:700; font-size:12px; padding:7px 16px;">💾 Apply & Save to Live Site</button>
+            </div>
+          </div>
+
+          <!-- Quick Search Filter -->
+          <div style="margin-bottom:16px;">
+            <div style="position:relative;">
+              <input type="text" id="universal-search-input" placeholder="🔍 Search any text, title, URL, or key across the entire website..." oninput="filterUniversalEditor(this.value)" style="padding-left:14px; font-size:13px; background:#0c0d12; border:1px solid var(--card-border); border-radius:8px; width:100%;">
+            </div>
+            <div id="universal-search-results" style="margin-top:10px; font-size:12px; color:var(--text-muted);"></div>
+          </div>
+
+          <!-- Mode Tabs -->
+          <div style="display:flex; gap:10px; border-bottom:1px solid var(--card-border); padding-bottom:10px; margin-bottom:16px;">
+            <button type="button" id="btn-mode-tree" onclick="setUniversalMode('tree')" class="btn btn-primary" style="font-size:12px; padding:5px 14px;">🌳 Visual Key-Value Editor</button>
+            <button type="button" id="btn-mode-raw" onclick="setUniversalMode('raw')" class="btn btn-outline" style="font-size:12px; padding:5px 14px;">📝 Raw Code / JSON Editor</button>
+          </div>
+
+          <!-- Tree View Container -->
+          <div id="universal-tree-container" style="display:block; max-height:650px; overflow-y:auto; padding-right:8px;"></div>
+
+          <!-- Raw Code Container -->
+          <div id="universal-raw-container" style="display:none;">
+            <textarea id="universal-json-editor" spellcheck="false" style="width:100%; height:550px; font-family:Consolas, Monaco, monospace; font-size:12.5px; line-height:1.6; background:#08090d; color:#7ee787; border:1px solid #232738; border-radius:8px; padding:16px; tab-size:2; resize:vertical;"></textarea>
           </div>
         </div>
       </div>
@@ -1034,22 +1100,26 @@
   },
   "footer": {
     "social": {
-      "x": "https://x.com/",
+      "x": "https://x.com/axelkarambizi",
       "behance": "https://www.behance.net/",
-      "dribbble": "https://dribbble.com/",
-      "instagram": "https://www.instagram.com/",
-      "linkedin": "https://www.linkedin.com/in/axelkarambizi",
-      "github": "https://github.com/karambiziaxel"
+      "linkedin": "https://www.linkedin.com/in/axel-karambizi-1633922a7/",
+      "instagram": "https://www.instagram.com/axelkarambizi/",
+      "github": "https://github.com/karambiziaxel",
+      "whatsapp": "https://wa.me/250788749709"
     },
     "copyright": "© Copyright 2026. All Rights Reserved by Axel Karambizi",
     "created_by": "Gacondo Labs",
     "created_by_url": "#"
   },
   "contact": {
-    "email": "hello@axelkarambizi.com",
-    "intro": "Have a project in mind, an initiative you'd like to collaborate on, or just want to connect? Reach out below.",
-    "phone": "+250 788 749 709",
     "heading": "Let’s build something.",
+    "intro": "Have a project in mind, an initiative you'd like to collaborate on, or just want to connect? Reach out below.",
+    "email": "hello@axelkarambizi.com",
+    "phone": "+250 788 749 709",
+    "whatsapp": "https://wa.me/250788749709",
+    "location": "Kigali, Rwanda",
+    "status": "Available for new projects & ventures",
+    "form_action": "https://formsubmit.co/papilocostaa@gmail.com",
     "portrait_image": "./assets/axel_linkedin_cover.png"
   },
   "general": {
@@ -2096,6 +2166,10 @@
       const ci = document.getElementById('contact-intro'); if (ci) siteData.contact.intro = ci.value;
       const ce = document.getElementById('contact-email'); if (ce) siteData.contact.email = ce.value;
       const cp = document.getElementById('contact-phone'); if (cp) siteData.contact.phone = cp.value;
+      const cw = document.getElementById('contact-whatsapp'); if (cw) siteData.contact.whatsapp = cw.value;
+      const cl = document.getElementById('contact-location'); if (cl) siteData.contact.location = cl.value;
+      const cs = document.getElementById('contact-status'); if (cs) siteData.contact.status = cs.value;
+      const cfa = document.getElementById('contact-form-action'); if (cfa) siteData.contact.form_action = cfa.value;
       const cpi = document.getElementById('contact-portrait-img'); if (cpi) siteData.contact.portrait_image = cpi.value;
 
       if (!siteData.footer) siteData.footer = {};
@@ -2107,9 +2181,10 @@
       const sx = document.getElementById('social-x'); if (sx) siteData.footer.social.x = sx.value;
       const sig = document.getElementById('social-ig'); if (sig) siteData.footer.social.instagram = sig.value;
       const sbe = document.getElementById('social-be'); if (sbe) siteData.footer.social.behance = sbe.value;
-      const sdr = document.getElementById('social-dr'); if (sdr) siteData.footer.social.dribbble = sdr.value;
+      const swa = document.getElementById('social-wa'); if (swa) siteData.footer.social.whatsapp = swa.value;
       const sli = document.getElementById('social-li'); if (sli) siteData.footer.social.linkedin = sli.value;
       const sgh = document.getElementById('social-gh'); if (sgh) siteData.footer.social.github = sgh.value;
+      delete siteData.footer.social.dribbble;
     }
 
     function populateForm() {
@@ -2199,6 +2274,10 @@
       document.getElementById('contact-intro').value = ct.intro || '';
       document.getElementById('contact-email').value = ct.email || '';
       document.getElementById('contact-phone').value = ct.phone || '';
+      const cwEl = document.getElementById('contact-whatsapp'); if (cwEl) cwEl.value = ct.whatsapp || 'https://wa.me/250788749709';
+      const clEl = document.getElementById('contact-location'); if (clEl) clEl.value = ct.location || 'Kigali, Rwanda';
+      const csEl = document.getElementById('contact-status'); if (csEl) csEl.value = ct.status || 'Available for new projects & ventures';
+      const cfaEl = document.getElementById('contact-form-action'); if (cfaEl) cfaEl.value = ct.form_action || 'https://formsubmit.co/papilocostaa@gmail.com';
       document.getElementById('contact-portrait-img').value = ct.portrait_image || './assets/contact_portrait.jpg';
       document.getElementById('prev-contact-portrait').src = '../' + (ct.portrait_image || './assets/contact_portrait.jpg').replace('./', '');
 
@@ -2212,9 +2291,13 @@
       document.getElementById('social-x').value = soc.x || '';
       document.getElementById('social-ig').value = soc.instagram || '';
       document.getElementById('social-be').value = soc.behance || '';
-      document.getElementById('social-dr').value = soc.dribbble || '';
+      const swaInput = document.getElementById('social-wa'); if (swaInput) swaInput.value = soc.whatsapp || ct.whatsapp || 'https://wa.me/250788749709';
       const sliEl = document.getElementById('social-li'); if (sliEl) sliEl.value = soc.linkedin || '';
       const sghEl = document.getElementById('social-gh'); if (sghEl) sghEl.value = soc.github || '';
+
+      if (typeof renderUniversalTree === 'function') {
+        renderUniversalTree();
+      }
 
       populateMedia();
     }
@@ -2275,13 +2358,196 @@
         'tab-faq': 'FAQ & Frequently Asked Questions',
         'tab-about': 'About Page, Timeline & Learning Stack',
         'tab-contact': 'Contact Form & Footer Settings',
+        'tab-universal': '⚡ Universal Site Content Editor (100% Dynamic)',
         'tab-media': 'Media, Photos & Asset Uploader',
         'tab-messages': 'Client Inquiries & Contact Submissions'
       };
       document.getElementById('tab-title').textContent = titles[tabId] || 'Admin Dashboard';
 
-      if (tabId === 'tab-messages') {
+      if (tabId === 'tab-universal') {
+        if (currentUniversalMode === 'tree') {
+          renderUniversalTree();
+        } else {
+          document.getElementById('universal-json-editor').value = JSON.stringify(siteData, null, 2);
+        }
+      } else if (tabId === 'tab-messages') {
         loadMessages();
+      }
+    }
+
+    // ==========================================
+    // Universal Content Editor (100% Dynamic)
+    // ==========================================
+    let currentUniversalMode = 'tree';
+
+    function setUniversalMode(mode) {
+      currentUniversalMode = mode;
+      const treeBtn = document.getElementById('btn-mode-tree');
+      const rawBtn = document.getElementById('btn-mode-raw');
+      const treeCont = document.getElementById('universal-tree-container');
+      const rawCont = document.getElementById('universal-raw-container');
+
+      if (mode === 'tree') {
+        const rawText = document.getElementById('universal-json-editor').value;
+        if (rawText.trim()) {
+          try {
+            const parsed = JSON.parse(rawText);
+            siteData = parsed;
+            populateForm();
+          } catch (e) {
+            alert('JSON contains syntax errors: ' + e.message + '\nPlease fix before switching to Visual Tree.');
+            return;
+          }
+        }
+        treeBtn.className = 'btn btn-primary';
+        rawBtn.className = 'btn btn-outline';
+        treeCont.style.display = 'block';
+        rawCont.style.display = 'none';
+        renderUniversalTree();
+      } else {
+        collectFormData();
+        document.getElementById('universal-json-editor').value = JSON.stringify(siteData, null, 2);
+        treeBtn.className = 'btn btn-outline';
+        rawBtn.className = 'btn btn-primary';
+        treeCont.style.display = 'none';
+        rawCont.style.display = 'block';
+      }
+    }
+
+    function formatUniversalJSON() {
+      const editor = document.getElementById('universal-json-editor');
+      try {
+        const val = editor.value.trim() ? JSON.parse(editor.value) : siteData;
+        editor.value = JSON.stringify(val, null, 2);
+        showToast('JSON formatted successfully!');
+      } catch (e) {
+        showToast('JSON error: ' + e.message, true);
+      }
+    }
+
+    function validateUniversalJSON() {
+      const editor = document.getElementById('universal-json-editor');
+      try {
+        JSON.parse(editor.value);
+        showToast('Valid JSON! No syntax errors.');
+      } catch (e) {
+        showToast('Invalid JSON: ' + e.message, true);
+      }
+    }
+
+    function saveUniversalContent() {
+      if (currentUniversalMode === 'raw') {
+        const editor = document.getElementById('universal-json-editor');
+        try {
+          siteData = JSON.parse(editor.value);
+        } catch (e) {
+          alert('Cannot save invalid JSON: ' + e.message);
+          return;
+        }
+      } else {
+        collectFormData();
+      }
+      saveAll();
+    }
+
+    function renderUniversalTree(filterText = '') {
+      const cont = document.getElementById('universal-tree-container');
+      if (!cont) return;
+
+      const q = (filterText || '').toLowerCase().trim();
+      let matchesCount = 0;
+
+      function renderNode(obj, path = '') {
+        let html = '';
+        if (obj === null || obj === undefined) return '';
+
+        if (Array.isArray(obj)) {
+          obj.forEach((item, idx) => {
+            const currentPath = path ? `${path}[${idx}]` : `[${idx}]`;
+            const label = `${path.split('.').pop() || 'Item'} #${idx + 1}`;
+            html += `<div style="margin-left:14px; margin-top:8px; border-left:2px solid #232738; padding-left:12px;">
+              <div style="font-size:12px; font-weight:700; color:#8b92a8; margin-bottom:6px;">${label}</div>`;
+            if (typeof item === 'object' && item !== null) {
+              html += renderNode(item, currentPath);
+            } else {
+              const val = String(item);
+              const matches = !q || currentPath.toLowerCase().includes(q) || val.toLowerCase().includes(q);
+              if (matches) {
+                matchesCount++;
+                html += `<div style="display:flex; gap:10px; align-items:center; margin-bottom:8px;">
+                  <span style="font-family:monospace; font-size:11.5px; color:#6a71df; min-width:140px;">${currentPath}</span>
+                  <input type="text" value="${escapeHtml(val)}" onchange="updateUniversalKey('${currentPath}', this.value)" style="flex:1; font-size:12.5px; padding:6px 10px; background:#12141d; border:1px solid #232738; border-radius:6px; color:#fff;">
+                </div>`;
+              }
+            }
+            html += `</div>`;
+          });
+        } else if (typeof obj === 'object') {
+          for (const key of Object.keys(obj)) {
+            const currentPath = path ? `${path}.${key}` : key;
+            const val = obj[key];
+
+            if (val !== null && typeof val === 'object') {
+              html += `<div style="margin-top:14px; margin-bottom:6px; background:#11131c; border:1px solid #1c1f2e; border-radius:8px; padding:12px 14px;">
+                <div style="font-size:13px; font-weight:700; color:#f0f2f8; margin-bottom:8px; display:flex; align-items:center; gap:8px;">
+                  <span style="color:#27d974;">📁</span> <span>${currentPath}</span>
+                </div>
+                ${renderNode(val, currentPath)}
+              </div>`;
+            } else {
+              const strVal = String(val ?? '');
+              const matches = !q || currentPath.toLowerCase().includes(q) || strVal.toLowerCase().includes(q);
+              if (matches) {
+                matchesCount++;
+                const isLong = strVal.length > 60 || strVal.includes('\\n');
+                html += `<div style="margin-bottom:10px; padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.04);">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                    <span style="font-family:monospace; font-size:12px; color:#858df8; font-weight:600;">${key}</span>
+                    <span style="font-size:10px; color:#5c6275; font-family:monospace;">${currentPath}</span>
+                  </div>`;
+                if (isLong) {
+                  html += `<textarea rows="2" onchange="updateUniversalKey('${currentPath}', this.value)" style="width:100%; font-size:12.5px; padding:8px 10px; background:#161824; border:1px solid #232738; border-radius:6px; color:#fff;">${escapeHtml(strVal)}</textarea>`;
+                } else {
+                  html += `<input type="text" value="${escapeHtml(strVal)}" onchange="updateUniversalKey('${currentPath}', this.value)" style="width:100%; font-size:12.5px; padding:6px 10px; background:#161824; border:1px solid #232738; border-radius:6px; color:#fff;">`;
+                }
+                html += `</div>`;
+              }
+            }
+          }
+        }
+        return html;
+      }
+
+      cont.innerHTML = renderNode(siteData);
+
+      const resEl = document.getElementById('universal-search-results');
+      if (resEl) {
+        if (q) {
+          resEl.textContent = `Found ${matchesCount} matching fields for "${q}". Edit any value directly.`;
+        } else {
+          resEl.textContent = `Showing all ${matchesCount} fields across all pages & sections. Edit any field and click Apply & Save.`;
+        }
+      }
+    }
+
+    function filterUniversalEditor(val) {
+      renderUniversalTree(val);
+    }
+
+    function updateUniversalKey(path, newValue) {
+      try {
+        const parts = path.replace(/\\[(\\d+)\\]/g, '.$1').split('.');
+        let curr = siteData;
+        for (let i = 0; i < parts.length - 1; i++) {
+          const p = parts[i];
+          if (!(p in curr)) curr[p] = {};
+          curr = curr[p];
+        }
+        curr[parts[parts.length - 1]] = newValue;
+        showToast(`Updated "${path}"`);
+        populateForm();
+      } catch (e) {
+        console.error('Failed to update universal key:', e);
       }
     }
 
