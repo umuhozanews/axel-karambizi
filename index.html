@@ -224,29 +224,81 @@
   visibility: hidden !important;
   pointer-events: none !important;
 }
-.framer-11gwpp8 {
-  aspect-ratio: 2.05 !important;
-  height: auto !important;
-  max-height: none !important;
+
+/* Featured Project Cards on Landing: Not zoomed, elegant, compact sizing */
+.framer-O6Pza .framer-ensd48 {
+  width: 100% !important;
+  max-width: 760px !important;
+  margin: 0 auto !important;
+  border-radius: 18px !important;
+  overflow: hidden !important;
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.1) !important;
 }
+
+.framer-11gwpp8 {
+  aspect-ratio: 16 / 10 !important;
+  width: 100% !important;
+  height: auto !important;
+  max-height: 480px !important;
+  border-radius: inherit !important;
+  overflow: hidden !important;
+}
+
 .framer-11gwpp8 img {
   object-fit: cover !important;
-  object-position: center !important;
+  object-position: center center !important;
   width: 100% !important;
   height: 100% !important;
+  transform: none !important;
 }
+
+/* Hero Portrait Image: Ensure unzoomed, well-framed display */
+.framer-174865s img,
+.framer-1y3f9q6 img {
+  object-fit: cover !important;
+  object-position: center 20% !important;
+  transform: none !important;
+}
+
+/* Tablet adjustments */
 @media (max-width: 1199.98px) {
+  .framer-O6Pza .framer-ensd48 {
+    max-width: 600px !important;
+    margin: 0 auto !important;
+  }
   .framer-11gwpp8 {
-    aspect-ratio: 2.05 !important;
-    height: auto !important;
+    aspect-ratio: 16 / 10 !important;
+    max-height: 380px !important;
   }
 }
+
+/* Mobile adjustments: neat, smaller cards that don't zoom-crop the photos */
 @media (max-width: 809.98px) {
+  .framer-O6Pza .framer-ensd48 {
+    max-width: 320px !important;
+    width: 88% !important;
+    margin: 0 auto !important;
+    border-radius: 16px !important;
+  }
   .framer-11gwpp8 {
-    aspect-ratio: 2.05 !important;
+    aspect-ratio: 16 / 10 !important;
     height: auto !important;
+    max-height: 200px !important;
+  }
+  .framer-11gwpp8 img {
+    object-fit: cover !important;
+    object-position: center center !important;
+  }
+  .framer-O6Pza .framer-12s38yx {
+    gap: 8px !important;
+    padding: 12px !important;
+  }
+  .framer-O6Pza .framer-qhutoj h2 {
+    font-size: 19px !important;
+    line-height: 1.25 !important;
   }
 }
+
 @media (min-width: 1200px) {
   .framer-1behxzj {
     bottom: -90px !important;
