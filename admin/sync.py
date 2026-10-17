@@ -196,6 +196,29 @@ def sync_all():
         if fq_intro:
             html = re.sub(r'Here are answers to some of the most common questions[^\<]*', fq_intro, html)
 
+        # FAQ Items synchronization (questions & answers)
+        faqs = data.get('faq', [])
+        if faqs:
+            q_pattern = r'(<div class="framer-eqt2pn"[^>]*><h4[^>]*>)([^<]+)(</h4>)'
+            def q_repl(idx, m):
+                if idx < len(faqs):
+                    return m.group(1) + faqs[idx].get('question', '') + m.group(3)
+                return m.group(0)
+            html = replace_nth_match(q_pattern, q_repl, html)
+
+            a_pattern = r'(<div class="framer-1l7evow"[^>]*>.*?<p class="framer-text framer-styles-preset-17cdd8a"[^>]*>)(.*?)(</p>)'
+            def a_repl(idx, m):
+                if idx < len(faqs):
+                    return m.group(1) + faqs[idx].get('answer', '') + m.group(3)
+                return m.group(0)
+            html = replace_nth_match(a_pattern, a_repl, html)
+
+        # Remove fixed height on FAQ container so answers are never clipped
+        html = html.replace('style="height: 583.594px;"', 'style="height: auto; min-height: auto;"')
+
+        # My Story button links directly to blogs
+        html = re.sub(r'(<a [^>]*href=")[^"]*("[^>]*>(?:(?!</a>).)*?My Story)', r'\1./blogs/\2', html, flags=re.DOTALL)
+
         for pat, repl in proj_url_map:
             html = re.sub(pat, repl, html)
 

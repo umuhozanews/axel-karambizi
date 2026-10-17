@@ -292,7 +292,15 @@
       var text = (link.textContent || '').trim().toLowerCase();
       var href = (link.getAttribute('href') || '').toLowerCase();
 
-      if (text === 'my story' || href === '#contact' || href === './#contact' || href.endsWith('/#contact')) {
+      if (text === 'my story') {
+        e.preventDefault();
+        e.stopPropagation();
+        var isRoot = window.location.pathname === '/' || window.location.pathname.endsWith('/index.html') && !window.location.pathname.includes('/', 1);
+        window.location.href = isRoot ? './blogs/' : '../blogs/';
+        return;
+      }
+
+      if (href === '#contact' || href === './#contact' || href.endsWith('/#contact')) {
         var contactEl = document.getElementById('contact');
         if (contactEl) {
           e.preventDefault();

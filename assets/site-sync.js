@@ -353,13 +353,34 @@
           const f = data.faq[idx];
           const q = card.querySelector('.framer-eqt2pn h4, h4');
           if (q && f.question) q.textContent = f.question;
-          const a = card.querySelector('.framer-118mxo5 p, [data-framer-name="Bottom"] p, p');
-          if (a && f.answer) a.textContent = f.answer;
+          const a = card.querySelector('.framer-1l7evow p, [data-framer-name="Bottom"] p, .framer-118mxo5 p, p');
+          if (a && f.answer) {
+            a.textContent = f.answer;
+            a.style.whiteSpace = 'normal';
+            a.style.lineHeight = '1.75';
+            a.style.overflow = 'visible';
+            a.style.height = 'auto';
+            a.style.wordBreak = 'normal';
+          }
         } else {
           card.style.display = 'none';
         }
       });
     }
+
+    // Ensure "My Story" button always links to /blogs/
+    document.querySelectorAll('a').forEach(a => {
+      if (a.textContent.trim().toLowerCase() === 'my story') {
+        const isRoot = window.location.pathname === '/' || (window.location.pathname.endsWith('/index.html') && !window.location.pathname.includes('/', 1));
+        const target = isRoot ? './blogs/' : '../blogs/';
+        a.href = target;
+        a.onclick = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          window.location.href = target;
+        };
+      }
+    });
 
     // 8. Explore Stories / Blogs
     if (data.explore_header) {

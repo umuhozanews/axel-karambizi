@@ -125,6 +125,41 @@ export function syncIndex(html, data) {
     });
   }
 
+  // FAQ Header
+  const fqh = data.faq_header || {};
+  if (fqh.heading) {
+    html = html.replace(/>Frequently Asked Questions</g, `>${fqh.heading}<`);
+  }
+  if (fqh.intro) {
+    html = html.replace(/Here are answers to some of the most common questions[^<]*/g, fqh.intro);
+  }
+
+  // FAQ Items
+  const faqs = data.faq || [];
+  if (faqs.length > 0) {
+    const qPattern = /(<div class="framer-eqt2pn"[^>]*><h4[^>]*>)([^<]+)(<\/h4>)/g;
+    html = replaceNthMatch(qPattern, (idx, groups) => {
+      if (idx < faqs.length && faqs[idx].question) {
+        return groups[1] + faqs[idx].question + groups[3];
+      }
+      return groups[0];
+    }, html);
+
+    const aPattern = /(<div class="framer-1l7evow"[^>]*>[\s\S]*?<p class="framer-text framer-styles-preset-17cdd8a"[^>]*>)([\s\S]*?)(<\/p>)/g;
+    html = replaceNthMatch(aPattern, (idx, groups) => {
+      if (idx < faqs.length && faqs[idx].answer) {
+        return groups[1] + faqs[idx].answer + groups[3];
+      }
+      return groups[0];
+    }, html);
+  }
+
+  // Remove fixed height on FAQ container
+  html = html.replace(/style="height:\s*583\.594px;"/g, 'style="height: auto; min-height: auto;"');
+
+  // My Story button links directly to blogs
+  html = html.replace(/(<a [^>]*href=")[^"]*("[^>]*>(?:(?!<\/a>)[\s\S])*?My Story)/gi, '$1./blogs/$2');
+
   return html;
 }
 
