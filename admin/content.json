@@ -1,93 +1,212 @@
 {
-  "faq": [
+  "general": {
+    "name": "Axel Karambizi",
+    "badge": "Hi",
+    "headline_1": "founder",
+    "headline_2": "builder",
+    "tagline": "I build businesses, create opportunities and tell the stories along the way.",
+    "hero_front_image": "./assets/hero_front_hd.jpg",
+    "hero_back_image": "./assets/hero_back_hd.jpg",
+    "avatar_image": "./assets/avatar.jpg",
+    "favicon_image": "./assets/favicon.png"
+  },
+  "navigation": {
+    "items": [
+      {
+        "label": "Home",
+        "url": "./"
+      },
+      {
+        "label": "About",
+        "url": "./about/"
+      },
+      {
+        "label": "Projects",
+        "url": "./projects/"
+      },
+      {
+        "label": "Blogs",
+        "url": "./blogs/"
+      }
+    ],
+    "button": {
+      "label": "Contact",
+      "url": "#contact"
+    },
+    "status_badge": "Available for work"
+  },
+  "counters": [
     {
-      "id": "faq-1",
-      "answer": "I build software products, accredited educational foundations, and digital ecosystems. My primary ventures include Risevana Foundation (rural education & nutrition for 1,200+ children), Libblio (school library intelligence software), and Atomiq (digital design, branding, and software agency).",
-      "question": "What do you build?"
+      "number": "1,200+",
+      "label": "Children Reached"
     },
     {
-      "id": "faq-2",
-      "answer": "I believe in conviction, velocity, and practical utility. Whether writing software or constructing school classrooms, I start with direct community and user needs, build working prototypes rapidly, and iterate based on real feedback.",
-      "question": "How do you approach a project?"
+      "number": "20+",
+      "label": "Products Deployed"
     },
     {
-      "id": "faq-3",
-      "answer": "I am based in Kigali, Rwanda, but work with partners, founders, and institutions across East Africa, Central Africa, the Middle East, and Europe.",
-      "question": "Where are you based?"
+      "number": "1,000+",
+      "label": "Trees Planted"
+    }
+  ],
+  "services": [
+    {
+      "title": "1. ui/ux design",
+      "items": [
+        "Wireframing and prototyping",
+        "User Interface design for web and mobile apps",
+        "Usability testing and user feedback analysis",
+        "Interaction design and micro-interactions"
+      ]
     },
     {
-      "id": "faq-4",
-      "answer": "I am constantly deepening my mastery of full-stack software architecture, AI-augmented developer workflows, distributed systems, and sustainable nonprofit governance.",
-      "question": "What are you learning right now?"
+      "title": "2. Education",
+      "items": [
+        "Accredited school foundations in rural areas",
+        "Classrooms and daily meals for children",
+        "Mobile classroom bringing tech to underserved areas",
+        "Community mentorship pathways for local youth"
+      ]
     },
     {
-      "id": "faq-5",
-      "answer": "Yes. Atomiq collaborates with forward-thinking founders, tech companies, and community organizations looking to build world-class web applications, brands, and digital infrastructure.",
-      "question": "Can we collaborate or hire Atomiq?"
+      "title": "3. Community Action",
+      "items": [
+        "Kigali Car Free Day community runs",
+        "Blood drives and civic events",
+        "Environmental initiatives, 1,000+ trees planted",
+        "Youth empowerment with Youth Uplift Initiative"
+      ]
     },
     {
-      "id": "faq-6",
-      "answer": "You can reach out directly via email at hello@axelkarambizi.com or phone at +250 788 749 709. Let us talk about your vision and how we can bring it to life.",
-      "question": "How do I get started?"
+      "title": "4. Storytelling",
+      "items": [
+        "Writing and travel journals",
+        "Field notes from founder journeys",
+        "Building across borders: DRC, Uganda, France, UAE",
+        "Documenting lessons in building and giving back"
+      ]
+    }
+  ],
+  "featured_projects": [
+    {
+      "id": "risevana",
+      "title": "Risevana Foundation",
+      "category": "Education · Social Impact",
+      "description": "A community-led education initiative making learning accessible to children in underserved rural communities. What started with one room in Nyamasheke is growing into a model for early childhood education, digital learning, and opportunity. ",
+      "image": "./assets/Screenshot_2026-10-04_at_2.53.39_PM.png",
+      "link": "https://risevana-foundation.vercel.app/"
+    },
+    {
+      "id": "libblio",
+      "title": "Atomiq",
+      "category": "Design · Technology",
+      "description": "A software and design agency built by young Rwandan founders to help startups and companies turn ideas into real products—from brand identity and digital experiences to AI, mobile apps, and full software systems. ",
+      "image": "./assets/Screenshot_2026-10-04_at_2.42.02_PM.png",
+      "link": "https://www.libblio.com/"
+    },
+    {
+      "id": "youth-uplift",
+      "title": "Youth Uplift Initiative",
+      "category": "Community / Youth",
+      "description": "Youth empowerment initiatives spanning mentorship, community runs, blood donation drives, and environmental restoration across Kigali.",
+      "image": "./assets/Screenshot_2026-10-04_at_2.43.47_PM.png",
+      "link": "https://www.yupinitiative.com/"
+    },
+    {
+      "id": "atomiq",
+      "title": "Libblio",
+      "category": "EdTech · SaaS",
+      "description": "A digital library management platform helping schools move from paper-based libraries to smarter, more accessible systems. Built as a student-led startup, Libblio went on to win AwardX East Africa and TICON Africa Startup of the Year. LinkedIn",
+      "image": "./assets/Smiling_Founder_Presenting_African_Startup_Trophy.png",
+      "link": "https://www.atomiq.rw/"
+    },
+    {
+      "id": "project-1791365220085",
+      "title": "Hippo Technology",
+      "category": "E-commerce · Business",
+      "description": "East Africa's most trusted tech gadget's delivery store. Premium quality gadgets paid after inspection with a delivery time below 20 minutes",
+      "image": "./assets/hipooooo.jpeg",
+      "link": "https://www.hippotech.rw/"
+    }
+  ],
+  "more_projects": [
+    {
+      "title": "Mobile Classroom",
+      "category": "Education",
+      "description": "Bringing technology and digital exposure to underserved areas.",
+      "link": "",
+      "image": ""
+    },
+    {
+      "title": "Community Mentorship",
+      "category": "Youth",
+      "description": "Pairing young builders and students with active practitioners across software, craft, and entrepreneurship.",
+      "link": "",
+      "image": ""
+    },
+    {
+      "title": "Tree Planting Initiatives",
+      "category": "Environment",
+      "description": "Community-led agroforestry planting over 1,000 native trees across vulnerable hillsides to combat soil erosion.",
+      "link": "",
+      "image": ""
+    }
+  ],
+  "explore_header": {
+    "heading": "The World Is Too Alive to Stay in One Place",
+    "intro": "I travel to see how people find clarity and purpose, collecting places, conversations, quiet moments and perspectives along the way."
+  },
+  "explore_stories": [
+    {
+      "id": "lake-kivu-stillness",
+      "title": "Reading by the Water: Naval Ravikant's Reflections",
+      "category": "Field Notes",
+      "date": "May 2, 2025",
+      "tag": "Most Viewed",
+      "excerpt": "Pausing on the shores of Lake Kivu with The Almanack of Naval Ravikant, and why making space to reflect matters as much as building.",
+      "image": "./assets/explore_reading_water.png",
+      "link": "./blog-detail/",
+      "body": ""
+    },
+    {
+      "id": "lake-kivu-speed",
+      "title": "Moments on the Lake: Finding Speed and Stillness",
+      "category": "Movement",
+      "date": "Apr 20, 2025",
+      "tag": "",
+      "excerpt": "Out on the waters of Lake Kivu, taking in Rwanda’s natural beauty, adventure, fresh air and the freedom of boundless horizons.",
+      "image": "./assets/explore_lake_kivu_jetski.png",
+      "link": "./blog-detail/",
+      "body": " hogashdoufboUAFVOBSuhbfoSDGFBGOUDSGYFOdsgfodsugfudsgvodsgodufgougbofiGOSDFGSODFUHGSADDOUHGASDOUFGSDOU"
     }
   ],
   "about": {
-    "name": "Axel Karambizi",
-    "badge": "About me",
+    "paragraph_1": "I’m a founder and builder from Kigali, Rwanda, passionate about turning barriers into opportunity through companies, communities and technology.",
+    "paragraph_2": "I grew up believing opportunity could be on the other side of a barrier. Sometimes a river, sometimes access to technology. So I started building.",
+    "portrait_image": "./assets/contact_portrait.jpg",
     "journey": [
       {
         "title": "Founder & Director",
-        "years": "2021 – Present",
-        "company": "Risevana Foundation"
+        "company": "Risevana Foundation",
+        "years": "2021 – Present"
       },
       {
         "title": "Co-Founder & Tech Lead",
-        "years": "2023 – Present",
-        "company": "Libblio"
+        "company": "Libblio",
+        "years": "2023 – Present"
       },
       {
         "title": "Founder & Lead Strategist",
-        "years": "2022 – Present",
-        "company": "Atomiq Agency"
+        "company": "Atomiq Agency",
+        "years": "2022 – Present"
       },
       {
         "title": "Founder & Community Lead",
-        "years": "2021 – Present",
-        "company": "Youth Uplift Initiative"
+        "company": "Youth Uplift Initiative",
+        "years": "2021 – Present"
       }
     ],
-    "tagline": "I build businesses, create opportunities and tell the stories along the way.",
-    "paragraph_1": "I’m a founder and builder from Kigali, Rwanda, passionate about turning barriers into opportunity through companies, communities and technology.",
-    "paragraph_2": "I grew up believing opportunity could be on the other side of a barrier. Sometimes a river, sometimes access to technology. So I started building.",
-    "paragraph_3": "",
-    "journey_intro": "From a river crossing in rural Rwanda to software running in 20+ institutions. What connects every chapter is doing the work before having the permission.",
-    "process_steps": [
-      {
-        "step": "01.",
-        "title": "Find the Barrier",
-        "description": "I like problems that don’t have obvious answers. It starts with spotting what stands between people and opportunity."
-      },
-      {
-        "step": "02.",
-        "title": "Mobilize the Community",
-        "description": "Building anything that lasts means bringing people together and earning human trust."
-      },
-      {
-        "step": "03.",
-        "title": "Build Where Roads End",
-        "description": "From classrooms to software, I ship systems that work where access is hardest."
-      },
-      {
-        "step": "04.",
-        "title": "Explore and Learn",
-        "description": "I travel and talk to founders to see how people find clarity, speed and purpose."
-      },
-      {
-        "step": "05.",
-        "title": "Become Useful",
-        "description": "I keep learning AI, business and storytelling so the next thing I build reaches further."
-      }
-    ],
+    "learning_stack_intro": "I learn by doing. Here is what I’m actively mastering across engineering, design, leadership, and operational scale.",
     "learning_stack": [
       {
         "name": "Full-Stack Software Architecture",
@@ -110,258 +229,87 @@
         "description": "Helping ideas cross borders and find their natural audience"
       }
     ],
-    "portrait_image": "./assets/contact_portrait.jpg",
-    "process_header": {
-      "intro": "My process starts with a real barrier and ends with something people can use, built alongside the people it is for.",
-      "heading": "Building with Purpose and Curiosity"
-    },
+    "badge": "About me",
+    "name": "Axel Karambizi",
+    "tagline": "I build businesses, create opportunities and tell the stories along the way.",
+    "paragraph_3": "",
     "journey_heading": "Discover My Journey",
+    "journey_intro": "From a river crossing in rural Rwanda to software running in 20+ institutions. What connects every chapter is doing the work before having the permission.",
     "learning_heading": "What I’m Becoming",
-    "learning_stack_intro": "I learn by doing. Here is what I’m actively mastering across engineering, design, leadership, and operational scale."
-  },
-  "footer": {
-    "social": {
-      "x": "https://x.com/axelkarambizi",
-      "github": "https://github.com/karambiziaxel",
-      "linkedin": "https://www.linkedin.com/in/axel-karambizi-1633922a7/",
-      "whatsapp": "https://wa.me/250788749709",
-      "instagram": "https://www.instagram.com/axelkarambizi/"
-    },
-    "copyright": "© Copyright 2026. All Rights Reserved by Axel Karambizi",
-    "created_by": "Gacondo Labs",
-    "created_by_url": "#"
+    "process_header": {
+      "heading": "Building with Purpose and Curiosity",
+      "intro": "My process starts with a real barrier and ends with something people can use, built alongside the people it is for."
+    }
   },
   "contact": {
-    "email": "hello@axelkarambizi.com",
-    "intro": "Have a project in mind, an initiative you'd like to collaborate on, or just want to connect? Reach out below.",
-    "phone": "+250 788 749 709",
-    "status": "Available for new projects & ventures",
     "heading": "Let’s build something.",
-    "location": "Kigali, Rwanda",
+    "intro": "Have a project in mind, an initiative you'd like to collaborate on, or just want to connect? Reach out below.",
+    "email": "hello@axelkarambizi.com",
+    "phone": "+250 788 749 709",
+    "portrait_image": "./assets/axel_linkedin_cover.png",
     "whatsapp": "https://wa.me/250788749709",
-    "form_action": "https://formsubmit.co/papilocostaa@gmail.com",
-    "portrait_image": "./assets/axel_linkedin_cover.png"
+    "location": "Kigali, Rwanda",
+    "status": "Available for new projects & ventures",
+    "form_action": "https://formsubmit.co/papilocostaa@gmail.com"
   },
-  "general": {
-    "name": "Axel Karambizi",
-    "badge": "Hi",
-    "tagline": "I build businesses, create opportunities and tell the stories along the way.",
-    "headline_1": "founder",
-    "headline_2": "builder",
-    "avatar_image": "./assets/avatar.jpg",
-    "favicon_image": "./assets/favicon.png",
-    "hero_back_image": "./assets/hero_back_hd.jpg",
-    "hero_front_image": "./assets/hero_front_hd.jpg"
+  "footer": {
+    "copyright": "© Copyright 2025. All Rights Reserved by Axel Karambizi",
+    "created_by": "Gacondo Labs",
+    "created_by_url": "#",
+    "social": {
+      "x": "https://x.com/",
+      "instagram": "https://www.instagram.com/axelkarambizi/",
+      "linkedin": "",
+      "github": "",
+      "whatsapp": "https://wa.me/250788749709"
+    }
   },
-  "counters": [
+  "faq": [
     {
-      "label": "Children Reached",
-      "number": "1,200+"
+      "id": "faq-1",
+      "question": "What do you build?",
+      "answer": "I build software products, accredited educational foundations, and digital ecosystems. My primary ventures include Risevana Foundation (rural education & nutrition for 1,200+ children), Libblio (school library intelligence software), and Atomiq (digital design, branding, and software agency)."
     },
     {
-      "label": "Products Deployed",
-      "number": "20+"
+      "id": "faq-2",
+      "question": "How do you approach a project?",
+      "answer": "I believe in conviction, velocity, and practical utility. Whether writing software or constructing school classrooms, I start with direct community and user needs, build working prototypes rapidly, and iterate based on real feedback."
     },
     {
-      "label": "Trees Planted",
-      "number": "1,000+"
+      "id": "faq-3",
+      "question": "Where are you based?",
+      "answer": "I am based in Kigali, Rwanda, but work with partners, founders, and institutions across East Africa, Central Africa, the Middle East, and Europe."
+    },
+    {
+      "id": "faq-4",
+      "question": "What are you learning right now?",
+      "answer": "I am constantly deepening my mastery of full-stack software architecture, AI-augmented developer workflows, distributed systems, and sustainable nonprofit governance."
+    },
+    {
+      "id": "faq-5",
+      "question": "Can we collaborate or hire Atomiq?",
+      "answer": "Yes. Atomiq collaborates with forward-thinking founders, tech companies, and community organizations looking to build world-class web applications, brands, and digital infrastructure."
+    },
+    {
+      "id": "faq-6",
+      "question": "How do I get started?",
+      "answer": "You can reach out directly via email at hello@axelkarambizi.com or phone at +250 788 749 709. Let us talk about your vision and how we can bring it to life."
     }
   ],
-  "services": [
-    {
-      "items": [
-        "Wireframing and prototyping",
-        "User Interface design for web and mobile apps",
-        "Usability testing and user feedback analysis",
-        "Interaction design and micro-interactions"
-      ],
-      "title": "1. ui/ux design"
-    },
-    {
-      "items": [
-        "Accredited school foundations in rural areas",
-        "Classrooms and daily meals for children",
-        "Mobile classroom bringing tech to underserved areas",
-        "Community mentorship pathways for local youth"
-      ],
-      "title": "2. Education"
-    },
-    {
-      "items": [
-        "Kigali Car Free Day community runs",
-        "Blood drives and civic events",
-        "Environmental initiatives, 1,000+ trees planted",
-        "Youth empowerment with Youth Uplift Initiative"
-      ],
-      "title": "3. Community Action"
-    },
-    {
-      "items": [
-        "Writing and travel journals",
-        "Field notes from founder journeys",
-        "Building across borders: DRC, Uganda, France, UAE",
-        "Documenting lessons in building and giving back"
-      ],
-      "title": "4. Storytelling"
-    }
-  ],
-  "faq_header": {
-    "intro": "Here are answers to some of the most common questions I receive. If you don’t see your question here, feel free to reach out—I’m happy to help!",
-    "heading": "Frequently Asked Questions"
-  },
-  "navigation": {
-    "items": [
-      {
-        "url": "./",
-        "label": "Home"
-      },
-      {
-        "url": "./about/",
-        "label": "About"
-      },
-      {
-        "url": "./projects/",
-        "label": "Projects"
-      },
-      {
-        "url": "./blogs/",
-        "label": "Blogs"
-      }
-    ],
-    "button": {
-      "url": "#contact",
-      "label": "Contact"
-    },
-    "status_badge": "Available for work"
-  },
-  "more_projects": [
-    {
-      "link": "",
-      "image": "./assets/RFcUbpIGFydbU9WBSTc9HJRQI.jpeg",
-      "title": "Mobile Classroom",
-      "category": "Education",
-      "description": "Bringing technology and digital exposure to underserved areas."
-    },
-    {
-      "link": "",
-      "image": "./assets/346Dg9EFyDG62n4PMiwIhATISNU.jpeg",
-      "title": "Community Mentorship",
-      "category": "Youth",
-      "description": "Pairing young builders and students with active practitioners across software, craft, and entrepreneurship."
-    },
-    {
-      "link": "",
-      "image": "./assets/RzBOpbFyAywEXNkFbMTKVhq44.jpg",
-      "title": "Tree Planting Initiatives",
-      "category": "Environment",
-      "description": "Community-led agroforestry planting over 1,000 native trees across vulnerable hillsides to combat soil erosion."
-    }
-  ],
-  "explore_header": {
-    "intro": "I travel to see how people find clarity and purpose, collecting places, conversations, quiet moments and perspectives along the way.",
-    "heading": "The World Is Too Alive to Stay in One Place"
-  },
-  "explore_stories": [
-    {
-      "id": "lake-kivu-stillness",
-      "tag": "Most Viewed",
-      "body": "",
-      "date": "May 2, 2025",
-      "link": "./blogs/lake-kivu-stillness/",
-      "image": "./assets/explore_reading_water.png",
-      "title": "Reading by the Water: Agisere & The Art of Stillness",
-      "excerpt": "Pausing on the shores of Lake Kivu with The Almanack of Naval Ravikant, and why making space to reflect matters as much as building.",
-      "category": "Field Notes"
-    },
-    {
-      "id": "dubai-opportunity",
-      "tag": "",
-      "body": "",
-      "date": "Apr 20, 2025",
-      "link": "./blogs/dubai-opportunity/",
-      "image": "./assets/explore_dubai.jpg",
-      "title": "I Went to Dubai Looking for Opportunity. Here’s What I Found.",
-      "excerpt": "Reflections on speed, scale, and global ambition from days spent meeting builders and founders across the UAE.",
-      "category": "Field Notes"
-    },
-    {
-      "id": "cross-border-founders",
-      "tag": "",
-      "body": "",
-      "date": "May 2, 2025",
-      "link": "./blogs/cross-border-founders/",
-      "image": "./assets/explore_founder_lessons.jpg",
-      "title": "What I Learned From Talking to Founders in Another Country",
-      "excerpt": "Cross-border lessons from East Africa to Central Africa: the common patterns that separate ideas from lasting execution.",
-      "category": "Field Notes"
-    },
-    {
-      "id": "people-i-met",
-      "tag": "",
-      "body": "",
-      "date": "Apr 20, 2025",
-      "link": "./blogs/people-i-met/",
-      "image": "./assets/explore_people_met.jpg",
-      "title": "The People I Met on the Way",
-      "excerpt": "Behind every venture, school, and line of code is human connection and the teachers who showed up without being asked.",
-      "category": "Field Notes"
-    },
-    {
-      "id": "lake-kivu-speed",
-      "tag": "",
-      "body": "",
-      "date": "Apr 20, 2025",
-      "link": "./blogs/lake-kivu-speed/",
-      "image": "./assets/explore_lake_kivu_jetski.png",
-      "title": "Moments on the Lake: Finding Speed and Stillness",
-      "excerpt": "Out on the waters of Lake Kivu, taking in Rwanda’s natural beauty, adventure, fresh air and the freedom of boundless horizons.",
-      "category": "Movement"
-    }
-  ],
-  "services_header": {
-    "intro": "I don’t have one box. I build companies, communities and technology, and I tell the stories along the way.",
-    "heading": "what I can do for you"
-  },
-  "featured_projects": [
-    {
-      "id": "risevana",
-      "link": "https://risevana-foundation.vercel.app/",
-      "image": "./assets/Screenshot_2026-10-04_at_2.53.39_PM.png",
-      "title": "Risevana Foundation",
-      "category": "Education · Social Impact",
-      "description": ""
-    },
-    {
-      "id": "libblio",
-      "link": "https://www.libblio.com/",
-      "image": "./assets/Smiling_Founder_Presenting_African_Startup_Trophy.png",
-      "title": "Libblio",
-      "category": "EdTech · SaaS",
-      "description": ""
-    },
-    {
-      "id": "youth-uplift",
-      "link": "https://www.yupinitiative.com/",
-      "image": "./assets/Screenshot_2026-10-04_at_2.43.47_PM.png",
-      "title": "Youth Uplift Initiative",
-      "category": "Community / Youth",
-      "description": ""
-    },
-    {
-      "id": "atomiq",
-      "link": "https://www.atomiq.rw/",
-      "image": "./assets/Screenshot_2026-10-04_at_2.42.02_PM.png",
-      "title": "Atomiq Agency",
-      "category": "Design · Technology",
-      "description": ""
-    }
-  ],
-  "more_projects_header": {
-    "intro": "Other initiatives and community ventures across Rwanda.",
-    "heading": "More Projects"
-  },
   "featured_projects_header": {
-    "intro": "These selected projects reflect how I learn: by building things for other people and solving problems that don’t have obvious answers.",
-    "heading": "Featured Projects"
+    "heading": "Featured Projects",
+    "intro": "These selected projects reflect how I learn: by building things for other people and solving problems that don’t have obvious answers."
+  },
+  "more_projects_header": {
+    "heading": "More Projects",
+    "intro": "Other initiatives and community ventures across Rwanda."
+  },
+  "services_header": {
+    "heading": "what I can do for you",
+    "intro": "I don’t have one box. I build companies, communities and technology, and I tell the stories along the way."
+  },
+  "faq_header": {
+    "heading": "Frequently Asked Questions",
+    "intro": "Here are answers to some of the most common questions I receive. If you don’t see your question here, feel free to reach out—I’m happy to help!"
   }
 }
