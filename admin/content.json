@@ -121,7 +121,32 @@
       "link": "https://www.hippotech.rw/"
     }
   ],
-  "more_projects": [],
+  "more_projects": [
+    {
+      "id": "more-project-1",
+      "title": "Mobile Classroom",
+      "category": "Education",
+      "description": "Bringing technology and digital exposure to underserved areas.",
+      "image": "./assets/RFcUbpIGFydbU9WBSTc9HJRQI.jpeg",
+      "link": ""
+    },
+    {
+      "id": "more-project-2",
+      "title": "Community Mentorship",
+      "category": "Youth",
+      "description": "Pairing young builders and students with active practitioners across software, craft, and entrepreneurship.",
+      "image": "./assets/RFcUbpIGFydbU9WBSTc9HJRQI.jpeg",
+      "link": ""
+    },
+    {
+      "id": "more-project-3",
+      "title": "Tree Planting Initiatives",
+      "category": "Environment",
+      "description": "Community-led agroforestry planting over 1,000 native trees across vulnerable hillsides to combat soil erosion.",
+      "image": "./assets/RFcUbpIGFydbU9WBSTc9HJRQI.jpeg",
+      "link": ""
+    }
+  ],
   "explore_header": {
     "heading": "The World Is Too Alive to Stay in One Place",
     "intro": "I travel to see how people find clarity and purpose, collecting places, conversations, quiet moments and perspectives along the way."
@@ -281,5 +306,39 @@
   "faq_header": {
     "heading": "Frequently Asked Questions",
     "intro": "Here are answers to some of the most common questions I receive. If you don’t see your question here, feel free to reach out—I’m happy to help!"
-  }
+  },
+  "stories_and_voices_header": {
+    "heading": "Stories & Voices",
+    "intro": "The missions I build for, in their own words. Each one started with a simple belief that people who lack access deserve a way in."
+  },
+  "stories_and_voices": [
+    {
+      "id": "sv-1",
+      "name": "Risevana",
+      "role": "Education on the Community’s Side",
+      "quote": "A river stood between children and school. So we built the classroom on their side.",
+      "image": "./assets/img_7.jpg"
+    },
+    {
+      "id": "sv-2",
+      "name": "Libblio",
+      "role": "EdTech & Library Intelligence",
+      "quote": "A library should know what its students need.",
+      "image": "./assets/img_8.jpg"
+    },
+    {
+      "id": "sv-3",
+      "name": "Youth Uplift Initiative",
+      "role": "Community Action",
+      "quote": "Opportunity becomes more powerful when people who normally lack access can reach it.",
+      "image": "./assets/img_9.jpg"
+    },
+    {
+      "id": "sv-4",
+      "name": "Atomiq",
+      "role": "Software & Digital Solutions",
+      "quote": "Four young people decided they could build things for other people.",
+      "image": "./assets/img_10.jpg"
+    }
+  ]
 }

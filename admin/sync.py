@@ -256,8 +256,8 @@ def sync_all():
         # Remove fixed height on FAQ container so answers are never clipped
         html = html.replace('style="height: 583.594px;"', 'style="height: auto; min-height: auto;"')
 
-        # My Story button links directly to blogs
-        html = re.sub(r'(<a [^>]*href=")[^"]*("[^>]*>(?:(?!</a>).)*?My Story)', r'\1./blogs/\2', html, flags=re.DOTALL)
+        # My Story button links directly to about
+        html = re.sub(r'(<a [^>]*href=")[^"]*("[^>]*>(?:(?!</a>).)*?My Story)', r'\1./about/\2', html, flags=re.DOTALL)
 
         # Featured projects: Update titles, categories, images, and links on index.html
         for idx, p in enumerate(fp):
@@ -281,6 +281,46 @@ def sync_all():
                 return chunk
 
             html = re.sub(rf'(data-framer-name="{f_name}".*?</a>)', idx_card_repl, html, flags=re.DOTALL)
+
+        # Stories & Voices (Testimonials) synchronization
+        sv_h = data.get('stories_and_voices_header', {})
+        sv_heading = sv_h.get('heading', 'Stories & Voices')
+        sv_intro = sv_h.get('intro', '')
+        if sv_heading:
+            html = re.sub(r'>Stories &amp; Voices<', f'>{sv_heading}<', html)
+        if sv_intro:
+            html = re.sub(r'The missions I build for, in their own words[^\<]*', sv_intro, html)
+
+        sv_list = data.get('stories_and_voices', [])
+        grid_m = re.search(r'(<div class="framer-q6dtkm" data-framer-name="Testimonial Grid">)(.*?)(</div>\s*</div>\s*</section>)', html, re.DOTALL)
+        if grid_m and len(sv_list) > 0:
+            inner_grid = grid_m.group(2)
+            parts = inner_grid.split('<div class="ssr-variant">')
+            existing_cards = ['<div class="ssr-variant">' + p for p in parts[1:]]
+
+            def update_story_card(card_html, story):
+                quote = story.get('quote', '')
+                name = story.get('name', '')
+                role = story.get('role', '')
+                image = story.get('image', '')
+                if quote:
+                    card_html = re.sub(r'(<div [^>]*data-framer-name="Review"[^>]*>.*?<p[^>]*>)(.*?)(</p></div>)', rf'\g<1>{quote}\g<3>', card_html, flags=re.DOTALL)
+                if name:
+                    card_html = re.sub(r'(<div [^>]*data-framer-name="Name"[^>]*>.*?<p[^>]*>)(.*?)(</p></div>)', rf'\g<1>{name}\g<3>', card_html, flags=re.DOTALL)
+                if role:
+                    card_html = re.sub(r'(<div [^>]*data-framer-name="Title"[^>]*>.*?<p[^>]*>)(.*?)(</p></div>)', rf'\g<1>{role}\g<3>', card_html, flags=re.DOTALL)
+                if image:
+                    clean_img = image.replace('../', './')
+                    card_html = re.sub(r'src="[^"]*"', f'src="{clean_img}"', card_html)
+                    card_html = re.sub(r'srcset="[^"]*"', f'srcset="{clean_img} 512w, {clean_img} 1024w"', card_html)
+                return card_html
+
+            rendered_sv = []
+            for idx, story in enumerate(sv_list):
+                tpl = existing_cards[idx] if idx < len(existing_cards) else existing_cards[0]
+                rendered_sv.append(update_story_card(tpl, story))
+
+            html = html[:grid_m.start()] + grid_m.group(1) + "".join(rendered_sv) + grid_m.group(3) + html[grid_m.end():]
 
         for pat, repl in proj_url_map:
             html = re.sub(pat, repl, html)
@@ -385,21 +425,40 @@ def sync_all():
 
             html_proj = re.sub(rf'(data-framer-name="{f_name}".*?</a>)', proj_card_repl, html_proj, flags=re.DOTALL)
 
-        # More Projects cards synchronization (12 matches: 4 cards x 3 viewports)
-        card_pattern = r'(<p class="framer-text framer-styles-preset-a6ucvx"[^>]*>)[^<]+(</p></div></div><div class="framer-a27xm9" data-framer-name="Title"[^>]*><h3 class="framer-text framer-styles-preset-12q7ivy"[^>]*>)[^<]+(</h3></div><div class="framer-5wou89" data-framer-name="Description"[^>]*><p class="framer-text framer-styles-preset-a6ucvx"[^>]*>)[^<]+(</p></div>)'
-        card_matches = list(re.finditer(card_pattern, html_proj))
-        for i in reversed(range(len(card_matches))):
-            m = card_matches[i]
-            proj_idx = (i // 3) % len(mp) if len(mp) > 0 else 0
-            if proj_idx < len(mp):
-                proj = mp[proj_idx]
-                rep = (
-                    m.group(1) + proj.get('category', '') +
-                    m.group(2) + proj.get('title', '') +
-                    m.group(3) + proj.get('description', '') +
-                    m.group(4)
-                )
-                html_proj = html_proj[:m.start()] + rep + html_proj[m.end():]
+        # More Projects cards dynamic synchronization (supports unlimited projects)
+        mp_grid_m = re.search(r'(<div class="framer-1dajtd0">\s*<!--\$-->)(.*?)(\s*<div class="ssr-variant"><div class="framer-1hnbvt7-container"></div></div><!--/\$-->\s*</div>)', html_proj, re.DOTALL)
+        if mp_grid_m and len(mp) > 0:
+            inner_mp = mp_grid_m.group(2)
+            card_pattern = r'(<!--\$--><div class="ssr-variant hidden-15pqoqk hidden-1xpdcp1">.*?<div class="ssr-variant hidden-1cl8viv hidden-1xpdcp1">.*?<div class="ssr-variant hidden-1cl8viv hidden-15pqoqk">.*?</div></div><!--/\$-->)'
+            cards = re.findall(card_pattern, inner_mp, re.DOTALL)
+            card_template = cards[0] if cards else None
+
+            if card_template:
+                rendered_cards = []
+                for proj in mp:
+                    card = card_template
+                    p_cat = proj.get('category', '')
+                    p_title = proj.get('title', '')
+                    p_desc = proj.get('description', '')
+                    p_img = proj.get('image', '').replace('./', '../')
+                    p_link = proj.get('link', '')
+
+                    if p_cat:
+                        card = re.sub(r'(<div class="framer-1qaut3e"[^>]*>.*?<p[^>]*>)[^<]*(</p>)', rf'\g<1>{p_cat}\g<2>', card)
+                    if p_title:
+                        card = re.sub(r'(<div class="framer-a27xm9"[^>]*>.*?<h3[^>]*>)[^<]*(</h3>)', rf'\g<1>{p_title}\g<2>', card)
+                    if p_desc:
+                        card = re.sub(r'(<div class="framer-5wou89"[^>]*>.*?<p[^>]*>)[^<]*(</p>)', rf'\g<1>{p_desc}\g<2>', card)
+                    if p_img:
+                        card = re.sub(r'src="[^"]*"', f'src="{p_img}"', card)
+                        card = re.sub(r'srcset="[^"]*"', f'srcset="{p_img} 512w, {p_img} 1024w, {p_img} 1200w"', card)
+                    if p_link:
+                        card = re.sub(r'href="[^"]*"', f'href="{p_link}" target="_blank" rel="noopener noreferrer"', card)
+                    else:
+                        card = re.sub(r'href="[^"]*"', 'href="#"', card)
+                    rendered_cards.append(card)
+
+                html_proj = html_proj[:mp_grid_m.start()] + mp_grid_m.group(1) + "".join(rendered_cards) + mp_grid_m.group(3) + html_proj[mp_grid_m.end():]
 
         # Section Headers for Projects
         fph = data.get('featured_projects_header', {})

@@ -283,37 +283,67 @@
       });
 
       // Projects page cards (.framer-1ef39wh-container)
-      const projPageCards = document.querySelectorAll('.framer-1ef39wh-container');
-      if (projPageCards.length > 0) {
-        projPageCards.forEach((card, idx) => {
-          const pIdx = Math.floor(idx / 3);
-          if (pIdx < data.more_projects.length) {
-            card.style.display = '';
-            const p = data.more_projects[pIdx];
-            const t = card.querySelector('h3');
-            if (t && p.title) t.textContent = p.title;
-            const paras = card.querySelectorAll('p');
-            if (paras.length > 0 && p.category) paras[0].textContent = p.category;
-            if (paras.length > 1 && p.description) paras[1].textContent = p.description;
-            const img = card.querySelector('img');
-            if (img && p.image) setSafeImage(img, p.image);
+      const projContainer = document.querySelector('.framer-1dajtd0');
+      if (projContainer) {
+        let allSsr = Array.from(projContainer.children).filter(el => el.classList.contains('ssr-variant') && el.querySelector('.framer-1ef39wh-container'));
+        const existingCount = Math.floor(allSsr.length / 3);
+        const requiredCount = data.more_projects.length;
 
-            if (p.link) {
+        // If user added more projects than existing slots, dynamically clone triplets from the first item
+        if (requiredCount > existingCount && existingCount > 0) {
+          const donorTriplets = allSsr.slice(0, 3);
+          for (let k = existingCount; k < requiredCount; k++) {
+            donorTriplets.forEach(donor => {
+              const clone = donor.cloneNode(true);
+              projContainer.appendChild(clone);
+            });
+          }
+          allSsr = Array.from(projContainer.children).filter(el => el.classList.contains('ssr-variant') && el.querySelector('.framer-1ef39wh-container'));
+        }
+
+        allSsr.forEach((ssrEl, idx) => {
+          const pIdx = Math.floor(idx / 3);
+          const card = ssrEl.querySelector('.framer-1ef39wh-container');
+          if (pIdx < data.more_projects.length) {
+            ssrEl.style.display = '';
+            if (card) {
+              card.style.display = '';
+              const p = data.more_projects[pIdx];
+              const t = card.querySelector('.framer-a27xm9 h3, h3');
+              if (t && p.title) t.textContent = p.title;
+              const c = card.querySelector('.framer-1qaut3e p, p');
+              if (c && p.category) c.textContent = p.category;
+              const d = card.querySelector('.framer-5wou89 p');
+              if (d && p.description) d.textContent = p.description;
+              const img = card.querySelector('img');
+              if (img && p.image) setSafeImage(img, p.image);
+
               const a = card.querySelector('a') || (card.tagName === 'A' ? card : null);
-              if (a) {
-                a.href = p.link;
-                a.target = "_blank";
-                a.rel = "noopener noreferrer";
-              }
-              card.style.cursor = 'pointer';
-              card.onclick = (e) => {
-                if (e.target.tagName !== 'A') {
-                  window.open(p.link, '_blank');
+              if (p.link) {
+                if (a) {
+                  a.href = p.link;
+                  a.target = "_blank";
+                  a.rel = "noopener noreferrer";
                 }
-              };
+                card.style.cursor = 'pointer';
+                card.onclick = (e) => {
+                  if (e.target.tagName !== 'A') {
+                    window.open(p.link, '_blank');
+                  }
+                };
+              } else {
+                if (a) {
+                  a.href = '#';
+                  a.removeAttribute('target');
+                  a.removeAttribute('rel');
+                }
+                card.style.cursor = 'default';
+                card.onclick = null;
+              }
             }
           } else {
-            card.style.display = 'none';
+            ssrEl.style.display = 'none';
+            if (card) card.style.display = 'none';
           }
         });
       }
@@ -413,11 +443,11 @@
       });
     }
 
-    // Ensure "My Story" button always links to /blogs/
+    // Ensure "My Story" button always links to /about/
     document.querySelectorAll('a').forEach(a => {
       if (a.textContent.trim().toLowerCase() === 'my story') {
         const isRoot = window.location.pathname === '/' || (window.location.pathname.endsWith('/index.html') && !window.location.pathname.includes('/', 1));
-        const target = isRoot ? './blogs/' : '../blogs/';
+        const target = isRoot ? './about/' : '../about/';
         a.href = target;
         a.onclick = (e) => {
           e.preventDefault();
@@ -426,6 +456,70 @@
         };
       }
     });
+
+    // Stories & Voices (Testimonials on Home Page)
+    if (data.stories_and_voices_header) {
+      const svh = data.stories_and_voices_header;
+      if (svh.heading) {
+        document.querySelectorAll('h2').forEach(h2 => {
+          if (h2.textContent.toLowerCase().includes('stories & voices') || h2.dataset.sync === 'sv-heading') {
+            h2.textContent = svh.heading;
+            h2.dataset.sync = 'sv-heading';
+          }
+        });
+      }
+      if (svh.intro) {
+        document.querySelectorAll('.framer-1a4c878 p, [data-framer-name="Text Wrap"] p').forEach(p => {
+          if (p.textContent.includes('missions I build for') || p.dataset.sync === 'sv-intro') {
+            p.textContent = svh.intro;
+            p.dataset.sync = 'sv-intro';
+          }
+        });
+      }
+    }
+
+    if (Array.isArray(data.stories_and_voices)) {
+      const grid = document.querySelector('[data-framer-name="Testimonial Grid"]');
+      if (grid) {
+        let testCards = Array.from(grid.querySelectorAll('[data-framer-name="Testimonial"]'));
+        const requiredCount = data.stories_and_voices.length;
+
+        // If more items added than existing, dynamically clone from the last card's parent container
+        if (requiredCount > testCards.length && testCards.length > 0) {
+          const donorCard = testCards[testCards.length - 1];
+          const donorWrapper = donorCard.closest('.ssr-variant') || donorCard;
+          for (let k = testCards.length; k < requiredCount; k++) {
+            const clone = donorWrapper.cloneNode(true);
+            grid.appendChild(clone);
+          }
+          testCards = Array.from(grid.querySelectorAll('[data-framer-name="Testimonial"]'));
+        }
+
+        testCards.forEach((card, idx) => {
+          const wrapper = card.closest('.ssr-variant') || card;
+          if (idx < data.stories_and_voices.length) {
+            wrapper.style.display = '';
+            card.style.display = '';
+            const item = data.stories_and_voices[idx];
+
+            const revP = card.querySelector('[data-framer-name="Review"] p, .framer-mqesvy p, p');
+            if (revP && item.quote) revP.textContent = item.quote;
+
+            const nameP = card.querySelector('[data-framer-name="Name"] p, .framer-x1j51t p');
+            if (nameP && item.name) nameP.textContent = item.name;
+
+            const roleP = card.querySelector('[data-framer-name="Title"] p, .framer-187w9vb p');
+            if (roleP && item.role) roleP.textContent = item.role;
+
+            const img = card.querySelector('[data-framer-name="Reviewer Image"] img, .framer-ggnhy6 img, img');
+            if (img && item.image) setSafeImage(img, item.image);
+          } else {
+            wrapper.style.display = 'none';
+            card.style.display = 'none';
+          }
+        });
+      }
+    }
 
     // 8. Explore Stories / Blogs
     if (data.explore_header) {

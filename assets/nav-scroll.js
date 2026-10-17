@@ -296,7 +296,7 @@
         e.preventDefault();
         e.stopPropagation();
         var isRoot = window.location.pathname === '/' || window.location.pathname.endsWith('/index.html') && !window.location.pathname.includes('/', 1);
-        window.location.href = isRoot ? './blogs/' : '../blogs/';
+        window.location.href = isRoot ? './about/' : '../about/';
         return;
       }
 

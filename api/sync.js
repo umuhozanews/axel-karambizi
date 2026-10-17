@@ -175,8 +175,50 @@ export function syncIndex(html, data) {
   // Remove fixed height on FAQ container
   html = html.replace(/style="height:\s*583\.594px;"/g, 'style="height: auto; min-height: auto;"');
 
-  // My Story button links directly to blogs
-  html = html.replace(/(<a [^>]*href=")[^"]*("[^>]*>(?:(?!<\/a>)[\s\S])*?My Story)/gi, '$1./blogs/$2');
+  // My Story button links directly to about
+  html = html.replace(/(<a [^>]*href=")[^"]*("[^>]*>(?:(?!<\/a>)[\s\S])*?My Story)/gi, '$1./about/$2');
+
+  // Stories & Voices (Testimonials) synchronization
+  const svH = data.stories_and_voices_header || {};
+  if (svH.heading) {
+    html = html.replace(/>Stories &amp; Voices</g, `>${svH.heading}<`);
+  }
+  if (svH.intro) {
+    html = html.replace(/The missions I build for, in their own words[^<]*/g, svH.intro);
+  }
+
+  const svList = data.stories_and_voices || [];
+  const gridMatch = html.match(/(<div class="framer-q6dtkm" data-framer-name="Testimonial Grid">)([\s\S]*?)(<\/div>\s*<\/div>\s*<\/section>)/);
+  if (gridMatch && svList.length > 0) {
+    const innerGrid = gridMatch[2];
+    const parts = innerGrid.split('<div class="ssr-variant">');
+    const existingCards = parts.slice(1).map(p => '<div class="ssr-variant">' + p);
+
+    function updateStoryCard(cardHtml, story) {
+      if (story.quote) {
+        cardHtml = cardHtml.replace(/(<div [^>]*data-framer-name="Review"[^>]*>[\s\S]*?<p[^>]*>)([\s\S]*?)(<\/p><\/div>)/, `$1${story.quote}$3`);
+      }
+      if (story.name) {
+        cardHtml = cardHtml.replace(/(<div [^>]*data-framer-name="Name"[^>]*>[\s\S]*?<p[^>]*>)([\s\S]*?)(<\/p><\/div>)/, `$1${story.name}$3`);
+      }
+      if (story.role) {
+        cardHtml = cardHtml.replace(/(<div [^>]*data-framer-name="Title"[^>]*>[\s\S]*?<p[^>]*>)([\s\S]*?)(<\/p><\/div>)/, `$1${story.role}$3`);
+      }
+      if (story.image) {
+        const cleanImg = story.image.replace('../', './');
+        cardHtml = cardHtml.replace(/src="[^"]*"/g, `src="${cleanImg}"`);
+        cardHtml = cardHtml.replace(/srcset="[^"]*"/g, `srcset="${cleanImg} 512w, ${cleanImg} 1024w"`);
+      }
+      return cardHtml;
+    }
+
+    const renderedSv = svList.map((story, idx) => {
+      const tpl = idx < existingCards.length ? existingCards[idx] : existingCards[0];
+      return updateStoryCard(tpl, story);
+    });
+
+    html = html.replace(gridMatch[0], gridMatch[1] + renderedSv.join('') + gridMatch[3]);
+  }
 
   return html;
 }
@@ -230,26 +272,45 @@ export function syncProjects(html, data) {
     }
   }
 
-  // 4. More Projects cards
-  const cardPattern = /(<p class="framer-text framer-styles-preset-a6ucvx"[^>]*>)[^<]+(<\/p><\/div><\/div><div class="framer-a27xm9" data-framer-name="Title"[^>]*><h3 class="framer-text framer-styles-preset-12q7ivy"[^>]*>)[^<]+(<\/h3><\/div><div class="framer-5wou89" data-framer-name="Description"[^>]*><p class="framer-text framer-styles-preset-a6ucvx"[^>]*>)[^<]+(<\/p><\/div>)/g;
-  const cardMatches = [];
-  let cardM;
-  while ((cardM = cardPattern.exec(html)) !== null) {
-    cardMatches.push({ start: cardM.index, end: cardM.index + cardM[0].length, groups: [...cardM] });
-  }
+  // 4. More Projects cards dynamic synchronization (supports unlimited projects)
+  const mpGridMatch = html.match(/(<div class="framer-1dajtd0">\s*<!--\$-->)([\s\S]*?)(\s*<div class="ssr-variant"><div class="framer-1hnbvt7-container"><\/div><\/div><!--\/\$-->\s*<\/div>)/);
+  if (mpGridMatch && mp.length > 0) {
+    const innerMp = mpGridMatch[2];
+    const cardPattern = /<!--\$--><div class="ssr-variant hidden-15pqoqk hidden-1xpdcp1">[\s\S]*?<div class="ssr-variant hidden-1cl8viv hidden-1xpdcp1">[\s\S]*?<div class="ssr-variant hidden-1cl8viv hidden-15pqoqk">[\s\S]*?<\/div><\/div><!--\/\$-->/g;
+    const cards = innerMp.match(cardPattern);
+    const cardTemplate = cards && cards.length > 0 ? cards[0] : null;
 
-  for (let i = cardMatches.length - 1; i >= 0; i--) {
-    const item = cardMatches[i];
-    const projIdx = i % 4;
-    if (projIdx < mp.length) {
-      const proj = mp[projIdx];
-      const rep = (
-        item.groups[1] + (proj.category || '') +
-        item.groups[2] + (proj.title || '') +
-        item.groups[3] + (proj.description || '') +
-        item.groups[4]
-      );
-      html = html.slice(0, item.start) + rep + html.slice(item.end);
+    if (cardTemplate) {
+      const renderedCards = mp.map(proj => {
+        let card = cardTemplate;
+        const pCat = proj.category || '';
+        const pTitle = proj.title || '';
+        const pDesc = proj.description || '';
+        const pImg = (proj.image || '').replace('./', '../');
+        const pLink = proj.link || '';
+
+        if (pCat) {
+          card = card.replace(/(<div class="framer-1qaut3e"[^>]*>[\s\S]*?<p[^>]*>)[^<]*(<\/p>)/g, `$1${pCat}$2`);
+        }
+        if (pTitle) {
+          card = card.replace(/(<div class="framer-a27xm9"[^>]*>[\s\S]*?<h3[^>]*>)[^<]*(<\/h3>)/g, `$1${pTitle}$2`);
+        }
+        if (pDesc) {
+          card = card.replace(/(<div class="framer-5wou89"[^>]*>[\s\S]*?<p[^>]*>)[^<]*(<\/p>)/g, `$1${pDesc}$2`);
+        }
+        if (pImg) {
+          card = card.replace(/src="[^"]*"/g, `src="${pImg}"`);
+          card = card.replace(/srcset="[^"]*"/g, `srcset="${pImg} 512w, ${pImg} 1024w, ${pImg} 1200w"`);
+        }
+        if (pLink) {
+          card = card.replace(/href="[^"]*"/g, `href="${pLink}" target="_blank" rel="noopener noreferrer"`);
+        } else {
+          card = card.replace(/href="[^"]*"/g, 'href="#"');
+        }
+        return card;
+      });
+
+      html = html.replace(mpGridMatch[0], mpGridMatch[1] + renderedCards.join('') + mpGridMatch[3]);
     }
   }
 

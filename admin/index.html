@@ -435,6 +435,7 @@
         <button class="tab-btn" data-tab="tab-projects" onclick="switchTab('tab-projects')">🚀 Featured Projects</button>
         <button class="tab-btn" data-tab="tab-more-projects" onclick="switchTab('tab-more-projects')">📁 More Projects</button>
         <button class="tab-btn" data-tab="tab-explore" onclick="switchTab('tab-explore')">🧭 Explore Stories</button>
+        <button class="tab-btn" data-tab="tab-stories-voices" onclick="switchTab('tab-stories-voices')">💬 Stories & Voices</button>
         <button class="tab-btn" data-tab="tab-services" onclick="switchTab('tab-services')">🛠️ Services</button>
         <button class="tab-btn" data-tab="tab-faq" onclick="switchTab('tab-faq')">❓ FAQ / Q&A</button>
         <button class="tab-btn" data-tab="tab-about" onclick="switchTab('tab-about')">📖 About & Timeline</button>
@@ -647,6 +648,28 @@
           <button type="button" onclick="addExploreStory()" class="btn btn-primary">+ Add New Story / Article</button>
         </div>
         <div id="explore-stories-container"></div>
+      </div>
+
+      <!-- Tab: Stories & Voices -->
+      <div id="tab-stories-voices" class="panel">
+        <div class="card-box">
+          <h3>Stories &amp; Voices Section Header</h3>
+          <div class="form-grid">
+            <div class="form-group full">
+              <label>Section Heading</label>
+              <input type="text" id="sv-header-heading" placeholder="Stories &amp; Voices">
+            </div>
+            <div class="form-group full">
+              <label>Section Intro Subtitle</label>
+              <textarea id="sv-header-intro" placeholder="The missions I build for, in their own words. Each one started with a simple belief that people who lack access deserve a way in."></textarea>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+          <p style="color:var(--text-muted); font-size:13px; margin:0;">Quotes from the ventures, clients and initiatives I build for, shown on the homepage. Add, edit, or delete items dynamically.</p>
+          <button type="button" onclick="addStoryAndVoice()" class="btn btn-primary">+ Add Story &amp; Voice</button>
+        </div>
+        <div id="stories-voices-container"></div>
       </div>
 
       <!-- Tab: Services -->
@@ -1225,6 +1248,40 @@
       "link": ""
     }
   ],
+  "stories_and_voices_header": {
+    "heading": "Stories & Voices",
+    "intro": "The missions I build for, in their own words. Each one started with a simple belief that people who lack access deserve a way in."
+  },
+  "stories_and_voices": [
+    {
+      "id": "sv-1",
+      "name": "Risevana",
+      "role": "Education on the Community’s Side",
+      "quote": "A river stood between children and school. So we built the classroom on their side.",
+      "image": "./assets/img_7.jpg"
+    },
+    {
+      "id": "sv-2",
+      "name": "Libblio",
+      "role": "EdTech & Library Intelligence",
+      "quote": "A library should know what its students need.",
+      "image": "./assets/img_8.jpg"
+    },
+    {
+      "id": "sv-3",
+      "name": "Youth Uplift Initiative",
+      "role": "Community Action",
+      "quote": "Opportunity becomes more powerful when people who normally lack access can reach it.",
+      "image": "./assets/img_9.jpg"
+    },
+    {
+      "id": "sv-4",
+      "name": "Atomiq",
+      "role": "Software & Digital Solutions",
+      "quote": "Four young people decided they could build things for other people.",
+      "image": "./assets/img_10.jpg"
+    }
+  ],
   "explore_header": {
     "intro": "I travel to see how people find clarity and purpose, collecting places, conversations, quiet moments and perspectives along the way.",
     "heading": "The World Is Too Alive to Stay in One Place"
@@ -1746,15 +1803,17 @@
     function addMoreProject() {
       collectFormData();
       if (!siteData.more_projects) siteData.more_projects = [];
+      const num = siteData.more_projects.length + 1;
       siteData.more_projects.push({
-        title: 'New Initiative',
+        id: 'more-project-' + Date.now(),
+        title: `New Initiative ${num}`,
         category: 'Community / Tech',
         description: 'Details about this initiative.',
         image: './assets/RFcUbpIGFydbU9WBSTc9HJRQI.jpeg',
         link: ''
       });
       renderMoreProjects();
-      showToast('Initiative added! Remember to save changes.');
+      showToast('New initiative added! Remember to save changes.');
     }
 
     function deleteMoreProject(index) {
@@ -1853,6 +1912,77 @@
         siteData.explore_stories.splice(index, 1);
         renderExploreStories();
         showToast('Story deleted.');
+      }
+    }
+
+    function renderStoriesAndVoices() {
+      const cont = document.getElementById('stories-voices-container');
+      if (!cont) return;
+      cont.innerHTML = '';
+      const items = siteData.stories_and_voices || [];
+      if (!items.length) {
+        cont.innerHTML = emptyHint('stories & voices', '+ Add Story & Voice');
+        return;
+      }
+      items.forEach((item, i) => {
+        const imgSrc = '../' + (item.image || './assets/img_7.jpg').replace('./', '');
+        cont.innerHTML += `
+          <div class="card-box" style="margin-bottom:16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+              <h3 style="margin:0;">Story & Voice ${i+1}: ${item.name || 'Untitled'}</h3>
+              <button type="button" onclick="deleteStoryAndVoice(${i})" class="btn btn-danger" style="padding:6px 12px; font-size:12px;">🗑️ Delete</button>
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Venture / Organization / Name</label>
+                <input type="text" id="sv-name-${i}" value="${(item.name || '').replace(/"/g, '&quot;')}" placeholder="e.g. Risevana">
+              </div>
+              <div class="form-group">
+                <label>Role / Subtitle Tag</label>
+                <input type="text" id="sv-role-${i}" value="${(item.role || '').replace(/"/g, '&quot;')}" placeholder="e.g. Education on the Community’s Side">
+              </div>
+              <div class="form-group full">
+                <label>Quote / Mission Statement</label>
+                <textarea id="sv-quote-${i}" rows="3" placeholder="A river stood between children and school...">${item.quote || ''}</textarea>
+              </div>
+              <div class="form-group full">
+                <label>Avatar / Organization Logo Photo</label>
+                <div class="image-field-wrap">
+                  <img id="prev-sv-img-${i}" src="${imgSrc}" class="image-preview-thumb">
+                  <input type="text" id="sv-img-${i}" value="${item.image || ''}" style="flex:1;">
+                  <label class="btn-upload">
+                    📁 Replace Photo
+                    <input type="file" accept="image/*" style="display:none;" onchange="uploadImageFile(this, 'sv-img-${i}', 'prev-sv-img-${i}')">
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function addStoryAndVoice() {
+      collectFormData();
+      if (!siteData.stories_and_voices) siteData.stories_and_voices = [];
+      const num = siteData.stories_and_voices.length + 1;
+      siteData.stories_and_voices.push({
+        id: 'sv-' + Date.now(),
+        name: `Venture / Partner ${num}`,
+        role: 'Community & Impact',
+        quote: 'Write the quote or story here...',
+        image: './assets/img_7.jpg'
+      });
+      renderStoriesAndVoices();
+      showToast('New Story & Voice added! Remember to save changes.');
+    }
+
+    function deleteStoryAndVoice(index) {
+      collectFormData();
+      if (confirm('Delete this story & voice item?')) {
+        siteData.stories_and_voices.splice(index, 1);
+        renderStoriesAndVoices();
+        showToast('Story & voice deleted.');
       }
     }
 
@@ -2096,6 +2226,19 @@
         const bd = document.getElementById(`exp-body-${i}`); if (bd) s.body = bd.value;
       });
 
+      // Stories & Voices
+      if (!siteData.stories_and_voices_header) siteData.stories_and_voices_header = {};
+      const svhHeading = document.getElementById('sv-header-heading'); if (svhHeading) siteData.stories_and_voices_header.heading = svhHeading.value;
+      const svhIntro = document.getElementById('sv-header-intro'); if (svhIntro) siteData.stories_and_voices_header.intro = svhIntro.value;
+
+      (siteData.stories_and_voices || []).forEach((item, i) => {
+        const n = document.getElementById(`sv-name-${i}`); if (n) item.name = n.value;
+        const r = document.getElementById(`sv-role-${i}`); if (r) item.role = r.value;
+        const q = document.getElementById(`sv-quote-${i}`); if (q) item.quote = q.value;
+        const img = document.getElementById(`sv-img-${i}`); if (img) item.image = img.value;
+        if (!item.id) item.id = 'sv-' + (i + 1);
+      });
+
       // 6. Services
       if (!siteData.services_header) siteData.services_header = {};
       const svh = document.getElementById('svc-header-heading'); if (svh) siteData.services_header.heading = svh.value;
@@ -2229,6 +2372,12 @@
       document.getElementById('explore-header-intro').value = expHead.intro || 'I travel to see how people find clarity and purpose, collecting places, conversations, quiet moments and perspectives along the way.';
       renderExploreStories();
 
+      // Stories & Voices
+      const svHead = siteData.stories_and_voices_header || {};
+      const svhEl = document.getElementById('sv-header-heading'); if (svhEl) svhEl.value = svHead.heading || 'Stories & Voices';
+      const sviEl = document.getElementById('sv-header-intro'); if (sviEl) sviEl.value = svHead.intro || 'The missions I build for, in their own words. Each one started with a simple belief that people who lack access deserve a way in.';
+      renderStoriesAndVoices();
+
       // 6. Services
       const svh = siteData.services_header || {};
       const svhEl = document.getElementById('svc-header-heading'); if (svhEl) svhEl.value = svh.heading || 'what I can do for you';
@@ -2345,9 +2494,10 @@
 
       const titles = {
         'tab-hero': 'General & Hero Settings',
-        'tab-projects': 'Featured Projects (4 Cards)',
-        'tab-more-projects': 'More Projects (4 Cards)',
-        'tab-explore': 'Explore & Blog Stories (5 Cards)',
+        'tab-projects': 'Featured Projects (Unlimited & Dynamic)',
+        'tab-more-projects': 'More Projects & Initiatives (Unlimited & Dynamic)',
+        'tab-explore': 'Explore & Blog Stories',
+        'tab-stories-voices': 'Stories & Voices (Testimonials & Mission Quotes)',
         'tab-services': 'Services Offered',
         'tab-faq': 'FAQ & Frequently Asked Questions',
         'tab-about': 'About Page, Timeline & Learning Stack',
