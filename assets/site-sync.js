@@ -16,6 +16,14 @@
     return (isRoot ? './' : '../') + clean;
   }
 
+  function setSafeImage(img, src) {
+    if (!img || !src) return;
+    const resolved = resolvePath(src);
+    img.src = resolved;
+    img.removeAttribute('srcset');
+    img.srcset = resolved + ' 1x';
+  }
+
   async function loadAndApplyContent() {
     try {
       const res = await fetch('/api/content?t=' + Date.now(), { cache: 'no-store' });
@@ -83,9 +91,8 @@
         });
       }
       if (g.avatar_image) {
-        const avUrl = resolvePath(g.avatar_image);
         document.querySelectorAll('.framer-GmZel img, [data-framer-name="Avatar"] img').forEach(img => {
-          img.src = avUrl;
+          setSafeImage(img, g.avatar_image);
         });
       }
       if (g.favicon_image) {
@@ -95,15 +102,13 @@
         });
       }
       if (g.hero_front_image) {
-        const hfUrl = resolvePath(g.hero_front_image);
         document.querySelectorAll('.framer-174865s img, img[alt*="Hero Front"], img[alt*="Axel Karambizi"]').forEach(img => {
-          img.src = hfUrl;
+          setSafeImage(img, g.hero_front_image);
         });
       }
       if (g.hero_back_image) {
-        const hbUrl = resolvePath(g.hero_back_image);
         document.querySelectorAll('.framer-1y3f9q6 img, img[alt*="Hero Back"]').forEach(img => {
-          img.src = hbUrl;
+          setSafeImage(img, g.hero_back_image);
         });
       }
     }
@@ -118,12 +123,15 @@
       });
     }
 
-    // 4. Featured Projects Header & Cards
+    // 4. Featured Projects Header & Cards (Home & Projects Page)
     if (data.featured_projects_header) {
       const fph = data.featured_projects_header;
       if (fph.heading) {
-        document.querySelectorAll('.framer-vosmgd h2, .framer-h8of8r h1, [data-framer-name="Projects Heading"] h2').forEach(el => {
-          el.textContent = fph.heading;
+        document.querySelectorAll('.framer-vosmgd h2, .framer-h8of8r h1, [data-framer-name="Projects Heading"] h2, h1, h2').forEach(el => {
+          if (el.textContent.trim().toLowerCase() === 'featured projects' || el.dataset.sync === 'fp-heading') {
+            el.textContent = fph.heading;
+            el.dataset.sync = 'fp-heading';
+          }
         });
       }
       if (fph.intro) {
@@ -134,6 +142,7 @@
     }
 
     if (Array.isArray(data.featured_projects)) {
+      // Home page cards
       const projCards = document.querySelectorAll('.framer-1763177, .framer-ensd48-container, [data-framer-name="Featured Project Card"]');
       if (projCards.length > 0) {
         const activeProjects = data.featured_projects;
@@ -156,7 +165,7 @@
 
             // Image
             const img = card.querySelector('img');
-            if (img && p.image) img.src = resolvePath(p.image);
+            if (img && p.image) setSafeImage(img, p.image);
 
             // Direct Link handling
             if (p.link) {
@@ -174,24 +183,55 @@
               };
             }
           } else {
-            // Delete removed cards from DOM
             card.style.display = 'none';
+          }
+        });
+      }
+
+      // Projects page cards (data-framer-name="Featured Project - 1", "Featured Project - 2", etc.)
+      data.featured_projects.forEach((p, idx) => {
+        const fCards = document.querySelectorAll(`[data-framer-name="Featured Project - ${idx + 1}"]`);
+        fCards.forEach(card => {
+          const t = card.querySelector('h2, h3');
+          if (t && p.title) t.textContent = p.title;
+          const paras = card.querySelectorAll('p');
+          if (paras.length > 0 && p.category) paras[0].textContent = p.category;
+          if (paras.length > 1 && p.description) paras[1].textContent = p.description;
+          card.querySelectorAll('img').forEach(img => {
+            if (p.image) setSafeImage(img, p.image);
+          });
+          if (p.link) {
+            card.querySelectorAll('a').forEach(a => {
+              a.href = p.link;
+              a.target = "_blank";
+              a.rel = "noopener noreferrer";
+            });
+            card.style.cursor = 'pointer';
+            card.onclick = (e) => {
+              if (e.target.tagName !== 'A') {
+                window.open(p.link, '_blank');
+              }
+            };
+          }
+        });
+      });
+    }
+
+    // 5. More Projects Header & Cards (Home & Projects Page)
+    if (data.more_projects_header) {
+      const mph = data.more_projects_header;
+      if (mph.heading) {
+        document.querySelectorAll('.framer-1dv323k h2, [data-framer-name="More Projects Heading"] h2, h2').forEach(el => {
+          if (el.textContent.trim().toLowerCase() === 'more projects' || el.dataset.sync === 'mp-heading') {
+            el.textContent = mph.heading;
+            el.dataset.sync = 'mp-heading';
           }
         });
       }
     }
 
-    // 5. More Projects Header & Cards
-    if (data.more_projects_header) {
-      const mph = data.more_projects_header;
-      if (mph.heading) {
-        document.querySelectorAll('.framer-1dv323k h2, [data-framer-name="More Projects Heading"] h2').forEach(el => {
-          el.textContent = mph.heading;
-        });
-      }
-    }
-
     if (Array.isArray(data.more_projects)) {
+      // Home page cards
       const mpCards = document.querySelectorAll('.framer-1a6sfx9-container, [data-framer-name="Project Row"]');
       mpCards.forEach((card, idx) => {
         if (idx < data.more_projects.length) {
@@ -203,6 +243,8 @@
           if (c && p.category) c.textContent = p.category;
           const d = card.querySelector('.framer-5wou89 p');
           if (d && p.description) d.textContent = p.description;
+          const img = card.querySelector('img');
+          if (img && p.image) setSafeImage(img, p.image);
 
           if (p.link) {
             const a = card.querySelector('a') || (card.tagName === 'A' ? card : null);
@@ -222,6 +264,42 @@
           card.style.display = 'none';
         }
       });
+
+      // Projects page cards (.framer-1ef39wh-container)
+      const projPageCards = document.querySelectorAll('.framer-1ef39wh-container');
+      if (projPageCards.length > 0) {
+        projPageCards.forEach((card, idx) => {
+          const pIdx = Math.floor(idx / 3);
+          if (pIdx < data.more_projects.length) {
+            card.style.display = '';
+            const p = data.more_projects[pIdx];
+            const t = card.querySelector('h3');
+            if (t && p.title) t.textContent = p.title;
+            const paras = card.querySelectorAll('p');
+            if (paras.length > 0 && p.category) paras[0].textContent = p.category;
+            if (paras.length > 1 && p.description) paras[1].textContent = p.description;
+            const img = card.querySelector('img');
+            if (img && p.image) setSafeImage(img, p.image);
+
+            if (p.link) {
+              const a = card.querySelector('a') || (card.tagName === 'A' ? card : null);
+              if (a) {
+                a.href = p.link;
+                a.target = "_blank";
+                a.rel = "noopener noreferrer";
+              }
+              card.style.cursor = 'pointer';
+              card.onclick = (e) => {
+                if (e.target.tagName !== 'A') {
+                  window.open(p.link, '_blank');
+                }
+              };
+            }
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      }
     }
 
     // 6. Services Header & Items
@@ -236,7 +314,7 @@
         });
       }
       if (svh.intro) {
-        document.querySelectorAll('.framer-dhjg6f p').forEach(p => {
+        document.querySelectorAll('.framer-dhjg6f p, .framer-mh8pgw p').forEach(p => {
           p.textContent = svh.intro;
         });
       }
@@ -286,8 +364,11 @@
     // 8. Explore Stories / Blogs
     if (data.explore_header) {
       const eh = data.explore_header;
-      document.querySelectorAll('.framer-1m0m5yq h2, [data-framer-name="Explore Heading"] h2').forEach(el => {
-        if (eh.heading) el.textContent = eh.heading;
+      document.querySelectorAll('.framer-1m0m5yq h2, [data-framer-name="Explore Heading"] h2, h2').forEach(el => {
+        if (el.textContent.includes('The World Is Too Alive') || el.dataset.sync === 'exp-heading') {
+          if (eh.heading) el.textContent = eh.heading;
+          el.dataset.sync = 'exp-heading';
+        }
       });
       document.querySelectorAll('.framer-8y2g0o p, [data-framer-name="Explore Intro"] p').forEach(el => {
         if (eh.intro) el.textContent = eh.intro;
@@ -295,6 +376,7 @@
     }
 
     if (Array.isArray(data.explore_stories)) {
+      // Home page cards
       const storyCards = document.querySelectorAll('.framer-1k3u20b, [data-framer-name="Story Card"], .framer-1x5y3c2-container');
       storyCards.forEach((card, idx) => {
         if (idx < data.explore_stories.length) {
@@ -309,7 +391,7 @@
           const exc = card.querySelector('.framer-1igatmi p, .framer-15p09p2 p');
           if (exc && s.excerpt) exc.textContent = s.excerpt;
           const img = card.querySelector('img');
-          if (img && s.image) img.src = resolvePath(s.image);
+          if (img && s.image) setSafeImage(img, s.image);
 
           if (s.link) {
             const aTag = card.querySelector('a') || (card.tagName === 'A' ? card : null);
@@ -327,9 +409,27 @@
           card.style.display = 'none';
         }
       });
+
+      // Blogs page (/blogs/) cards
+      const blogKeys = ['lake-kivu-stillness', 'dubai-opportunity', 'cross-border-founders', 'people-i-met', 'lake-kivu-speed'];
+      blogKeys.forEach((key, idx) => {
+        if (idx < data.explore_stories.length) {
+          const s = data.explore_stories[idx];
+          document.querySelectorAll(`a[href*="${key}"]`).forEach(a => {
+            const h3 = a.querySelector('h3');
+            if (h3 && s.title) h3.textContent = s.title;
+            const img = a.querySelector('img');
+            if (img && s.image) setSafeImage(img, s.image);
+            const paras = a.querySelectorAll('p');
+            if (paras.length > 0 && s.category) paras[0].textContent = s.category;
+            if (paras.length > 1 && s.date) paras[1].textContent = s.date;
+            if (paras.length > 2 && s.excerpt) paras[2].textContent = s.excerpt;
+          });
+        }
+      });
     }
 
-    // 9. About Page & Timeline
+    // 9. About Page & Process Steps
     if (data.about) {
       const ab = data.about;
       if (ab.badge) {
@@ -356,9 +456,8 @@
         });
       }
       if (ab.portrait_image) {
-        const pUrl = resolvePath(ab.portrait_image);
-        document.querySelectorAll('.framer-zm9lgs img, img[alt*="About Portrait"]').forEach(img => {
-          img.src = pUrl;
+        document.querySelectorAll('.framer-zm9lgs img, img[alt*="About Portrait"], img[alt*="Portrait of portfolio creator"]').forEach(img => {
+          setSafeImage(img, ab.portrait_image);
         });
       }
       if (ab.journey_heading) {
@@ -385,6 +484,51 @@
       if (ab.learning_stack_intro) {
         document.querySelectorAll('.framer-19x9sd8 p, [data-framer-name="Learning Intro"] p').forEach(el => {
           el.textContent = ab.learning_stack_intro;
+        });
+      }
+
+      // Process & Philosophy ("Building with Purpose and Curiosity")
+      if (ab.process_header) {
+        const ph = ab.process_header;
+        if (ph.heading) {
+          document.querySelectorAll('h2').forEach(h2 => {
+            if (h2.textContent.includes('Building with Purpose') || h2.dataset.sync === 'proc-heading') {
+              h2.textContent = ph.heading;
+              h2.dataset.sync = 'proc-heading';
+            }
+          });
+        }
+        if (ph.intro) {
+          document.querySelectorAll('.framer-kwmpg0 p').forEach(p => {
+            p.textContent = ph.intro;
+          });
+        }
+      }
+
+      if (Array.isArray(ab.process_steps) && ab.process_steps.length > 0) {
+        document.querySelectorAll('.framer-1u93412').forEach(grid => {
+          const stepCards = grid.querySelectorAll('div[data-framer-name="Desktop"], div[data-framer-name="Tablet & Phone"]');
+          const stepMap = { '01.': 0, '02.': 1, '03.': 2, '04.': 3, '05.': 4 };
+          stepCards.forEach(card => {
+            const h2 = card.querySelector('h2');
+            if (!h2) return;
+            const originalNum = h2.dataset.origNum || h2.textContent.trim();
+            if (!h2.dataset.origNum) h2.dataset.origNum = originalNum;
+            const stepIdx = stepMap[originalNum];
+            if (typeof stepIdx === 'number') {
+              if (stepIdx < ab.process_steps.length) {
+                card.style.display = '';
+                const stepData = ab.process_steps[stepIdx];
+                if (stepData.step) h2.textContent = stepData.step;
+                const h3 = card.querySelector('h3');
+                if (h3 && stepData.title) h3.textContent = stepData.title;
+                const p = card.querySelector('p');
+                if (p && stepData.description) p.textContent = stepData.description;
+              } else {
+                card.style.display = 'none';
+              }
+            }
+          });
         });
       }
 
@@ -435,9 +579,8 @@
         });
       }
       if (ct.portrait_image) {
-        const cpUrl = resolvePath(ct.portrait_image);
         document.querySelectorAll('.framer-1mflr40 img, img[alt*="Contact Portrait"]').forEach(img => {
-          img.src = cpUrl;
+          setSafeImage(img, ct.portrait_image);
         });
       }
     }
@@ -457,7 +600,7 @@
       }
       if (ft.social) {
         const s = ft.social;
-        if (s.x) document.querySelectorAll('.framer-16ft3t1, a[href*="x.com"]').forEach(a => a.href = s.x);
+        if (s.x) document.querySelectorAll('.framer-16ft3t1, a[href*="x.com"], a[href*="twitter.com"]').forEach(a => a.href = s.x);
         if (s.instagram) document.querySelectorAll('.framer-5grdll, a[href*="instagram.com"]').forEach(a => a.href = s.instagram);
         if (s.behance) document.querySelectorAll('.framer-1yo788g, a[href*="behance.net"]').forEach(a => a.href = s.behance);
         if (s.dribbble) document.querySelectorAll('.framer-15j1vxj, a[href*="dribbble.com"]').forEach(a => a.href = s.dribbble);

@@ -699,7 +699,7 @@
       <!-- Tab 5: About Page -->
       <div id="tab-about" class="panel">
         <div class="card-box">
-          <h3>About Page Header & Hero</h3>
+          <h3>About Page Header & Titles</h3>
           <div class="form-grid">
             <div class="form-group">
               <label>Header Badge</label>
@@ -713,13 +713,29 @@
               <label>Headline / Tagline</label>
               <input type="text" id="about-tagline" placeholder="I build businesses, create opportunities and tell the stories along the way.">
             </div>
-            <div class="form-group full">
-              <label>About Portrait Photo</label>
-              <div class="image-field-wrap">
-                <img id="prev-about-portrait" src="" class="image-preview-thumb">
-                <input type="text" id="about-portrait-img" style="flex:1;">
-                <label class="btn-upload">
-                  📁 Replace Photo
+          </div>
+        </div>
+
+        <div class="card-box" style="border: 1px solid var(--primary); background: rgba(106, 113, 223, 0.06); box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
+            <div>
+              <h3 style="margin: 0; color: #fff; font-size: 16px;">🖼️ Portrait of Portfolio Creator (About Page Photo)</h3>
+              <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">
+                This is the large creator portrait displayed on the About page (<strong>https://axelkarambizi.com/about/</strong>). You can replace, upload, or reset this photo.
+              </p>
+            </div>
+            <button type="button" onclick="resetAboutPortrait()" class="btn btn-secondary" style="font-size: 12px; padding: 6px 14px;">🗑️ Reset Photo to Default</button>
+          </div>
+          <div style="display: flex; gap: 22px; align-items: center; flex-wrap: wrap;">
+            <img id="prev-about-portrait" src="../assets/contact_portrait.jpg" alt="About Portrait" style="width: 140px; height: 180px; object-fit: cover; border-radius: 12px; border: 2px solid var(--primary); box-shadow: 0 6px 20px rgba(0,0,0,0.5);">
+            <div style="flex: 1; min-width: 260px;">
+              <div class="form-group" style="margin-bottom: 12px;">
+                <label>Photo URL / File Path in assets/</label>
+                <input type="text" id="about-portrait-img" value="./assets/contact_portrait.jpg" oninput="document.getElementById('prev-about-portrait').src = '../' + this.value.replace('./', '');">
+              </div>
+              <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                <label class="btn btn-primary" style="cursor: pointer; padding: 10px 18px;">
+                  📁 Replace / Upload New Photo
                   <input type="file" accept="image/*" style="display:none;" onchange="uploadImageFile(this, 'about-portrait-img', 'prev-about-portrait')">
                 </label>
               </div>
@@ -740,6 +756,31 @@
           <div class="form-group full" style="margin-top: 12px;">
             <label>Paragraph 3 (Optional Extra Bio)</label>
             <textarea id="about-p3" placeholder="Optional 3rd paragraph..."></textarea>
+          </div>
+        </div>
+
+        <div class="card-box">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+            <div>
+              <h3 style="margin:0;">⚙️ Process & Philosophy (Building with Purpose)</h3>
+              <p style="color: var(--text-muted); font-size: 13px; margin-top: 4px;">
+                Manage the "Building with Purpose and Curiosity" methodology section on the About page.
+              </p>
+            </div>
+          </div>
+          <div class="form-grid" style="margin-bottom: 16px;">
+            <div class="form-group full">
+              <label>Section Heading</label>
+              <input type="text" id="about-process-heading" placeholder="Building with Purpose and Curiosity">
+            </div>
+            <div class="form-group full">
+              <label>Section Intro Subtitle</label>
+              <textarea id="about-process-intro" placeholder="My process starts with a real barrier and ends with something people can use, built alongside the people it is for."></textarea>
+            </div>
+          </div>
+          <div id="process-steps-container"></div>
+          <div style="margin-top:10px;">
+            <button type="button" onclick="addProcessStep()" class="btn btn-outline" style="width:100%; justify-content:center;">+ Add Process Step</button>
           </div>
         </div>
 
@@ -1596,6 +1637,7 @@
         return;
       }
       items.forEach((p, i) => {
+        const imgSrc = '../' + (p.image || './assets/RFcUbpIGFydbU9WBSTc9HJRQI.jpeg').replace('./', '');
         mpCont.innerHTML += `
           <div class="card-box" style="margin-bottom:16px;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -1619,6 +1661,17 @@
                 <label>Description</label>
                 <textarea id="mp-desc-${i}">${p.description || ''}</textarea>
               </div>
+              <div class="form-group full">
+                <label>Project Cover Image</label>
+                <div class="image-field-wrap">
+                  <img id="prev-mp-img-${i}" src="${imgSrc}" class="image-preview-thumb">
+                  <input type="text" id="mp-img-${i}" value="${p.image || ''}" style="flex:1;">
+                  <label class="btn-upload">
+                    📁 Replace Photo
+                    <input type="file" accept="image/*" style="display:none;" onchange="uploadImageFile(this, 'mp-img-${i}', 'prev-mp-img-${i}')">
+                  </label>
+                </div>
+              </div>
             </div>
           </div>
         `;
@@ -1632,6 +1685,7 @@
         title: 'New Initiative',
         category: 'Community / Tech',
         description: 'Details about this initiative.',
+        image: './assets/RFcUbpIGFydbU9WBSTc9HJRQI.jpeg',
         link: ''
       });
       renderMoreProjects();
@@ -1811,6 +1865,76 @@
       }
     }
 
+    function renderProcessSteps() {
+      const pCont = document.getElementById('process-steps-container');
+      if (!pCont) return;
+      pCont.innerHTML = '';
+      const steps = (siteData.about && siteData.about.process_steps) || [];
+      if (!steps.length) {
+        pCont.innerHTML = emptyHint('process steps', '+ Add Process Step');
+        return;
+      }
+      steps.forEach((s, i) => {
+        pCont.innerHTML += `
+          <div class="card-box" style="margin-bottom:14px; background:#0f1017; border:1px solid var(--card-border);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+              <h4 style="margin:0; font-size:14px; color:var(--text);">Step ${i+1}: ${s.step || ''} ${s.title || 'Untitled Step'}</h4>
+              <button type="button" onclick="deleteProcessStep(${i})" class="btn btn-danger" style="padding:4px 10px; font-size:12px;">🗑️ Delete</button>
+            </div>
+            <div class="form-grid">
+              <div class="form-group" style="max-width:140px;">
+                <label>Step Number</label>
+                <input type="text" id="proc-step-${i}" value="${s.step || `0${i+1}.`}">
+              </div>
+              <div class="form-group" style="flex:1;">
+                <label>Step Title</label>
+                <input type="text" id="proc-title-${i}" value="${s.title || ''}">
+              </div>
+              <div class="form-group full">
+                <label>Step Description</label>
+                <textarea id="proc-desc-${i}">${s.description || ''}</textarea>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function addProcessStep() {
+      collectFormData();
+      if (!siteData.about) siteData.about = {};
+      if (!siteData.about.process_steps) siteData.about.process_steps = [];
+      const nextNum = siteData.about.process_steps.length + 1;
+      const numStr = nextNum < 10 ? `0${nextNum}.` : `${nextNum}.`;
+      siteData.about.process_steps.push({
+        step: numStr,
+        title: 'New Step Title',
+        description: 'Description of this methodology or process step.'
+      });
+      renderProcessSteps();
+      showToast('Process step added! Remember to save changes.');
+    }
+
+    function deleteProcessStep(index) {
+      collectFormData();
+      if (confirm('Delete this process step?')) {
+        siteData.about.process_steps.splice(index, 1);
+        renderProcessSteps();
+        showToast('Process step deleted.');
+      }
+    }
+
+    function resetAboutPortrait() {
+      const defaultImg = './assets/contact_portrait.jpg';
+      const abp = document.getElementById('about-portrait-img');
+      if (abp) abp.value = defaultImg;
+      const prev = document.getElementById('prev-about-portrait');
+      if (prev) prev.src = '../assets/contact_portrait.jpg';
+      if (!siteData.about) siteData.about = {};
+      siteData.about.portrait_image = defaultImg;
+      showToast('About portrait reset to default.');
+    }
+
     function downloadContentJSON() {
       collectFormData();
       const jsonStr = JSON.stringify(siteData, null, 2);
@@ -1888,6 +2012,7 @@
         const c = document.getElementById(`mp-cat-${i}`); if (c) p.category = c.value;
         const d = document.getElementById(`mp-desc-${i}`); if (d) p.description = d.value;
         const ln = document.getElementById(`mp-link-${i}`); if (ln) p.link = ln.value;
+        const img = document.getElementById(`mp-img-${i}`); if (img) p.image = img.value;
       });
 
       // 5. Explore Stories
@@ -1942,6 +2067,17 @@
       const aji = document.getElementById('about-journey-intro'); if (aji) siteData.about.journey_intro = aji.value;
       const alh = document.getElementById('about-learning-heading'); if (alh) siteData.about.learning_heading = alh.value;
       const ali = document.getElementById('about-learn-intro'); if (ali) siteData.about.learning_stack_intro = ali.value;
+
+      // Process & Philosophy
+      if (!siteData.about.process_header) siteData.about.process_header = {};
+      const aph = document.getElementById('about-process-heading'); if (aph) siteData.about.process_header.heading = aph.value;
+      const api = document.getElementById('about-process-intro'); if (api) siteData.about.process_header.intro = api.value;
+
+      (siteData.about.process_steps || []).forEach((s, i) => {
+        const st = document.getElementById(`proc-step-${i}`); if (st) s.step = st.value;
+        const ti = document.getElementById(`proc-title-${i}`); if (ti) s.title = ti.value;
+        const de = document.getElementById(`proc-desc-${i}`); if (de) s.description = de.value;
+      });
 
       (siteData.about.journey || []).forEach((j, i) => {
         const t = document.getElementById(`j-title-${i}`); if (t) j.title = t.value;
@@ -2051,6 +2187,11 @@
       document.getElementById('about-learn-intro').value = ab.learning_stack_intro || '';
       renderJourney();
       renderLearningStack();
+
+      // Process & Philosophy
+      renderProcessSteps();
+      const aphEl = document.getElementById('about-process-heading'); if (aphEl) aphEl.value = (ab.process_header && ab.process_header.heading) || 'Building with Purpose and Curiosity';
+      const apiEl = document.getElementById('about-process-intro'); if (apiEl) apiEl.value = (ab.process_header && ab.process_header.intro) || 'My process starts with a real barrier and ends with something people can use, built alongside the people it is for.';
 
       // 9. Contact
       const ct = siteData.contact || {};

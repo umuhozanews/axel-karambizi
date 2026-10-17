@@ -5,7 +5,7 @@ Synchronizes all data from admin/content.json across:
 - index.html (Home & FAQ)
 - projects/index.html (Projects)
 - explore/index.html & blogs/index.html (Explore / Blogs)
-- about/index.html (About & Timeline)
+- about/index.html (About & Timeline & Process Steps)
 - contact/index.html (Contact)
 - all project-detail and blog-detail pages
 """
@@ -38,6 +38,14 @@ def sync_all():
     faqs = data.get('faq', [])
     services = data.get('services', [])
 
+    # Authentic project destination links
+    proj_url_map = [
+        (r'href="(?:\.\./)?(?:/)?projects/summer-vibes-festival-campaign/?"', 'href="https://risevana-foundation.vercel.app/" target="_blank" rel="noopener noreferrer"'),
+        (r'href="(?:\.\./)?(?:/)?projects/coral-spiral-abstract/?"', 'href="https://www.libblio.com/" target="_blank" rel="noopener noreferrer"'),
+        (r'href="(?:\.\./)?(?:/)?projects/shopease-redesign-sprint/?"', 'href="https://www.yupinitiative.com/" target="_blank" rel="noopener noreferrer"'),
+        (r'href="(?:\.\./)?(?:/)?projects/black-geometric-prisms/?"', 'href="https://www.atomiq.rw/" target="_blank" rel="noopener noreferrer"'),
+    ]
+
     def replace_nth_match(pattern, repl_func, text):
         matches = list(re.finditer(pattern, text))
         for i in reversed(range(len(matches))):
@@ -49,8 +57,6 @@ def sync_all():
     def update_common(html, is_root=True):
         prefix = './' if is_root else '../'
         asset_prefix = './assets/' if is_root else '../assets/'
-
-        # Preserve avatar & navbar branding
 
         # Copyright & Creator
         copy_text = footer.get('copyright', '© Copyright 2026. All Rights Reserved by Axel Karambizi')
@@ -86,14 +92,20 @@ def sync_all():
         clean_fav = asset_prefix + os.path.basename(fav)
         html = re.sub(r'href="[^"]*favicon\.[^"]*"', f'href="{clean_fav}"', html)
 
-        # Social links
+        # Social links (matches all variants with or without trailing slash)
         soc = footer.get('social', {})
-        if soc.get('x'): html = re.sub(r'href="https://x\.com/[^"]*"', f'href="{soc.get("x")}"', html)
-        if soc.get('instagram'): html = re.sub(r'href="https://www\.instagram\.com/[^"]*"', f'href="{soc.get("instagram")}"', html)
-        if soc.get('behance'): html = re.sub(r'href="https://www\.behance\.net/[^"]*"', f'href="{soc.get("behance")}"', html)
-        if soc.get('dribbble'): html = re.sub(r'href="https://dribbble\.com/[^"]*"', f'href="{soc.get("dribbble")}"', html)
-        if soc.get('linkedin'): html = re.sub(r'href="https://(?:www\.)?linkedin\.com/[^"]*"', f'href="{soc.get("linkedin")}"', html)
-        if soc.get('github'): html = re.sub(r'href="https://(?:www\.)?github\.com/[^"]*"', f'href="{soc.get("github")}"', html)
+        if soc.get('x'):
+            html = re.sub(r'href="https://(?:www\.)?(?:x|twitter)\.com(?:/[^"]*)?"', f'href="{soc.get("x")}"', html)
+        if soc.get('instagram'):
+            html = re.sub(r'href="https://(?:www\.)?instagram\.com(?:/[^"]*)?"', f'href="{soc.get("instagram")}"', html)
+        if soc.get('behance'):
+            html = re.sub(r'href="https://(?:www\.)?behance\.net(?:/[^"]*)?"', f'href="{soc.get("behance")}"', html)
+        if soc.get('dribbble'):
+            html = re.sub(r'href="https://(?:www\.)?dribbble\.com(?:/[^"]*)?"', f'href="{soc.get("dribbble")}"', html)
+        if soc.get('linkedin'):
+            html = re.sub(r'href="https://(?:www\.)?linkedin\.com(?:/[^"]*)?"', f'href="{soc.get("linkedin")}"', html)
+        if soc.get('github'):
+            html = re.sub(r'href="https://(?:www\.)?github\.com(?:/[^"]*)?"', f'href="{soc.get("github")}"', html)
 
         # Avatar
         avatar = gen.get('avatar_image', './assets/avatar.jpg')
@@ -119,24 +131,22 @@ def sync_all():
         # Hero Images
         front_img = gen.get('hero_front_image', './assets/hero_front_hd.jpg')
         back_img = gen.get('hero_back_image', './assets/hero_back_hd.jpg')
-        html = re.sub(r'src="[^"]*(?:ONE90238|hero_front)[^"]*"', f'src="{front_img}"', html)
-        html = re.sub(r'src="[^"]*(?:ONE90240|hero_back)[^"]*"', f'src="{back_img}"', html)
+        clean_front = './assets/' + os.path.basename(front_img)
+        clean_back = './assets/' + os.path.basename(back_img)
+        html = re.sub(r'src="[^"]*(?:hero_front_hd|2o9r)[^"]*"', f'src="{clean_front}"', html)
+        html = re.sub(r'src="[^"]*(?:hero_back_hd|9v8E)[^"]*"', f'src="{clean_back}"', html)
 
-        # Featured Projects Images
-        for p in fp:
-            img_path = p.get('image', '')
-            p_id = p.get('id', '')
-            if 'risevana' in p_id:
-                html = re.sub(r'src="[^"]*project_risevana[^"]*"', f'src="{img_path}"', html)
-            elif 'libblio' in p_id:
-                html = re.sub(r'src="[^"]*project_libblio[^"]*"', f'src="{img_path}"', html)
-            elif 'youth' in p_id:
-                html = re.sub(r'src="[^"]*project_youth_uplift[^"]*"', f'src="{img_path}"', html)
-            elif 'atomiq' in p_id:
-                html = re.sub(r'src="[^"]*project_atomiq[^"]*"', f'src="{img_path}"', html)
+        # Counters
+        if len(counters) >= 3:
+            html = re.sub(r'>1,200\+<', f'>{counters[0].get("number", "1,200+")}<', html)
+            html = re.sub(r'>Children Reached<', f'>{counters[0].get("label", "Children Reached")}<', html)
+            html = re.sub(r'>20\+<', f'>{counters[1].get("number", "20+")}<', html)
+            html = re.sub(r'>Products Deployed<', f'>{counters[1].get("label", "Products Deployed")}<', html)
+            html = re.sub(r'>1,000\+<', f'>{counters[2].get("number", "1,000+")}<', html)
+            html = re.sub(r'>Trees Planted<', f'>{counters[2].get("label", "Trees Planted")}<', html)
 
-        # Services Synchronization
-        if services and len(services) > 0:
+        # Services Section
+        if len(services) > 0:
             s1 = services[0]
             s1_title = s1.get('title', '1. ui/ux design')
             s1_items = s1.get('items', [])
@@ -179,13 +189,6 @@ def sync_all():
         if fq_intro:
             html = re.sub(r'Here are answers to some of the most common questions[^\<]*', fq_intro, html)
 
-        # Ensure project cards link directly to authentic URLs
-        proj_url_map = [
-            (r'href="(?:\.\./)?(?:/)?projects/summer-vibes-festival-campaign/?"', 'href="https://risevana-foundation.vercel.app/" target="_blank" rel="noopener noreferrer"'),
-            (r'href="(?:\.\./)?(?:/)?projects/coral-spiral-abstract/?"', 'href="https://www.libblio.com/" target="_blank" rel="noopener noreferrer"'),
-            (r'href="(?:\.\./)?(?:/)?projects/shopease-redesign-sprint/?"', 'href="https://www.yupinitiative.com/" target="_blank" rel="noopener noreferrer"'),
-            (r'href="(?:\.\./)?(?:/)?projects/black-geometric-prisms/?"', 'href="https://www.atomiq.rw/" target="_blank" rel="noopener noreferrer"'),
-        ]
         for pat, repl in proj_url_map:
             html = re.sub(pat, repl, html)
 
@@ -196,7 +199,7 @@ def sync_all():
     # ==========================================
     # 2. Update explore/index.html & blogs/index.html
     # ==========================================
-    for target_rel, is_blogs_page in [('explore/index.html', False), ('blogs/index.html', True)]:
+    for target_rel in ['explore/index.html', 'blogs/index.html']:
         target_path = os.path.join(base_dir, *target_rel.split('/'))
         if not os.path.exists(target_path):
             continue
@@ -212,7 +215,7 @@ def sync_all():
         html_page = re.sub(r'>The World Is Too Alive to Stay in One Place<', f'>{h_title}<', html_page)
         html_page = re.sub(r'I travel to see how people find clarity and purpose[^<]*', h_intro, html_page)
 
-        # Dates (dynamic matches based on len(exp) * 3 breakpoints)
+        # Dates
         modulo = max(1, len(exp) * 3) if len(exp) > 0 else 15
         date_pattern = r'(<div[^>]*data-framer-name="Date"[^>]*><p[^>]*>)(.*?)(</p></div>)'
         def date_repl(i, m):
@@ -240,20 +243,16 @@ def sync_all():
             return m.group(0)
         html_page = replace_nth_match(desc_pattern, desc_repl, html_page)
 
-        # Images
-        img_pattern = r'(<img[^>]+src=")([^"]*)("[^>]*alt="[^"]*"[^>]*>)'
-        def img_repl(i, m):
-            s_idx = (i % modulo) // 3
-            if s_idx < len(exp):
-                img_path = exp[s_idx].get('image', '').replace('./', '../')
-                return m.group(1) + img_path + m.group(3)
-            return m.group(0)
-        html_page = replace_nth_match(img_pattern, img_repl, html_page)
+        # Images & srcset removal/override
+        for s in exp:
+            if s.get('image'):
+                img_path = s['image'].replace('./', '../')
+                s_id = s.get('id', '')
+                if s_id:
+                    html_page = re.sub(rf'src="[^"]*{re.escape(os.path.basename(img_path))}[^"]*"', f'src="{img_path}"', html_page)
 
         # Strip any Framer bundle module script to prevent template hydration
         html_page = re.sub(r'<script[^>]*data-framer-bundle="main"[^>]*>.*?</script>', '', html_page)
-
-        # Replace residual Insights pills with Field Notes
         html_page = html_page.replace('>Insights<', '>Field Notes<')
 
         with open(target_path, 'w', encoding='utf-8') as f:
@@ -270,40 +269,26 @@ def sync_all():
 
         html_proj = update_common(html_proj, is_root=False)
 
-        # Featured projects h2 tags (27 matches)
-        h2_pattern = r'(<h2 class="framer-text[^"]*"[^>]*>)(.*?)(</h2>)'
-        def h2_repl(i, m):
-            group_idx = i % 9
-            if group_idx < 8:
-                p_idx = group_idx // 2
-                if p_idx < len(fp):
-                    return m.group(1) + fp[p_idx].get('title', '') + m.group(3)
-            return m.group(0)
-        html_proj = replace_nth_match(h2_pattern, h2_repl, html_proj)
-
-        # Featured projects category badges (first 12 matches of Category)
-        cat_pattern = r'(data-framer-name="Category"[^>]*><p class="framer-text[^"]*"[^>]*>)(.*?)(</p>)'
-        cat_matches = list(re.finditer(cat_pattern, html_proj))
-        for i in reversed(range(min(12, len(cat_matches)))):
-            m = cat_matches[i]
-            p_idx = i // 3
-            if p_idx < len(fp):
-                cat = fp[p_idx].get('category', '')
-                rep = m.group(1) + cat + m.group(3)
-                html_proj = html_proj[:m.start()] + rep + html_proj[m.end():]
-
-        # Featured projects images
-        for p in fp:
+        # Featured projects: Update titles, categories, descriptions, images and srcset
+        for idx, p in enumerate(fp):
+            f_name = f'Featured Project - {idx+1}'
             img_path = p.get('image', '').replace('./', '../')
-            p_id = p.get('id', '')
-            if 'risevana' in p_id:
-                html_proj = re.sub(r'src="[^"]*project_risevana[^"]*"', f'src="{img_path}"', html_proj)
-            elif 'libblio' in p_id:
-                html_proj = re.sub(r'src="[^"]*project_libblio[^"]*"', f'src="{img_path}"', html_proj)
-            elif 'youth' in p_id:
-                html_proj = re.sub(r'src="[^"]*project_youth_uplift[^"]*"', f'src="{img_path}"', html_proj)
-            elif 'atomiq' in p_id:
-                html_proj = re.sub(r'src="[^"]*project_atomiq[^"]*"', f'src="{img_path}"', html_proj)
+            p_title = p.get('title', '')
+            p_cat = p.get('category', '')
+            p_desc = p.get('description', '')
+            p_link = p.get('link', '')
+
+            # Match cards with data-framer-name="Featured Project - {idx+1}"
+            # Replace img src and srcset
+            if img_path:
+                # Replace src & srcset on cards for this featured project
+                pattern = rf'(data-framer-name="{f_name}".*?<img[^>]+src=")([^"]*)(")([^>]*>)'
+                def img_card_repl(m):
+                    tag = m.group(0)
+                    tag = re.sub(r'src="[^"]*"', f'src="{img_path}"', tag)
+                    tag = re.sub(r'srcset="[^"]*"', f'srcset="{img_path} 512w, {img_path} 1024w"', tag)
+                    return tag
+                html_proj = re.sub(rf'data-framer-name="{f_name}".*?</div></div></div>', img_card_repl, html_proj, flags=re.DOTALL)
 
         # More Projects cards synchronization (12 matches: 4 cards x 3 viewports)
         card_pattern = r'(<p class="framer-text framer-styles-preset-a6ucvx"[^>]*>)[^<]+(</p></div></div><div class="framer-a27xm9" data-framer-name="Title"[^>]*><h3 class="framer-text framer-styles-preset-12q7ivy"[^>]*>)[^<]+(</h3></div><div class="framer-5wou89" data-framer-name="Description"[^>]*><p class="framer-text framer-styles-preset-a6ucvx"[^>]*>)[^<]+(</p></div>)'
@@ -368,6 +353,45 @@ def sync_all():
         if p2:
             html_about = re.sub(r'I grew up believing opportunity could be on the other side[^\<]*', p2, html_about)
 
+        # Portrait Image & srcset override (clears ONE90235.jpg.jpeg)
+        portrait = about.get('portrait_image', './assets/contact_portrait.jpg').replace('./', '../')
+        html_about = re.sub(r'src="[^"]*(?:ONE90235|contact_portrait)[^"]*"', f'src="{portrait}"', html_about)
+        html_about = re.sub(r'srcset="[^"]*ONE90235[^"]*"', f'srcset="{portrait} 620w"', html_about)
+
+        # Process & Philosophy Section ("Building with Purpose and Curiosity")
+        proc_h = about.get('process_header', {})
+        proc_steps = about.get('process_steps', [])
+        if proc_h.get('heading'):
+            html_about = re.sub(r'Building with Purpose and Curiosity', proc_h['heading'], html_about)
+        if proc_h.get('intro'):
+            html_about = re.sub(r'My process starts with a real barrier and ends with something people can use, built alongside the people it is for\.', proc_h['intro'], html_about)
+
+        default_titles = [
+            'Find the Barrier',
+            'Mobilize the Community',
+            'Build Where Roads End',
+            'Explore and Learn',
+            'Become Useful'
+        ]
+        default_descs = [
+            r'I like problems that don[’\']t have obvious answers\. It starts with spotting what stands between people and opportunity\.',
+            r'Building anything that lasts means bringing people together and earning human trust\.',
+            r'From classrooms to software, I ship systems that work where access is hardest\.',
+            r'I travel and talk to founders to see how people find clarity, speed and purpose\.',
+            r'I keep learning AI, business and storytelling so the next thing I build reaches further\.'
+        ]
+
+        for i, (old_t, old_d) in enumerate(zip(default_titles, default_descs)):
+            if i < len(proc_steps):
+                s = proc_steps[i]
+                new_step = s.get('step', f'0{i+1}.')
+                new_title = s.get('title', '')
+                new_desc = s.get('description', '')
+                old_num = f'0{i+1}.'
+                html_about = re.sub(rf'(<h2 class="framer-text[^"]*"[^>]*>){re.escape(old_num)}(</h2>)', rf'\g<1>{new_step}\g<2>', html_about)
+                html_about = re.sub(rf'(<h3 class="framer-text[^"]*"[^>]*>){re.escape(old_t)}(</h3>)', rf'\g<1>{new_title}\g<2>', html_about)
+                html_about = re.sub(old_d, new_desc, html_about)
+
         # Journey & Learning Headings
         j_heading = about.get('journey_heading', 'Discover My Journey')
         j_intro = about.get('journey_intro', '')
@@ -380,14 +404,9 @@ def sync_all():
         if l_heading:
             html_about = re.sub(r'>What I’m Becoming<', f'>{l_heading}<', html_about)
 
-        # Learning Stack Intro
         intro = about.get('learning_stack_intro', '')
         if intro:
             html_about = re.sub(r'I learn by doing\. Here is what I’m actively mastering[^\<]*', intro, html_about)
-
-        # Portrait Image
-        portrait = about.get('portrait_image', './assets/contact_portrait.jpg').replace('./', '../')
-        html_about = re.sub(r'src="[^"]*(?:ONE90235|contact_portrait)[^"]*"', f'src="{portrait}"', html_about)
 
         # External Live Journey Links
         html_about = re.sub(r'>Risevana Foundation(?: ↗)?</h3>', '><a href="https://risevana-foundation.vercel.app/" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;display:inline-block">Risevana Foundation ↗</a></h3>', html_about)
@@ -409,7 +428,6 @@ def sync_all():
 
         html_contact = update_common(html_contact, is_root=False)
 
-        # Heading & Intro
         c_heading = contact.get('heading', 'Let’s build something.')
         c_intro = contact.get('intro', '')
         if c_heading:
