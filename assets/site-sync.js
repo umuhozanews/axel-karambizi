@@ -6,6 +6,15 @@
 (function() {
   'use strict';
 
+  // Ensure Behance is permanently hidden and removed
+  try {
+    const behanceStyle = document.createElement('style');
+    behanceStyle.id = 'behance-remove-style';
+    behanceStyle.textContent = '.framer-1yo788g, .framer-30cdzv, .framer-1nl2v36, a[href*="behance.net"] { display: none !important; }';
+    if (document.head) document.head.appendChild(behanceStyle);
+    else document.addEventListener('DOMContentLoaded', () => document.head.appendChild(behanceStyle));
+  } catch (e) {}
+
   function resolvePath(url) {
     if (!url || typeof url !== 'string') return '';
     if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:')) {
@@ -664,7 +673,11 @@
         const s = ft.social;
         if (s.x) document.querySelectorAll('.framer-16ft3t1, a[href*="x.com"], a[href*="twitter.com"]').forEach(a => a.href = s.x);
         if (s.instagram) document.querySelectorAll('.framer-5grdll, a[href*="instagram.com"]').forEach(a => a.href = s.instagram);
-        if (s.behance) document.querySelectorAll('.framer-1yo788g, a[href*="behance.net"]').forEach(a => a.href = s.behance);
+        // Permanently eliminate Behance icons and links
+        document.querySelectorAll('.framer-1yo788g, .framer-30cdzv, .framer-1nl2v36, a[href*="behance.net"]').forEach(a => {
+          a.style.display = 'none';
+          a.remove();
+        });
         if (s.github) document.querySelectorAll('a[href*="github.com"]').forEach(a => a.href = s.github);
         if (s.whatsapp) document.querySelectorAll('a[href*="wa.me"]').forEach(a => a.href = s.whatsapp);
 

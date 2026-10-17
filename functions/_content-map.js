@@ -273,10 +273,6 @@ export const CONTENT_MAP = {
     "kind": "href",
     "sel": ".framer-5grdll"
    },
-   "footer.social.behance": {
-    "kind": "href",
-    "sel": ".framer-1yo788g"
-   },
    "footer.social.linkedin": {
     "kind": "href",
     "sel": ".framer-15j1vxj"
@@ -406,10 +402,6 @@ export const CONTENT_MAP = {
    "footer.social.instagram": {
     "kind": "href",
     "sel": ".framer-5grdll"
-   },
-   "footer.social.behance": {
-    "kind": "href",
-    "sel": ".framer-1yo788g"
    },
    "footer.social.linkedin": {
     "kind": "href",
@@ -552,10 +544,6 @@ export const CONTENT_MAP = {
    "footer.social.instagram": {
     "kind": "href",
     "sel": ".framer-5grdll"
-   },
-   "footer.social.behance": {
-    "kind": "href",
-    "sel": ".framer-1yo788g"
    },
    "footer.social.linkedin": {
     "kind": "href",

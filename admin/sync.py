@@ -98,8 +98,10 @@ def sync_all():
             html = re.sub(r'href="https://(?:www\.)?(?:x|twitter)\.com(?:/[^"]*)?"', f'href="{soc.get("x")}"', html)
         if soc.get('instagram'):
             html = re.sub(r'href="https://(?:www\.)?instagram\.com(?:/[^"]*)?"', f'href="{soc.get("instagram")}"', html)
-        if soc.get('behance'):
-            html = re.sub(r'href="https://(?:www\.)?behance\.net(?:/[^"]*)?"', f'href="{soc.get("behance")}"', html)
+        # Permanently eliminate Behance across all pages
+        html = re.sub(r'<!--\$-->\s*<a[^>]*href="https://(?:www\.)?behance\.net/?"[^>]*>.*?</a>\s*<!--/\$-->', '', html, flags=re.DOTALL)
+        html = re.sub(r'<a[^>]*href="https://(?:www\.)?behance\.net/?"[^>]*>.*?</a>', '', html, flags=re.DOTALL)
+        html = re.sub(r'\s*"https://(?:www\.)?behance\.net/?",?\s*', '', html)
         if soc.get('github'):
             html = re.sub(r'href="https://(?:www\.)?github\.com(?:/[^"]*)?"', f'href="{soc.get("github")}"', html)
         if soc.get('whatsapp'):

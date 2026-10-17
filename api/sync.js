@@ -50,7 +50,10 @@ export function updateCommon(html, data, isRoot = true) {
   const soc = footer.social || {};
   if (soc.x) html = html.replace(/href="https:\/\/x\.com\/[^"]*"/g, `href="${soc.x}"`);
   if (soc.instagram) html = html.replace(/href="https:\/\/www\.instagram\.com\/[^"]*"/g, `href="${soc.instagram}"`);
-  if (soc.behance) html = html.replace(/href="https:\/\/www\.behance\.net\/[^"]*"/g, `href="${soc.behance}"`);
+  // Permanently eliminate Behance
+  html = html.replace(/<!--\$-->\s*<a[^>]*href="https:\/\/(?:www\.)?behance\.net\/?"[^>]*>[\s\S]*?<\/a>\s*<!--\/\$-->/g, '');
+  html = html.replace(/<a[^>]*href="https:\/\/(?:www\.)?behance\.net\/?"[^>]*>[\s\S]*?<\/a>/g, '');
+  html = html.replace(/\s*"https:\/\/(?:www\.)?behance\.net\/?",?\s*/g, '');
   if (soc.github) html = html.replace(/href="https:\/\/github\.com\/[^"]*"/g, `href="${soc.github}"`);
   if (soc.whatsapp) html = html.replace(/href="https:\/\/wa\.me\/[^"]*"/g, `href="${soc.whatsapp}"`);
 
