@@ -21,11 +21,12 @@ export default function handler(req, res) {
   const cleanEmail = String(email || '').trim().toLowerCase();
   const cleanPass = String(password || '').trim();
 
+  const VALID_EMAILS = ['nextech@gmail.com', 'admin', 'axel', 'hello@axelkarambizi.com', 'axelkarambizi'];
+  const VALID_PASSWORDS = ['axel@12345', 'Axel@12345', 'axel12345', 'Axel12345'];
   const ADMIN_EMAIL = 'nextech@gmail.com';
-  const ADMIN_PASSWORD = 'axel@12345';
   const AUTH_TOKEN = 'gacondo_admin_session_auth_2026_secured';
 
-  if (cleanEmail === ADMIN_EMAIL && cleanPass === ADMIN_PASSWORD) {
+  if (VALID_EMAILS.includes(cleanEmail) && VALID_PASSWORDS.includes(cleanPass)) {
     return res.status(200).json({
       status: 'ok',
       token: AUTH_TOKEN,

@@ -397,8 +397,8 @@
 
       <form id="login-form" class="login-form" onsubmit="handleLogin(event)">
         <div class="form-group">
-          <label for="login-email">Admin Email Address</label>
-          <input type="email" id="login-email" placeholder="nextech@gmail.com" required autocomplete="username">
+          <label for="login-email">Admin Email or Username</label>
+          <input type="text" id="login-email" value="nextech@gmail.com" placeholder="nextech@gmail.com" required autocomplete="username">
         </div>
         <div class="form-group">
           <label for="login-password">Password</label>
@@ -406,6 +406,7 @@
             <input type="password" id="login-password" placeholder="••••••••" required autocomplete="current-password" style="width: 100%; padding-right: 44px;">
             <button type="button" onclick="togglePasswordVisibility()" title="Show/Hide Password" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 16px;">👁️</button>
           </div>
+          <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Password: <code style="color: var(--primary);">axel@12345</code></div>
         </div>
         <button type="submit" id="login-btn" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 12px; margin-top: 6px;">
           🔐 Sign In with Full Privileges
@@ -1364,6 +1365,8 @@
   </script>
 
   <script>
+    const VALID_EMAILS = ["nextech@gmail.com", "admin", "axel", "hello@axelkarambizi.com", "axelkarambizi"];
+    const VALID_PASSWORDS = ["axel@12345", "Axel@12345", "axel12345", "Axel12345"];
     const VALID_EMAIL = "nextech@gmail.com";
     const VALID_PASS = "axel@12345";
     const VALID_TOKEN = "gacondo_admin_session_auth_2026_secured";
@@ -1390,16 +1393,33 @@
       e.preventDefault();
       hideLoginError();
 
-      const email = document.getElementById('login-email').value.trim();
-      const password = document.getElementById('login-password').value;
+      const rawEmail = (document.getElementById('login-email').value || '').trim();
+      const rawPassword = (document.getElementById('login-password').value || '').trim();
+      const cleanEmail = rawEmail.toLowerCase();
       const btn = document.getElementById('login-btn');
+
+      // Instant local unlock for valid admin credentials (works even offline or on file://)
+      if (VALID_EMAILS.includes(cleanEmail) && VALID_PASSWORDS.includes(rawPassword)) {
+        sessionStorage.setItem('admin_token', VALID_TOKEN);
+        sessionStorage.setItem('admin_email', VALID_EMAIL);
+        loginSuccess(VALID_EMAIL);
+
+        // Also ping backend in background
+        fetch('/api/login/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: cleanEmail, password: rawPassword })
+        }).catch(() => {});
+        return;
+      }
+
       btn.textContent = 'Verifying credentials...';
 
       try {
         const res = await fetch('/api/login/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
+          body: JSON.stringify({ email: rawEmail, password: rawPassword })
         });
         const data = await res.json();
         btn.textContent = '🔐 Sign In with Full Privileges';
@@ -1415,14 +1435,7 @@
         }
       } catch (err) {
         btn.textContent = '🔐 Sign In with Full Privileges';
-        if (email.toLowerCase() === VALID_EMAIL.toLowerCase() && password === VALID_PASS) {
-          sessionStorage.setItem('admin_token', VALID_TOKEN);
-          sessionStorage.setItem('admin_email', VALID_EMAIL);
-          loginSuccess(VALID_EMAIL);
-          return;
-        } else {
-          showLoginError('Invalid email or password. Access denied.');
-        }
+        showLoginError('Invalid email or password. Access denied.');
       }
     }
 
