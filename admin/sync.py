@@ -240,6 +240,29 @@ def sync_all():
         # My Story button links directly to blogs
         html = re.sub(r'(<a [^>]*href=")[^"]*("[^>]*>(?:(?!</a>).)*?My Story)', r'\1./blogs/\2', html, flags=re.DOTALL)
 
+        # Featured projects: Update titles, categories, images, and links on index.html
+        for idx, p in enumerate(fp):
+            f_name = f'Featured Project - {idx+1}'
+            img_path = p.get('image', '')
+            p_title = p.get('title', '')
+            p_cat = p.get('category', '')
+            p_link = p.get('link', '')
+
+            def idx_card_repl(m):
+                chunk = m.group(0)
+                if img_path:
+                    chunk = re.sub(r'src="[^"]*"', f'src="{img_path}"', chunk)
+                    chunk = re.sub(r'srcset="[^"]*"', f'srcset="{img_path} 512w, {img_path} 1024w"', chunk)
+                if p_link:
+                    chunk = re.sub(r'href="[^"]*"', f'href="{p_link}"', chunk)
+                if p_title:
+                    chunk = re.sub(r'(<h2[^>]*>)[^<]*(</h2>)', rf'\g<1>{p_title}\g<2>', chunk)
+                if p_cat:
+                    chunk = re.sub(r'(<div class="framer-1rmvwl7"[^>]*>.*?<p[^>]*>)[^<]*(</p>)', rf'\g<1>{p_cat}\g<2>', chunk)
+                return chunk
+
+            html = re.sub(rf'(data-framer-name="{f_name}".*?</a>)', idx_card_repl, html, flags=re.DOTALL)
+
         for pat, repl in proj_url_map:
             html = re.sub(pat, repl, html)
 
@@ -320,26 +343,28 @@ def sync_all():
 
         html_proj = update_common(html_proj, is_root=False)
 
-        # Featured projects: Update titles, categories, descriptions, images and srcset
+        # Featured projects: Update titles, categories, images, srcset, and links
         for idx, p in enumerate(fp):
             f_name = f'Featured Project - {idx+1}'
             img_path = p.get('image', '').replace('./', '../')
             p_title = p.get('title', '')
             p_cat = p.get('category', '')
-            p_desc = p.get('description', '')
             p_link = p.get('link', '')
 
-            # Match cards with data-framer-name="Featured Project - {idx+1}"
-            # Replace img src and srcset
-            if img_path:
-                # Replace src & srcset on cards for this featured project
-                pattern = rf'(data-framer-name="{f_name}".*?<img[^>]+src=")([^"]*)(")([^>]*>)'
-                def img_card_repl(m):
-                    tag = m.group(0)
-                    tag = re.sub(r'src="[^"]*"', f'src="{img_path}"', tag)
-                    tag = re.sub(r'srcset="[^"]*"', f'srcset="{img_path} 512w, {img_path} 1024w"', tag)
-                    return tag
-                html_proj = re.sub(rf'data-framer-name="{f_name}".*?</div></div></div>', img_card_repl, html_proj, flags=re.DOTALL)
+            def proj_card_repl(m):
+                chunk = m.group(0)
+                if img_path:
+                    chunk = re.sub(r'src="[^"]*"', f'src="{img_path}"', chunk)
+                    chunk = re.sub(r'srcset="[^"]*"', f'srcset="{img_path} 512w, {img_path} 1024w"', chunk)
+                if p_link:
+                    chunk = re.sub(r'href="[^"]*"', f'href="{p_link}"', chunk)
+                if p_title:
+                    chunk = re.sub(r'(<h[23][^>]*>)[^<]*(</h[23]>)', rf'\g<1>{p_title}\g<2>', chunk)
+                if p_cat:
+                    chunk = re.sub(r'(<div class="framer-1rmvwl7"[^>]*>.*?<p[^>]*>)[^<]*(</p>)', rf'\g<1>{p_cat}\g<2>', chunk)
+                return chunk
+
+            html_proj = re.sub(rf'(data-framer-name="{f_name}".*?</a>)', proj_card_repl, html_proj, flags=re.DOTALL)
 
         # More Projects cards synchronization (12 matches: 4 cards x 3 viewports)
         card_pattern = r'(<p class="framer-text framer-styles-preset-a6ucvx"[^>]*>)[^<]+(</p></div></div><div class="framer-a27xm9" data-framer-name="Title"[^>]*><h3 class="framer-text framer-styles-preset-12q7ivy"[^>]*>)[^<]+(</h3></div><div class="framer-5wou89" data-framer-name="Description"[^>]*><p class="framer-text framer-styles-preset-a6ucvx"[^>]*>)[^<]+(</p></div>)'

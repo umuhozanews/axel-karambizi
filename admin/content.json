@@ -334,9 +334,9 @@
     {
       "id": "libblio",
       "link": "https://www.libblio.com/",
-      "image": "./assets/Screenshot_2026-10-04_at_2.42.02_PM.png",
-      "title": "Atomiq",
-      "category": "Design · Technology",
+      "image": "./assets/Smiling_Founder_Presenting_African_Startup_Trophy.png",
+      "title": "Libblio",
+      "category": "EdTech · SaaS",
       "description": ""
     },
     {
@@ -350,9 +350,9 @@
     {
       "id": "atomiq",
       "link": "https://www.atomiq.rw/",
-      "image": "./assets/Smiling_Founder_Presenting_African_Startup_Trophy.png",
-      "title": "Libblio",
-      "category": "EdTech · SaaS",
+      "image": "./assets/Screenshot_2026-10-04_at_2.42.02_PM.png",
+      "title": "Atomiq Agency",
+      "category": "Design · Technology",
       "description": ""
     }
   ],
