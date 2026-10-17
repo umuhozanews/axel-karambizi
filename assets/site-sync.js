@@ -10,7 +10,7 @@
   try {
     const behanceStyle = document.createElement('style');
     behanceStyle.id = 'behance-remove-style';
-    behanceStyle.textContent = '.framer-1yo788g, .framer-30cdzv, .framer-1nl2v36, a[href*="behance.net"] { display: none !important; }';
+    behanceStyle.textContent = '.framer-1yo788g, .framer-30cdzv, .framer-1nl2v36, a[href*="behance.net"], #floating-admin-badge { display: none !important; }';
     if (document.head) document.head.appendChild(behanceStyle);
     else document.addEventListener('DOMContentLoaded', () => document.head.appendChild(behanceStyle));
   } catch (e) {}
@@ -704,8 +704,9 @@
       }
     }
 
-    // Ensure floating quick admin badge is present
-    injectAdminQuickBadge();
+    // Ensure floating quick admin badge is removed
+    const existingBadge = document.getElementById('floating-admin-badge');
+    if (existingBadge) existingBadge.remove();
   }
 
   function injectEnhancedContactBar(ct) {
@@ -767,18 +768,6 @@
     }
   };
 
-  function injectAdminQuickBadge() {
-    if (document.getElementById('floating-admin-badge')) return;
-    const badge = document.createElement('a');
-    badge.id = 'floating-admin-badge';
-    badge.href = '/admin/';
-    badge.title = 'Open Admin CMS & Universal Content Editor';
-    badge.style.cssText = 'position:fixed; bottom:20px; right:20px; z-index:99999; background:rgba(12, 13, 18, 0.88); border:1px solid rgba(106, 113, 223, 0.45); color:#fff; padding:7px 14px; border-radius:30px; font-size:12px; font-family:-apple-system, sans-serif; display:flex; align-items:center; gap:6px; text-decoration:none; box-shadow:0 8px 24px rgba(0,0,0,0.6); backdrop-filter:blur(12px); transition:transform 0.2s, border-color 0.2s; opacity:0.85;';
-    badge.onmouseenter = () => { badge.style.opacity = '1'; badge.style.transform = 'translateY(-2px)'; badge.style.borderColor = '#27d974'; };
-    badge.onmouseleave = () => { badge.style.opacity = '0.85'; badge.style.transform = 'translateY(0)'; badge.style.borderColor = 'rgba(106, 113, 223, 0.45)'; };
-    badge.innerHTML = '<span style="color:#27d974; font-size:14px;">⚡</span> <strong style="font-weight:600;">Edit Site</strong>';
-    document.body.appendChild(badge);
-  }
 
   // Run on initial load
   if (document.readyState === 'loading') {
