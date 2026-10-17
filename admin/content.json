@@ -129,29 +129,7 @@
       "link": "https://www.hippotech.rw/"
     }
   ],
-  "more_projects": [
-    {
-      "title": "Mobile Classroom",
-      "category": "Education",
-      "description": "Bringing technology and digital exposure to underserved areas.",
-      "link": "",
-      "image": ""
-    },
-    {
-      "title": "Community Mentorship",
-      "category": "Youth",
-      "description": "Pairing young builders and students with active practitioners across software, craft, and entrepreneurship.",
-      "link": "",
-      "image": ""
-    },
-    {
-      "title": "Tree Planting Initiatives",
-      "category": "Environment",
-      "description": "Community-led agroforestry planting over 1,000 native trees across vulnerable hillsides to combat soil erosion.",
-      "link": "",
-      "image": ""
-    }
-  ],
+  "more_projects": [],
   "explore_header": {
     "heading": "The World Is Too Alive to Stay in One Place",
     "intro": "I travel to see how people find clarity and purpose, collecting places, conversations, quiet moments and perspectives along the way."
