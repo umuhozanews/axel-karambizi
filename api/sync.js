@@ -71,6 +71,10 @@ export function updateCommon(html, data, isRoot = true) {
   const cleanAvatar = `${assetPrefix}${avatarBasename}`;
   html = html.replace(/src="[^"]*(?:avatar|img_0|IUYr)[^"]*"/g, `src="${cleanAvatar}"`);
 
+  // Remove description sentence overlay from project photos across all viewports
+  html = html.replace(/<div class="framer-m8h9u9"[^>]*>[\s\S]*?<\/div>/g, '');
+  html = html.replace(/<div class="framer-ldojh2"[^>]*>[\s\S]*?<\/div>/g, '');
+
   return html;
 }
 

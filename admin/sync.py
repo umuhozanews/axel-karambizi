@@ -121,6 +121,10 @@ def sync_all():
         clean_avatar = asset_prefix + os.path.basename(avatar)
         html = re.sub(r'src="[^"]*(?:avatar|img_0|IUYr)[^"]*"', f'src="{clean_avatar}"', html)
 
+        # Remove description sentence overlay from project photos across all viewports
+        html = re.sub(r'<div class="framer-m8h9u9"[^>]*>.*?</div>', '', html, flags=re.DOTALL)
+        html = re.sub(r'<div class="framer-ldojh2"[^>]*>.*?</div>', '', html, flags=re.DOTALL)
+
         return html
 
     # ==========================================

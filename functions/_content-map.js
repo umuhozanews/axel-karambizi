@@ -114,16 +114,6 @@ export const CONTENT_MAP = {
     "order": "copy"
    },
    {
-    "list": "featured_projects",
-    "field": "description",
-    "sel": ".framer-m8h9u9 p",
-    "kind": "text",
-    "start": 0,
-    "slots": 4,
-    "copies": 1,
-    "order": "copy"
-   },
-   {
     "list": "faq",
     "field": "question",
     "sel": ".framer-eqt2pn h4",
@@ -293,16 +283,6 @@ export const CONTENT_MAP = {
     "list": "featured_projects",
     "field": "title",
     "sel": ".framer-qhutoj h3",
-    "kind": "text",
-    "start": 0,
-    "slots": 4,
-    "copies": 1,
-    "order": "copy"
-   },
-   {
-    "list": "featured_projects",
-    "field": "description",
-    "sel": ".framer-ldojh2 p",
     "kind": "text",
     "start": 0,
     "slots": 4,

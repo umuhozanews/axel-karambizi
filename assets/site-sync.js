@@ -10,7 +10,7 @@
   try {
     const behanceStyle = document.createElement('style');
     behanceStyle.id = 'behance-remove-style';
-    behanceStyle.textContent = '.framer-1yo788g, .framer-30cdzv, .framer-1nl2v36, a[href*="behance.net"], #floating-admin-badge { display: none !important; }';
+    behanceStyle.textContent = '.framer-1yo788g, .framer-30cdzv, .framer-1nl2v36, a[href*="behance.net"], #floating-admin-badge, .framer-m8h9u9, .framer-ldojh2 { display: none !important; }';
     if (document.head) document.head.appendChild(behanceStyle);
     else document.addEventListener('DOMContentLoaded', () => document.head.appendChild(behanceStyle));
   } catch (e) {}
@@ -168,9 +168,8 @@
             const t = card.querySelector('.framer-qhutoj h2, .framer-qhutoj h3, [data-framer-name="Title"] h2, [data-framer-name="Title"] h3');
             if (t && p.title) t.textContent = p.title;
 
-            // Description
-            const d = card.querySelector('.framer-m8h9u9 p, .framer-ldojh2 p, [data-framer-name="Description"] p');
-            if (d && p.description) d.textContent = p.description;
+            // Remove description overlay from project photo
+            card.querySelectorAll('.framer-m8h9u9, .framer-ldojh2').forEach(el => el.remove());
 
             // Image
             const img = card.querySelector('img');
@@ -205,7 +204,7 @@
           if (t && p.title) t.textContent = p.title;
           const paras = card.querySelectorAll('p');
           if (paras.length > 0 && p.category) paras[0].textContent = p.category;
-          if (paras.length > 1 && p.description) paras[1].textContent = p.description;
+          card.querySelectorAll('.framer-m8h9u9, .framer-ldojh2').forEach(el => el.remove());
           card.querySelectorAll('img').forEach(img => {
             if (p.image) setSafeImage(img, p.image);
           });
