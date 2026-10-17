@@ -351,8 +351,20 @@
         if (idx < data.faq.length) {
           card.style.display = '';
           const f = data.faq[idx];
-          const q = card.querySelector('.framer-eqt2pn h4, h4');
-          if (q && f.question) q.textContent = f.question;
+
+          // 1. Maintain question number (1., 2., 3., etc.)
+          const numEl = card.querySelector('.framer-e6shww > .framer-118mxo5 h4, .framer-xyut35 .framer-118mxo5 h4');
+          if (numEl) {
+            numEl.textContent = `${idx + 1}.`;
+          }
+
+          // 2. Set question text: ONLY target .framer-eqt2pn h4, NEVER plain h4!
+          const q = card.querySelector('.framer-eqt2pn h4');
+          if (q && f.question) {
+            q.textContent = f.question;
+          }
+
+          // 3. Set answer text and enforce full responsive wrapping
           const a = card.querySelector('.framer-1l7evow p, [data-framer-name="Bottom"] p, .framer-118mxo5 p, p');
           if (a && f.answer) {
             a.textContent = f.answer;
@@ -361,6 +373,22 @@
             a.style.overflow = 'visible';
             a.style.height = 'auto';
             a.style.wordBreak = 'normal';
+            a.style.overflowWrap = 'break-word';
+            a.style.display = 'block';
+            a.style.width = '100%';
+            a.style.maxWidth = '100%';
+          }
+
+          // 4. Ensure answer wrapper div allows text wrapping and expansion
+          const aWrap = card.querySelector('.framer-1l7evow .framer-118mxo5, [data-framer-name="Bottom"] .framer-118mxo5');
+          if (aWrap) {
+            aWrap.style.whiteSpace = 'normal';
+            aWrap.style.wordBreak = 'normal';
+            aWrap.style.overflowWrap = 'break-word';
+            aWrap.style.width = '100%';
+            aWrap.style.maxWidth = '100%';
+            aWrap.style.height = 'auto';
+            aWrap.style.display = 'block';
           }
         } else {
           card.style.display = 'none';

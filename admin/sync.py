@@ -196,9 +196,16 @@ def sync_all():
         if fq_intro:
             html = re.sub(r'Here are answers to some of the most common questions[^\<]*', fq_intro, html)
 
-        # FAQ Items synchronization (questions & answers)
+        # FAQ Items synchronization (numbers, questions & answers)
         faqs = data.get('faq', [])
         if faqs:
+            # 1. Maintain question number (1., 2., 3., etc.)
+            num_pattern = r'(<div class="framer-xyut35"[^>]*>.*?<div class="framer-118mxo5"[^>]*><h4[^>]*>)([^<]+)(</h4>)'
+            def num_repl(idx, m):
+                return m.group(1) + f"{idx+1}." + m.group(3)
+            html = replace_nth_match(num_pattern, num_repl, html)
+
+            # 2. Synchronize question text
             q_pattern = r'(<div class="framer-eqt2pn"[^>]*><h4[^>]*>)([^<]+)(</h4>)'
             def q_repl(idx, m):
                 if idx < len(faqs):
@@ -206,12 +213,20 @@ def sync_all():
                 return m.group(0)
             html = replace_nth_match(q_pattern, q_repl, html)
 
+            # 3. Synchronize answer text
             a_pattern = r'(<div class="framer-1l7evow"[^>]*>.*?<p class="framer-text framer-styles-preset-17cdd8a"[^>]*>)(.*?)(</p>)'
             def a_repl(idx, m):
                 if idx < len(faqs):
                     return m.group(1) + faqs[idx].get('answer', '') + m.group(3)
                 return m.group(0)
             html = replace_nth_match(a_pattern, a_repl, html)
+
+        # Enforce wrapping styles inline on answer paragraphs
+        html = re.sub(
+            r'(<div class="framer-1l7evow"[^>]*>.*?<p class="framer-text framer-styles-preset-17cdd8a"[^>]*)(style="[^"]*")',
+            r'\1style="--framer-text-alignment: left; --framer-text-color: var(--extracted-r6o4lv, var(--token-a9f688eb-778b-4a71-929e-ebf8a014b4cf, rgb(48, 48, 48))); line-height: 1.75; font-size: 15px; margin: 0; padding-top: 6px; padding-bottom: 8px; white-space: normal; overflow-wrap: break-word; word-break: normal; width: 100%; display: block;"',
+            html
+        )
 
         # Remove fixed height on FAQ container so answers are never clipped
         html = html.replace('style="height: 583.594px;"', 'style="height: auto; min-height: auto;"')

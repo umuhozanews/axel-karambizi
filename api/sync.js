@@ -137,6 +137,11 @@ export function syncIndex(html, data) {
   // FAQ Items
   const faqs = data.faq || [];
   if (faqs.length > 0) {
+    const numPattern = /(<div class="framer-xyut35"[^>]*>[\s\S]*?<div class="framer-118mxo5"[^>]*><h4[^>]*>)([^<]+)(<\/h4>)/g;
+    html = replaceNthMatch(numPattern, (idx, groups) => {
+      return groups[1] + `${idx + 1}.` + groups[3];
+    }, html);
+
     const qPattern = /(<div class="framer-eqt2pn"[^>]*><h4[^>]*>)([^<]+)(<\/h4>)/g;
     html = replaceNthMatch(qPattern, (idx, groups) => {
       if (idx < faqs.length && faqs[idx].question) {
@@ -153,6 +158,12 @@ export function syncIndex(html, data) {
       return groups[0];
     }, html);
   }
+
+  // Enforce wrapping styles inline on answer paragraphs
+  html = html.replace(
+    /(<div class="framer-1l7evow"[^>]*>[\s\S]*?<p class="framer-text framer-styles-preset-17cdd8a"[^>]*)(style="[^"]*")/g,
+    '$1style="--framer-text-alignment: left; --framer-text-color: var(--extracted-r6o4lv, var(--token-a9f688eb-778b-4a71-929e-ebf8a014b4cf, rgb(48, 48, 48))); line-height: 1.75; font-size: 15px; margin: 0; padding-top: 6px; padding-bottom: 8px; white-space: normal; overflow-wrap: break-word; word-break: normal; width: 100%; display: block;"'
+  );
 
   // Remove fixed height on FAQ container
   html = html.replace(/style="height:\s*583\.594px;"/g, 'style="height: auto; min-height: auto;"');
