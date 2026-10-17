@@ -51,7 +51,7 @@
   ],
   "services": [
     {
-      "title": "1. ui/ux design",
+      "title": "1.Business",
       "items": [
         "Wireframing and prototyping",
         "User Interface design for web and mobile apps",
@@ -98,10 +98,10 @@
     },
     {
       "id": "libblio",
-      "title": "Libblio",
-      "category": "EdTech · SaaS",
-      "description": "A digital library management platform helping schools move from paper-based libraries to smarter, more accessible systems. Built as a student-led startup, Libblio went on to win AwardX East Africa and TICON Africa Startup of the Year.",
-      "image": "./assets/Smiling_Founder_Presenting_African_Startup_Trophy.png",
+      "title": "Atomiq",
+      "category": "Design · Technology",
+      "description": "A software and design agency built by young Rwandan founders to help startups and companies turn ideas into real products—from brand identity and digital experiences to AI, mobile apps, and full software systems. ",
+      "image": "./assets/Screenshot_2026-10-04_at_2.42.02_PM.png",
       "link": "https://www.libblio.com/"
     },
     {
@@ -114,10 +114,10 @@
     },
     {
       "id": "atomiq",
-      "title": "Atomiq Agency",
-      "category": "Design · Technology",
-      "description": "A software and design agency built by young Rwandan founders to help startups and companies turn ideas into real products—from brand identity and digital experiences to AI, mobile apps, and full software systems.",
-      "image": "./assets/Screenshot_2026-10-04_at_2.42.02_PM.png",
+      "title": "Libblio",
+      "category": "EdTech · SaaS",
+      "description": "A digital library management platform helping schools move from paper-based libraries to smarter, more accessible systems. Built as a student-led startup, Libblio went on to win AwardX East Africa and TICON Africa Startup of the Year. LinkedIn",
+      "image": "./assets/Smiling_Founder_Presenting_African_Startup_Trophy.png",
       "link": "https://www.atomiq.rw/"
     },
     {
@@ -253,14 +253,14 @@
     "form_action": "https://formsubmit.co/papilocostaa@gmail.com"
   },
   "footer": {
-    "copyright": "© Copyright 2026. All Rights Reserved by Axel Karambizi",
+    "copyright": "© Copyright 2025. All Rights Reserved by Axel Karambizi",
     "created_by": "Gacondo Labs",
     "created_by_url": "#",
     "social": {
-      "x": "https://x.com/axelkarambizi",
+      "x": "https://x.com/",
       "instagram": "https://www.instagram.com/axelkarambizi/",
-      "linkedin": "https://www.linkedin.com/in/axel-karambizi-1633922a7/",
-      "github": "https://github.com/karambiziaxel",
+      "linkedin": "",
+      "github": "",
       "whatsapp": "https://wa.me/250788749709"
     }
   },
