@@ -474,6 +474,47 @@
       <!-- Tab 1: General & Hero -->
       <div id="tab-hero" class="panel active">
         <div class="card-box">
+          <h3>Navbar & Header Controls</h3>
+          <p style="color:var(--text-muted); font-size:13px; margin-bottom:14px;">Edit the top status pill badge, primary action button, favicon, and avatar shown in the header navigation.</p>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Status Badge (Pill in Header)</label>
+              <input type="text" id="nav-status-badge" placeholder="Available for work">
+            </div>
+            <div class="form-group">
+              <label>Contact CTA Button Text</label>
+              <input type="text" id="nav-btn-label" placeholder="Contact">
+            </div>
+            <div class="form-group full">
+              <label>Contact CTA Button Link URL</label>
+              <input type="text" id="nav-btn-url" placeholder="#contact">
+            </div>
+            <div class="form-group full">
+              <label>Navbar Avatar Photo</label>
+              <div class="image-field-wrap">
+                <img id="prev-gen-avatar" src="" class="image-preview-thumb">
+                <input type="text" id="gen-avatar" style="flex:1;">
+                <label class="btn-upload">
+                  📁 Replace Photo
+                  <input type="file" accept="image/*" style="display:none;" onchange="uploadImageFile(this, 'gen-avatar', 'prev-gen-avatar')">
+                </label>
+              </div>
+            </div>
+            <div class="form-group full">
+              <label>Favicon Icon (.png / .ico)</label>
+              <div class="image-field-wrap">
+                <img id="prev-gen-favicon" src="" class="image-preview-thumb" style="width:40px;height:40px;object-fit:contain;">
+                <input type="text" id="gen-favicon" style="flex:1;">
+                <label class="btn-upload">
+                  📁 Replace Favicon
+                  <input type="file" accept="image/*" style="display:none;" onchange="uploadImageFile(this, 'gen-favicon', 'prev-gen-favicon')">
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-box">
           <h3>Hero Identity</h3>
           <div class="form-grid">
             <div class="form-group">
@@ -545,18 +586,46 @@
 
       <!-- Tab 2: Featured Projects -->
       <div id="tab-projects" class="panel">
-        <div style="display:flex; justify-content:flex-end; margin-bottom:14px;">
-      <button type="button" onclick="addFeaturedProject()" class="btn btn-primary">+ Add Featured Project</button>
-    </div>
-    <div id="featured-projects-container"></div>
+        <div class="card-box">
+          <h3>Featured Projects Section Header</h3>
+          <div class="form-grid">
+            <div class="form-group full">
+              <label>Section Heading</label>
+              <input type="text" id="fp-header-heading" placeholder="Featured Projects">
+            </div>
+            <div class="form-group full">
+              <label>Section Intro Subtitle</label>
+              <textarea id="fp-header-intro" placeholder="These selected projects reflect how I learn: by building things for other people and solving problems that don’t have obvious answers."></textarea>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+          <p style="color:var(--text-muted); font-size:13px; margin:0;">Add, reorder, or delete featured project cards. Cards deleted here are immediately removed from the live site.</p>
+          <button type="button" onclick="addFeaturedProject()" class="btn btn-primary">+ Add Featured Project</button>
+        </div>
+        <div id="featured-projects-container"></div>
       </div>
 
       <!-- Tab 3: More Projects -->
       <div id="tab-more-projects" class="panel">
-        <div style="display:flex; justify-content:flex-end; margin-bottom:14px;">
-      <button type="button" onclick="addMoreProject()" class="btn btn-primary">+ Add More Project</button>
-    </div>
-    <div id="more-projects-container"></div>
+        <div class="card-box">
+          <h3>More Projects Section Header</h3>
+          <div class="form-grid">
+            <div class="form-group full">
+              <label>Section Heading</label>
+              <input type="text" id="mp-header-heading" placeholder="More Projects">
+            </div>
+            <div class="form-group full">
+              <label>Section Intro Subtitle</label>
+              <textarea id="mp-header-intro" placeholder="Other initiatives and community ventures across Rwanda."></textarea>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+          <p style="color:var(--text-muted); font-size:13px; margin:0;">Initiatives and secondary projects. Delete or add items dynamically.</p>
+          <button type="button" onclick="addMoreProject()" class="btn btn-primary">+ Add More Project</button>
+        </div>
+        <div id="more-projects-container"></div>
       </div>
 
       <!-- Tab 4: Explore Stories -->
@@ -572,14 +641,28 @@
             <textarea id="explore-header-intro"></textarea>
           </div>
         </div>
-        <div style="display:flex; justify-content:flex-end; margin-bottom:14px;">
-      <button type="button" onclick="addExploreStory()" class="btn btn-primary">+ Add New Story / Article</button>
-    </div>
-    <div id="explore-stories-container"></div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+          <p style="color:var(--text-muted); font-size:13px; margin:0;">Articles, travel journals, and founder reflections.</p>
+          <button type="button" onclick="addExploreStory()" class="btn btn-primary">+ Add New Story / Article</button>
+        </div>
+        <div id="explore-stories-container"></div>
       </div>
 
       <!-- Tab: Services -->
       <div id="tab-services" class="panel">
+        <div class="card-box">
+          <h3>Services Section Header</h3>
+          <div class="form-grid">
+            <div class="form-group full">
+              <label>Section Heading</label>
+              <input type="text" id="svc-header-heading" placeholder="what I can do for you">
+            </div>
+            <div class="form-group full">
+              <label>Section Intro Subtitle</label>
+              <textarea id="svc-header-intro" placeholder="I don’t have one box. I build companies, communities and technology..."></textarea>
+            </div>
+          </div>
+        </div>
         <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px; margin-bottom:14px; flex-wrap:wrap;">
           <p style="color:var(--text-muted); font-size:13px; max-width:560px; line-height:1.5;">
             Each service is a title plus offerings (one per line). Add, edit, or delete here, then click <strong>Save All Changes</strong>.
@@ -591,6 +674,19 @@
 
       <!-- Tab: FAQ -->
       <div id="tab-faq" class="panel">
+        <div class="card-box">
+          <h3>FAQ Section Header</h3>
+          <div class="form-grid">
+            <div class="form-group full">
+              <label>Section Heading</label>
+              <input type="text" id="faq-header-heading" placeholder="Frequently Asked Questions">
+            </div>
+            <div class="form-group full">
+              <label>Section Intro Subtitle</label>
+              <textarea id="faq-header-intro" placeholder="Here are answers to some of the most common questions I receive..."></textarea>
+            </div>
+          </div>
+        </div>
         <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px; margin-bottom:14px; flex-wrap:wrap;">
           <p style="color:var(--text-muted); font-size:13px; max-width:560px; line-height:1.5;">
             These questions appear on the homepage FAQ. Add, edit, or delete, then click <strong>Save All Changes</strong>.
@@ -603,7 +699,36 @@
       <!-- Tab 5: About Page -->
       <div id="tab-about" class="panel">
         <div class="card-box">
-          <h3>About Me Bio</h3>
+          <h3>About Page Header & Hero</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Header Badge</label>
+              <input type="text" id="about-badge" placeholder="About me">
+            </div>
+            <div class="form-group">
+              <label>Display Name</label>
+              <input type="text" id="about-name" placeholder="Axel Karambizi">
+            </div>
+            <div class="form-group full">
+              <label>Headline / Tagline</label>
+              <input type="text" id="about-tagline" placeholder="I build businesses, create opportunities and tell the stories along the way.">
+            </div>
+            <div class="form-group full">
+              <label>About Portrait Photo</label>
+              <div class="image-field-wrap">
+                <img id="prev-about-portrait" src="" class="image-preview-thumb">
+                <input type="text" id="about-portrait-img" style="flex:1;">
+                <label class="btn-upload">
+                  📁 Replace Photo
+                  <input type="file" accept="image/*" style="display:none;" onchange="uploadImageFile(this, 'about-portrait-img', 'prev-about-portrait')">
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-box">
+          <h3>About Me Bio Paragraphs</h3>
           <div class="form-group full">
             <label>Paragraph 1</label>
             <textarea id="about-p1"></textarea>
@@ -612,26 +737,46 @@
             <label>Paragraph 2</label>
             <textarea id="about-p2"></textarea>
           </div>
+          <div class="form-group full" style="margin-top: 12px;">
+            <label>Paragraph 3 (Optional Extra Bio)</label>
+            <textarea id="about-p3" placeholder="Optional 3rd paragraph..."></textarea>
+          </div>
         </div>
 
         <div class="card-box">
           <h3>Discover My Journey Timeline</h3>
+          <div class="form-grid" style="margin-bottom:16px;">
+            <div class="form-group full">
+              <label>Timeline Section Heading</label>
+              <input type="text" id="about-journey-heading" placeholder="Discover My Journey">
+            </div>
+            <div class="form-group full">
+              <label>Timeline Intro Subtitle</label>
+              <textarea id="about-journey-intro" placeholder="From a river crossing in rural Rwanda to software running in 20+ institutions..."></textarea>
+            </div>
+          </div>
           <div id="journey-container"></div>
-    <div style="margin-top:10px;">
-      <button type="button" onclick="addJourneyItem()" class="btn btn-outline" style="width:100%; justify-content:center;">+ Add Role / Experience</button>
-    </div>
+          <div style="margin-top:10px;">
+            <button type="button" onclick="addJourneyItem()" class="btn btn-outline" style="width:100%; justify-content:center;">+ Add Role / Experience</button>
+          </div>
         </div>
 
         <div class="card-box">
           <h3>What I’m Becoming (Learning Stack)</h3>
-          <div class="form-group full" style="margin-bottom:16px;">
-            <label>Intro</label>
-            <textarea id="about-learn-intro"></textarea>
+          <div class="form-grid" style="margin-bottom:16px;">
+            <div class="form-group full">
+              <label>Section Heading</label>
+              <input type="text" id="about-learning-heading" placeholder="What I’m Becoming">
+            </div>
+            <div class="form-group full">
+              <label>Intro Subtitle</label>
+              <textarea id="about-learn-intro"></textarea>
+            </div>
           </div>
           <div id="learning-stack-container"></div>
-    <div style="margin-top:10px;">
-      <button type="button" onclick="addLearningItem()" class="btn btn-outline" style="width:100%; justify-content:center;">+ Add Skill</button>
-    </div>
+          <div style="margin-top:10px;">
+            <button type="button" onclick="addLearningItem()" class="btn btn-outline" style="width:100%; justify-content:center;">+ Add Skill</button>
+          </div>
         </div>
       </div>
 
@@ -680,6 +825,18 @@
             <div class="form-group">
               <label>Created By Credit</label>
               <input type="text" id="footer-created-by">
+            </div>
+            <div class="form-group full">
+              <label>Created By Website Link URL</label>
+              <input type="text" id="footer-created-by-url" placeholder="https://...">
+            </div>
+            <div class="form-group">
+              <label>LinkedIn URL</label>
+              <input type="text" id="social-li" placeholder="https://www.linkedin.com/in/...">
+            </div>
+            <div class="form-group">
+              <label>GitHub URL</label>
+              <input type="text" id="social-gh" placeholder="https://github.com/...">
             </div>
             <div class="form-group">
               <label>X (Twitter) URL</label>
@@ -745,233 +902,63 @@
 
   <script id="initial-content" type="application/json">
 {
-  "general": {
-    "name": "Axel Karambizi",
-    "badge": "Hi",
-    "headline_1": "founder",
-    "headline_2": "builder",
-    "tagline": "I’m a Kigali-based founder and builder of companies, communities and technology",
-    "hero_front_image": "./assets/hero_front_hd.jpg",
-    "hero_back_image": "./assets/hero_back_hd.jpg",
-    "avatar_image": "./assets/avatar.jpg",
-    "favicon_image": "./assets/favicon.png"
-  },
-  "navigation": {
-    "items": [
-      {
-        "label": "Home",
-        "url": "./"
-      },
-      {
-        "label": "About",
-        "url": "./about/"
-      },
-      {
-        "label": "Project",
-        "url": "./projects/"
-      },
-      {
-        "label": "Explore",
-        "url": "./explore/"
-      }
-    ],
-    "button": {
-      "label": "Contact",
-      "url": "#contact"
-    },
-    "status_badge": "Available for work"
-  },
-  "counters": [
+  "faq": [
     {
-      "number": "1,200+",
-      "label": "Children Reached"
+      "id": "faq-1",
+      "answer": "I build software products, accredited educational foundations, and digital ecosystems. My primary ventures include Risevana Foundation (rural education & nutrition for 1,200+ children), Libblio (school library intelligence software), and Atomiq (digital design, branding, and software agency).",
+      "question": "What do you build?"
     },
     {
-      "number": "20+",
-      "label": "Schools Deployed"
+      "id": "faq-2",
+      "answer": "I believe in conviction, velocity, and practical utility. Whether writing software or constructing school classrooms, I start with direct community and user needs, build working prototypes rapidly, and iterate based on real feedback.",
+      "question": "How do you approach a project?"
     },
     {
-      "number": "1,000+",
-      "label": "Trees Planted"
-    }
-  ],
-  "services": [
-    {
-      "title": "1. ui/ux design",
-      "items": [
-        "Wireframing and prototyping",
-        "User Interface design for web and mobile apps",
-        "Usability testing and user feedback analysis",
-        "Interaction design and micro-interactions"
-      ]
+      "id": "faq-3",
+      "answer": "I am based in Kigali, Rwanda, but work with partners, founders, and institutions across East Africa, Central Africa, the Middle East, and Europe.",
+      "question": "Where are you based?"
     },
     {
-      "title": "2. Education",
-      "items": [
-        "Accredited school foundations in rural areas",
-        "Classrooms and daily meals for children",
-        "Mobile classroom bringing tech to underserved areas",
-        "Community mentorship pathways for local youth"
-      ]
+      "id": "faq-4",
+      "answer": "I am constantly deepening my mastery of full-stack software architecture, AI-augmented developer workflows, distributed systems, and sustainable nonprofit governance.",
+      "question": "What are you learning right now?"
     },
     {
-      "title": "3. Community Action",
-      "items": [
-        "Kigali Car Free Day community runs",
-        "Blood drives and civic events",
-        "Environmental initiatives, 1,000+ trees planted",
-        "Youth empowerment with Youth Uplift Initiative"
-      ]
+      "id": "faq-5",
+      "answer": "Yes. Atomiq collaborates with forward-thinking founders, tech companies, and community organizations looking to build world-class web applications, brands, and digital infrastructure.",
+      "question": "Can we collaborate or hire Atomiq?"
     },
     {
-      "title": "4. Storytelling",
-      "items": [
-        "Writing and travel journals",
-        "Field notes from founder journeys",
-        "Building across borders: DRC, Uganda, France, UAE",
-        "Documenting lessons in building and giving back"
-      ]
-    }
-  ],
-  "featured_projects": [
-    {
-      "id": "risevana",
-      "title": "Risevana Foundation",
-      "category": "Non-Profit / Education",
-      "description": "An accredited foundation that built classrooms and daily meals on the children’s side of the river, reaching 1,200+ children.",
-      "image": "./assets/project_risevana.png",
-      "link": "./project-detail/"
-    },
-    {
-      "id": "libblio",
-      "title": "Libblio",
-      "category": "EdTech / Software",
-      "description": "School library software and reader intelligence for Rwandan schools, transforming how institutions organize knowledge.",
-      "image": "./assets/project_libblio.png",
-      "link": "./project-detail/"
-    },
-    {
-      "id": "youth-uplift",
-      "title": "Youth Uplift Initiative",
-      "category": "Community / Youth",
-      "description": "Youth empowerment initiatives spanning mentorship, community runs, blood donation drives, and environmental restoration across Kigali.",
-      "image": "./assets/project_youth_uplift.png",
-      "link": "./project-detail/"
-    },
-    {
-      "id": "atomiq",
-      "title": "Atomiq Agency",
-      "category": "Agency / Technology",
-      "description": "A design, branding, and software agency helping founders, creators, and institutions build world-class digital products and stories.",
-      "image": "./assets/project_atomiq.png",
-      "link": "./project-detail/"
-    }
-  ],
-  "more_projects": [
-    {
-      "title": "Mobile Classroom",
-      "category": "Education / Outreach",
-      "description": "A traveling learning lab bringing tech, books, and digital literacy workshops directly to remote communities."
-    },
-    {
-      "title": "Community Mentorship",
-      "category": "Youth / Skills",
-      "description": "Pairing young builders and students with active practitioners across software, craft, and entrepreneurship."
-    },
-    {
-      "title": "Car Free Day Runs & Blood Drives",
-      "category": "Civic / Health",
-      "description": "Mobilizing thousands of Kigali residents for active fitness, community unity, and life-saving blood donation drives."
-    },
-    {
-      "title": "Tree Planting Initiatives",
-      "category": "Environment",
-      "description": "Community-led agroforestry planting over 1,000 native trees across vulnerable hillsides to combat soil erosion."
-    }
-  ],
-  "explore_header": {
-    "heading": "The World Is Too Alive to Stay in One Place",
-    "intro": "I travel to see how people find clarity and purpose, collecting places, conversations, quiet moments and perspectives along the way."
-  },
-  "explore_stories": [
-    {
-      "id": "lake-kivu-stillness",
-      "title": "Reading by the Water: Agisere & The Art of Stillness",
-      "category": "Field Notes",
-      "date": "May 2, 2025",
-      "tag": "Most Viewed",
-      "excerpt": "Pausing on the shores of Lake Kivu with The Almanack of Naval Ravikant, and why making space to reflect matters as much as building.",
-      "image": "./assets/explore_reading_water.png",
-      "link": "./blog-detail/"
-    },
-    {
-      "id": "dubai-opportunity",
-      "title": "I Went to Dubai Looking for Opportunity. Here’s What I Found.",
-      "category": "Field Notes",
-      "date": "Apr 30, 2025",
-      "tag": "",
-      "excerpt": "I went looking for founders, capital and a little bit of chaos, and found that world-class ambition begins with local conviction.",
-      "image": "./assets/explore_dubai.jpg",
-      "link": "./blog-detail/"
-    },
-    {
-      "id": "cross-border-founders",
-      "title": "What I Learned From Talking to Founders in Another Country",
-      "category": "Travel",
-      "date": "Apr 27, 2025",
-      "tag": "",
-      "excerpt": "Cross-border lessons from Switzerland, Paris, Uganda and the DRC on how founders see constraint, speed and market boundaries.",
-      "image": "./assets/explore_founder_lessons.jpg",
-      "link": "./blog-detail/"
-    },
-    {
-      "id": "people-i-met",
-      "title": "The People I Met on the Way",
-      "category": "Field Notes",
-      "date": "Apr 24, 2025",
-      "tag": "",
-      "excerpt": "From Car Free Day runners in Kigali to community elders in rural villages, the journey is measured in the stories people trust you with.",
-      "image": "./assets/explore_people_met.jpg",
-      "link": "./blog-detail/"
-    },
-    {
-      "id": "lake-kivu-speed",
-      "title": "Moments on the Lake: Finding Speed and Stillness",
-      "category": "Movement",
-      "date": "Apr 20, 2025",
-      "tag": "",
-      "excerpt": "Out on the waters of Lake Kivu, taking in Rwanda’s natural beauty, adventure, fresh air and the freedom of boundless horizons.",
-      "image": "./assets/explore_lake_kivu_jetski.png",
-      "link": "./blog-detail/"
+      "id": "faq-6",
+      "answer": "You can reach out directly via email at hello@axelkarambizi.com or phone at +250 788 749 709. Let us talk about your vision and how we can bring it to life.",
+      "question": "How do I get started?"
     }
   ],
   "about": {
-    "paragraph_1": "I’m a founder and builder from Kigali, Rwanda, passionate about turning barriers into opportunity through companies, communities and technology.",
-    "paragraph_2": "I grew up believing opportunity could be on the other side of a barrier. Sometimes a river, sometimes access to technology. So I started building.",
-    "portrait_image": "./assets/contact_portrait.jpg",
     "journey": [
       {
         "title": "Founder & Director",
-        "company": "Risevana Foundation",
-        "years": "2021 – Present"
+        "years": "2021 – Present",
+        "company": "Risevana Foundation"
       },
       {
         "title": "Co-Founder & Tech Lead",
-        "company": "Libblio",
-        "years": "2023 – Present"
+        "years": "2023 – Present",
+        "company": "Libblio"
       },
       {
         "title": "Founder & Lead Strategist",
-        "company": "Atomiq Agency",
-        "years": "2022 – Present"
+        "years": "2022 – Present",
+        "company": "Atomiq Agency"
       },
       {
         "title": "Founder & Community Lead",
-        "company": "Youth Uplift Initiative",
-        "years": "2021 – Present"
+        "years": "2021 – Present",
+        "company": "Youth Uplift Initiative"
       }
     ],
-    "learning_stack_intro": "I learn by doing. Here is what I’m actively mastering across engineering, design, leadership, and operational scale.",
+    "paragraph_1": "I’m a founder and builder from Kigali, Rwanda, passionate about turning barriers into opportunity through companies, communities and technology.",
+    "paragraph_2": "I grew up believing opportunity could be on the other side of a barrier. Sometimes a river, sometimes access to technology. So I started building.",
     "learning_stack": [
       {
         "name": "Full-Stack Software Architecture",
@@ -993,25 +980,222 @@
         "name": "Strategic Storytelling & Brand",
         "description": "Helping ideas cross borders and find their natural audience"
       }
-    ]
-  },
-  "contact": {
-    "heading": "Let’s build something.",
-    "intro": "Have a project in mind, an initiative you'd like to collaborate on, or just want to connect? Reach out below.",
-    "email": "hello@axelkarambizi.com",
-    "phone": "+250 788 749 709",
-    "portrait_image": "./assets/contact_portrait.jpg"
+    ],
+    "portrait_image": "./assets/contact_portrait.jpg",
+    "learning_stack_intro": "I learn by doing. Here is what I’m actively mastering across engineering, design, leadership, and operational scale.",
+    "badge": "About me",
+    "name": "Axel Karambizi",
+    "tagline": "I build businesses, create opportunities and tell the stories along the way.",
+    "paragraph_3": "",
+    "journey_heading": "Discover My Journey",
+    "journey_intro": "From a river crossing in rural Rwanda to software running in 20+ institutions. What connects every chapter is doing the work before having the permission.",
+    "learning_heading": "What I’m Becoming"
   },
   "footer": {
-    "copyright": "© Copyright 2026. All Rights Reserved by Axel Karambizi",
-    "created_by": "Gacondo Labs",
-    "created_by_url": "#",
     "social": {
       "x": "https://x.com/",
-      "instagram": "https://www.instagram.com/",
       "behance": "https://www.behance.net/",
-      "dribbble": "https://dribbble.com/"
+      "dribbble": "https://dribbble.com/",
+      "instagram": "https://www.instagram.com/",
+      "linkedin": "https://www.linkedin.com/in/axelkarambizi",
+      "github": "https://github.com/karambiziaxel"
+    },
+    "copyright": "© Copyright 2026. All Rights Reserved by Axel Karambizi",
+    "created_by": "Gacondo Labs",
+    "created_by_url": "#"
+  },
+  "contact": {
+    "email": "hello@axelkarambizi.com",
+    "intro": "Have a project in mind, an initiative you'd like to collaborate on, or just want to connect? Reach out below.",
+    "phone": "+250 788 749 709",
+    "heading": "Let’s build something.",
+    "portrait_image": "./assets/axel_linkedin_cover.png"
+  },
+  "general": {
+    "name": "Axel Karambizi",
+    "badge": "Hi",
+    "tagline": "I build businesses, create opportunities and tell the stories along the way.",
+    "headline_1": "founder",
+    "headline_2": "builder",
+    "avatar_image": "./assets/avatar.jpg",
+    "favicon_image": "./assets/favicon.png",
+    "hero_back_image": "./assets/hero_back_hd.jpg",
+    "hero_front_image": "./assets/hero_front_hd.jpg"
+  },
+  "counters": [
+    {
+      "label": "Children Reached",
+      "number": "1,200+"
+    },
+    {
+      "label": "Products Deployed",
+      "number": "20+"
+    },
+    {
+      "label": "Trees Planted",
+      "number": "1,000+"
     }
+  ],
+  "services": [
+    {
+      "items": [
+        "Wireframing and prototyping",
+        "User Interface design for web and mobile apps",
+        "Usability testing and user feedback analysis",
+        "Interaction design and micro-interactions"
+      ],
+      "title": "1. ui/ux design"
+    },
+    {
+      "items": [
+        "Accredited school foundations in rural areas",
+        "Classrooms and daily meals for children",
+        "Mobile classroom bringing tech to underserved areas",
+        "Community mentorship pathways for local youth"
+      ],
+      "title": "2. Education"
+    },
+    {
+      "items": [
+        "Kigali Car Free Day community runs",
+        "Blood drives and civic events",
+        "Environmental initiatives, 1,000+ trees planted",
+        "Youth empowerment with Youth Uplift Initiative"
+      ],
+      "title": "3. Community Action"
+    },
+    {
+      "items": [
+        "Writing and travel journals",
+        "Field notes from founder journeys",
+        "Building across borders: DRC, Uganda, France, UAE",
+        "Documenting lessons in building and giving back"
+      ],
+      "title": "4. Storytelling"
+    }
+  ],
+  "navigation": {
+    "items": [
+      {
+        "url": "./",
+        "label": "Home"
+      },
+      {
+        "url": "./about/",
+        "label": "About"
+      },
+      {
+        "url": "./projects/",
+        "label": "Projects"
+      },
+      {
+        "url": "./blogs/",
+        "label": "Blogs"
+      }
+    ],
+    "button": {
+      "url": "#contact",
+      "label": "Contact"
+    },
+    "status_badge": "Available for work"
+  },
+  "more_projects": [
+    {
+      "title": "Mobile Classroom",
+      "category": "Education",
+      "description": "Bringing technology and digital exposure to underserved areas.",
+      "link": ""
+    },
+    {
+      "title": "Community Mentorship",
+      "category": "Youth",
+      "description": "Pairing young builders and students with active practitioners across software, craft, and entrepreneurship.",
+      "link": ""
+    },
+    {
+      "title": "Tree Planting Initiatives",
+      "category": "Environment",
+      "description": "Community-led agroforestry planting over 1,000 native trees across vulnerable hillsides to combat soil erosion.",
+      "link": ""
+    }
+  ],
+  "explore_header": {
+    "intro": "I travel to see how people find clarity and purpose, collecting places, conversations, quiet moments and perspectives along the way.",
+    "heading": "The World Is Too Alive to Stay in One Place"
+  },
+  "explore_stories": [
+    {
+      "id": "lake-kivu-stillness",
+      "tag": "Most Viewed",
+      "date": "May 2, 2025",
+      "link": "./blog-detail/",
+      "image": "./assets/explore_reading_water.png",
+      "title": "Reading by the Water: Naval Ravikant's Reflections",
+      "excerpt": "Pausing on the shores of Lake Kivu with The Almanack of Naval Ravikant, and why making space to reflect matters as much as building.",
+      "category": "Field Notes",
+      "body": ""
+    },
+    {
+      "id": "lake-kivu-speed",
+      "tag": "",
+      "date": "Apr 20, 2025",
+      "link": "./blog-detail/",
+      "image": "./assets/explore_lake_kivu_jetski.png",
+      "title": "Moments on the Lake: Finding Speed and Stillness",
+      "excerpt": "Out on the waters of Lake Kivu, taking in Rwanda’s natural beauty, adventure, fresh air and the freedom of boundless horizons.",
+      "category": "Movement",
+      "body": ""
+    }
+  ],
+  "featured_projects": [
+    {
+      "id": "risevana",
+      "link": "https://risevana-foundation.vercel.app/",
+      "image": "./assets/Screenshot_2026-10-04_at_2.53.39_PM.png",
+      "title": "Risevana Foundation",
+      "category": "Education · Social Impact",
+      "description": "A community-led education initiative making learning accessible to children in underserved rural communities. What started with one room in Nyamasheke is growing into a model for early childhood education, digital learning, and opportunity. "
+    },
+    {
+      "id": "libblio",
+      "link": "https://www.libblio.com/",
+      "image": "./assets/Screenshot_2026-10-04_at_2.42.02_PM.png",
+      "title": "Atomiq",
+      "category": "Design · Technology",
+      "description": "A software and design agency built by young Rwandan founders to help startups and companies turn ideas into real products—from brand identity and digital experiences to AI, mobile apps, and full software systems. "
+    },
+    {
+      "id": "youth-uplift",
+      "link": "https://www.yupinitiative.com/",
+      "image": "./assets/Screenshot_2026-10-04_at_2.43.47_PM.png",
+      "title": "Youth Uplift Initiative",
+      "category": "Community / Youth",
+      "description": "Youth empowerment initiatives spanning mentorship, community runs, blood donation drives, and environmental restoration across Kigali."
+    },
+    {
+      "id": "atomiq",
+      "link": "https://www.atomiq.rw/",
+      "image": "./assets/Smiling_Founder_Presenting_African_Startup_Trophy.png",
+      "title": "Libblio",
+      "category": "EdTech · SaaS",
+      "description": "A digital library management platform helping schools move from paper-based libraries to smarter, more accessible systems. Built as a student-led startup, Libblio went on to win AwardX East Africa and TICON Africa Startup of the Year. LinkedIn"
+    }
+  ],
+  "featured_projects_header": {
+    "heading": "Featured Projects",
+    "intro": "These selected projects reflect how I learn: by building things for other people and solving problems that don’t have obvious answers."
+  },
+  "more_projects_header": {
+    "heading": "More Projects",
+    "intro": "Other initiatives and community ventures across Rwanda."
+  },
+  "services_header": {
+    "heading": "what I can do for you",
+    "intro": "I don’t have one box. I build companies, communities and technology, and I tell the stories along the way."
+  },
+  "faq_header": {
+    "heading": "Frequently Asked Questions",
+    "intro": "Here are answers to some of the most common questions I receive. If you don’t see your question here, feel free to reach out—I’m happy to help!"
   }
 }
   </script>
@@ -1428,6 +1612,10 @@
                 <input type="text" id="mp-cat-${i}" value="${p.category || ''}">
               </div>
               <div class="form-group full">
+                <label>Project / Initiative Link URL</label>
+                <input type="text" id="mp-link-${i}" value="${(p.link || '').replace(/"/g, '&quot;')}" placeholder="https://...">
+              </div>
+              <div class="form-group full">
                 <label>Description</label>
                 <textarea id="mp-desc-${i}">${p.description || ''}</textarea>
               </div>
@@ -1443,7 +1631,8 @@
       siteData.more_projects.push({
         title: 'New Initiative',
         category: 'Community / Tech',
-        description: 'Details about this initiative.'
+        description: 'Details about this initiative.',
+        link: ''
       });
       renderMoreProjects();
       showToast('Initiative added! Remember to save changes.');
@@ -1497,6 +1686,14 @@
                 <textarea id="exp-exc-${i}">${s.excerpt || ''}</textarea>
               </div>
               <div class="form-group full">
+                <label>Story / Article Link URL</label>
+                <input type="text" id="exp-link-${i}" value="${(s.link || '').replace(/"/g, '&quot;')}" placeholder="./blog-detail/ or https://...">
+              </div>
+              <div class="form-group full">
+                <label>Story Content / Full Body</label>
+                <textarea id="exp-body-${i}" rows="5" placeholder="Full article body content...">${s.body || ''}</textarea>
+              </div>
+              <div class="form-group full">
                 <label>Blog Cover Image</label>
                 <div class="image-field-wrap">
                   <img id="prev-exp-img-${i}" src="${imgSrc}" class="image-preview-thumb">
@@ -1524,7 +1721,8 @@
         tag: '',
         excerpt: 'Write your story excerpt here.',
         image: './assets/explore_reading_water.png',
-        link: './blog-detail/'
+        link: './blog-detail/',
+        body: ''
       });
       renderExploreStories();
       showToast('Story added! Remember to save changes.');
@@ -1639,15 +1837,26 @@
     }
 
     function collectFormData() {
+      // 1. Navigation
+      if (!siteData.navigation) siteData.navigation = {};
+      const nsb = document.getElementById('nav-status-badge'); if (nsb) siteData.navigation.status_badge = nsb.value;
+      if (!siteData.navigation.button) siteData.navigation.button = {};
+      const nbl = document.getElementById('nav-btn-label'); if (nbl) siteData.navigation.button.label = nbl.value;
+      const nbu = document.getElementById('nav-btn-url'); if (nbu) siteData.navigation.button.url = nbu.value;
+
+      // 2. General & Hero
       if (!siteData.general) siteData.general = {};
       const gn = document.getElementById('gen-name'); if (gn) siteData.general.name = gn.value;
       const gb = document.getElementById('gen-badge'); if (gb) siteData.general.badge = gb.value;
       const gh1 = document.getElementById('gen-h1'); if (gh1) siteData.general.headline_1 = gh1.value;
       const gh2 = document.getElementById('gen-h2'); if (gh2) siteData.general.headline_2 = gh2.value;
       const gt = document.getElementById('gen-tagline'); if (gt) siteData.general.tagline = gt.value;
+      const gav = document.getElementById('gen-avatar'); if (gav) siteData.general.avatar_image = gav.value;
+      const gfav = document.getElementById('gen-favicon'); if (gfav) siteData.general.favicon_image = gfav.value;
       const ghf = document.getElementById('gen-hero-front'); if (ghf) siteData.general.hero_front_image = ghf.value;
       const ghb = document.getElementById('gen-hero-back'); if (ghb) siteData.general.hero_back_image = ghb.value;
 
+      // Metric Counters
       if (!siteData.counters) siteData.counters = [];
       const c1n = document.getElementById('cnt-1-num'), c1l = document.getElementById('cnt-1-lbl');
       if (c1n && c1l) siteData.counters[0] = { number: c1n.value, label: c1l.value };
@@ -1656,7 +1865,11 @@
       const c3n = document.getElementById('cnt-3-num'), c3l = document.getElementById('cnt-3-lbl');
       if (c3n && c3l) siteData.counters[2] = { number: c3n.value, label: c3l.value };
 
-      // Collect Featured Projects
+      // 3. Featured Projects
+      if (!siteData.featured_projects_header) siteData.featured_projects_header = {};
+      const fph = document.getElementById('fp-header-heading'); if (fph) siteData.featured_projects_header.heading = fph.value;
+      const fpi = document.getElementById('fp-header-intro'); if (fpi) siteData.featured_projects_header.intro = fpi.value;
+
       (siteData.featured_projects || []).forEach((p, i) => {
         const t = document.getElementById(`fp-title-${i}`); if (t) p.title = t.value;
         const c = document.getElementById(`fp-cat-${i}`); if (c) p.category = c.value;
@@ -1665,14 +1878,19 @@
         const ln = document.getElementById(`fp-link-${i}`); if (ln) p.link = ln.value;
       });
 
-      // Collect More Projects
+      // 4. More Projects
+      if (!siteData.more_projects_header) siteData.more_projects_header = {};
+      const mph = document.getElementById('mp-header-heading'); if (mph) siteData.more_projects_header.heading = mph.value;
+      const mpi = document.getElementById('mp-header-intro'); if (mpi) siteData.more_projects_header.intro = mpi.value;
+
       (siteData.more_projects || []).forEach((p, i) => {
         const t = document.getElementById(`mp-title-${i}`); if (t) p.title = t.value;
         const c = document.getElementById(`mp-cat-${i}`); if (c) p.category = c.value;
         const d = document.getElementById(`mp-desc-${i}`); if (d) p.description = d.value;
+        const ln = document.getElementById(`mp-link-${i}`); if (ln) p.link = ln.value;
       });
 
-      // Collect Explore Stories
+      // 5. Explore Stories
       if (!siteData.explore_header) siteData.explore_header = {};
       const ehh = document.getElementById('explore-header-heading'); if (ehh) siteData.explore_header.heading = ehh.value;
       const ehi = document.getElementById('explore-header-intro'); if (ehi) siteData.explore_header.intro = ehi.value;
@@ -1684,10 +1902,15 @@
         const tg = document.getElementById(`exp-tag-${i}`); if (tg) s.tag = tg.value;
         const exc = document.getElementById(`exp-exc-${i}`); if (exc) s.excerpt = exc.value;
         const img = document.getElementById(`exp-img-${i}`); if (img) s.image = img.value;
+        const ln = document.getElementById(`exp-link-${i}`); if (ln) s.link = ln.value;
+        const bd = document.getElementById(`exp-body-${i}`); if (bd) s.body = bd.value;
       });
 
-      // Collect FAQs
-      
+      // 6. Services
+      if (!siteData.services_header) siteData.services_header = {};
+      const svh = document.getElementById('svc-header-heading'); if (svh) siteData.services_header.heading = svh.value;
+      const svi = document.getElementById('svc-header-intro'); if (svi) siteData.services_header.intro = svi.value;
+
       (siteData.services || []).forEach((s, i) => {
         const t = document.getElementById(`svc-title-${i}`); if (t) s.title = t.value;
         const it = document.getElementById(`svc-items-${i}`);
@@ -1696,15 +1919,28 @@
         }
       });
 
+      // 7. FAQ
+      if (!siteData.faq_header) siteData.faq_header = {};
+      const fqh = document.getElementById('faq-header-heading'); if (fqh) siteData.faq_header.heading = fqh.value;
+      const fqi = document.getElementById('faq-header-intro'); if (fqi) siteData.faq_header.intro = fqi.value;
+
       (siteData.faq || []).forEach((faq, i) => {
         const q = document.getElementById(`faq-q-${i}`); if (q) faq.question = q.value;
         const a = document.getElementById(`faq-a-${i}`); if (a) faq.answer = a.value;
       });
 
-      // Collect About
+      // 8. About
       if (!siteData.about) siteData.about = {};
+      const abb = document.getElementById('about-badge'); if (abb) siteData.about.badge = abb.value;
+      const abn = document.getElementById('about-name'); if (abn) siteData.about.name = abn.value;
+      const abt = document.getElementById('about-tagline'); if (abt) siteData.about.tagline = abt.value;
+      const abpi = document.getElementById('about-portrait-img'); if (abpi) siteData.about.portrait_image = abpi.value;
       const ap1 = document.getElementById('about-p1'); if (ap1) siteData.about.paragraph_1 = ap1.value;
       const ap2 = document.getElementById('about-p2'); if (ap2) siteData.about.paragraph_2 = ap2.value;
+      const ap3 = document.getElementById('about-p3'); if (ap3) siteData.about.paragraph_3 = ap3.value;
+      const ajh = document.getElementById('about-journey-heading'); if (ajh) siteData.about.journey_heading = ajh.value;
+      const aji = document.getElementById('about-journey-intro'); if (aji) siteData.about.journey_intro = aji.value;
+      const alh = document.getElementById('about-learning-heading'); if (alh) siteData.about.learning_heading = alh.value;
       const ali = document.getElementById('about-learn-intro'); if (ali) siteData.about.learning_stack_intro = ali.value;
 
       (siteData.about.journey || []).forEach((j, i) => {
@@ -1718,7 +1954,7 @@
         const d = document.getElementById(`ls-desc-${i}`); if (d) ls.description = d.value;
       });
 
-      // Collect Contact & Footer
+      // 9. Contact & Footer
       if (!siteData.contact) siteData.contact = {};
       const ch = document.getElementById('contact-heading'); if (ch) siteData.contact.heading = ch.value;
       const ci = document.getElementById('contact-intro'); if (ci) siteData.contact.intro = ci.value;
@@ -1729,51 +1965,94 @@
       if (!siteData.footer) siteData.footer = {};
       const fc = document.getElementById('footer-copyright'); if (fc) siteData.footer.copyright = fc.value;
       const fcb = document.getElementById('footer-created-by'); if (fcb) siteData.footer.created_by = fcb.value;
+      const fcu = document.getElementById('footer-created-by-url'); if (fcu) siteData.footer.created_by_url = fcu.value;
 
       if (!siteData.footer.social) siteData.footer.social = {};
       const sx = document.getElementById('social-x'); if (sx) siteData.footer.social.x = sx.value;
       const sig = document.getElementById('social-ig'); if (sig) siteData.footer.social.instagram = sig.value;
       const sbe = document.getElementById('social-be'); if (sbe) siteData.footer.social.behance = sbe.value;
       const sdr = document.getElementById('social-dr'); if (sdr) siteData.footer.social.dribbble = sdr.value;
+      const sli = document.getElementById('social-li'); if (sli) siteData.footer.social.linkedin = sli.value;
+      const sgh = document.getElementById('social-gh'); if (sgh) siteData.footer.social.github = sgh.value;
     }
 
     function populateForm() {
+      // 1. Navigation
+      const nav = siteData.navigation || {};
+      const nsb = document.getElementById('nav-status-badge'); if (nsb) nsb.value = nav.status_badge || 'Available for work';
+      const nbl = document.getElementById('nav-btn-label'); if (nbl) nbl.value = nav.button?.label || 'Contact';
+      const nbu = document.getElementById('nav-btn-url'); if (nbu) nbu.value = nav.button?.url || '#contact';
+
+      // 2. General & Hero
       const g = siteData.general || {};
       document.getElementById('gen-name').value = g.name || '';
       document.getElementById('gen-badge').value = g.badge || '';
       document.getElementById('gen-h1').value = g.headline_1 || '';
       document.getElementById('gen-h2').value = g.headline_2 || '';
       document.getElementById('gen-tagline').value = g.tagline || '';
+      const gav = document.getElementById('gen-avatar'); if (gav) gav.value = g.avatar_image || './assets/avatar.jpg';
+      const prevGav = document.getElementById('prev-gen-avatar'); if (prevGav) prevGav.src = '../' + (g.avatar_image || './assets/avatar.jpg').replace('./', '');
+      const gfav = document.getElementById('gen-favicon'); if (gfav) gfav.value = g.favicon_image || './assets/favicon.png';
+      const prevGfav = document.getElementById('prev-gen-favicon'); if (prevGfav) prevGfav.src = '../' + (g.favicon_image || './assets/favicon.png').replace('./', '');
       document.getElementById('gen-hero-front').value = g.hero_front_image || './assets/hero_front_hd.jpg';
       document.getElementById('prev-gen-hero-front').src = '../' + (g.hero_front_image || './assets/hero_front_hd.jpg').replace('./', '');
       document.getElementById('gen-hero-back').value = g.hero_back_image || './assets/hero_back_hd.jpg';
       document.getElementById('prev-gen-hero-back').src = '../' + (g.hero_back_image || './assets/hero_back_hd.jpg').replace('./', '');
 
+      // Counters
       const c = siteData.counters || [];
-      if (c[0]) { document.getElementById('cnt-1-num').value = c[0].number; document.getElementById('cnt-1-lbl').value = c[0].label; }
-      if (c[1]) { document.getElementById('cnt-2-num').value = c[1].number; document.getElementById('cnt-2-lbl').value = c[1].label; }
-      if (c[2]) { document.getElementById('cnt-3-num').value = c[2].number; document.getElementById('cnt-3-lbl').value = c[2].label; }
+      if (c[0]) { document.getElementById('cnt-1-num').value = c[0].number || ''; document.getElementById('cnt-1-lbl').value = c[0].label || ''; }
+      if (c[1]) { document.getElementById('cnt-2-num').value = c[1].number || ''; document.getElementById('cnt-2-lbl').value = c[1].label || ''; }
+      if (c[2]) { document.getElementById('cnt-3-num').value = c[2].number || ''; document.getElementById('cnt-3-lbl').value = c[2].label || ''; }
 
-      // Dynamic Renderers
+      // 3. Featured Projects
+      const fph = siteData.featured_projects_header || {};
+      const fphEl = document.getElementById('fp-header-heading'); if (fphEl) fphEl.value = fph.heading || 'Featured Projects';
+      const fpiEl = document.getElementById('fp-header-intro'); if (fpiEl) fpiEl.value = fph.intro || 'These selected projects reflect how I learn: by building things for other people and solving problems that don’t have obvious answers.';
       renderFeaturedProjects();
+
+      // 4. More Projects
+      const mph = siteData.more_projects_header || {};
+      const mphEl = document.getElementById('mp-header-heading'); if (mphEl) mphEl.value = mph.heading || 'More Projects';
+      const mpiEl = document.getElementById('mp-header-intro'); if (mpiEl) mpiEl.value = mph.intro || 'Other initiatives and community ventures across Rwanda.';
       renderMoreProjects();
 
+      // 5. Explore Stories
       const expHead = siteData.explore_header || {};
       document.getElementById('explore-header-heading').value = expHead.heading || 'The World Is Too Alive to Stay in One Place';
-      document.getElementById('explore-header-intro').value = expHead.intro || 'I travel to see how people find clarity and purpose...';
-
+      document.getElementById('explore-header-intro').value = expHead.intro || 'I travel to see how people find clarity and purpose, collecting places, conversations, quiet moments and perspectives along the way.';
       renderExploreStories();
+
+      // 6. Services
+      const svh = siteData.services_header || {};
+      const svhEl = document.getElementById('svc-header-heading'); if (svhEl) svhEl.value = svh.heading || 'what I can do for you';
+      const sviEl = document.getElementById('svc-header-intro'); if (sviEl) sviEl.value = svh.intro || 'I don’t have one box. I build companies, communities and technology, and I tell the stories along the way.';
       renderServices();
+
+      // 7. FAQ
+      const fqh = siteData.faq_header || {};
+      const fqhEl = document.getElementById('faq-header-heading'); if (fqhEl) fqhEl.value = fqh.heading || 'Frequently Asked Questions';
+      const fqiEl = document.getElementById('faq-header-intro'); if (fqiEl) fqiEl.value = fqh.intro || 'Here are answers to some of the most common questions I receive. If you don’t see your question here, feel free to reach out—I’m happy to help!';
       renderFAQs();
 
+      // 8. About Page
       const ab = siteData.about || {};
+      const abbEl = document.getElementById('about-badge'); if (abbEl) abbEl.value = ab.badge || 'About me';
+      const abnEl = document.getElementById('about-name'); if (abnEl) abnEl.value = ab.name || 'Axel Karambizi';
+      const abtEl = document.getElementById('about-tagline'); if (abtEl) abtEl.value = ab.tagline || 'I build businesses, create opportunities and tell the stories along the way.';
+      const abpEl = document.getElementById('about-portrait-img'); if (abpEl) abpEl.value = ab.portrait_image || './assets/contact_portrait.jpg';
+      const prevAbp = document.getElementById('prev-about-portrait'); if (prevAbp) prevAbp.src = '../' + (ab.portrait_image || './assets/contact_portrait.jpg').replace('./', '');
       document.getElementById('about-p1').value = ab.paragraph_1 || '';
       document.getElementById('about-p2').value = ab.paragraph_2 || '';
+      const ap3El = document.getElementById('about-p3'); if (ap3El) ap3El.value = ab.paragraph_3 || '';
+      const ajhEl = document.getElementById('about-journey-heading'); if (ajhEl) ajhEl.value = ab.journey_heading || 'Discover My Journey';
+      const ajiEl = document.getElementById('about-journey-intro'); if (ajiEl) ajiEl.value = ab.journey_intro || 'From a river crossing in rural Rwanda to software running in 20+ institutions. What connects every chapter is doing the work before having the permission.';
+      const alhEl = document.getElementById('about-learning-heading'); if (alhEl) alhEl.value = ab.learning_heading || 'What I’m Becoming';
       document.getElementById('about-learn-intro').value = ab.learning_stack_intro || '';
-
       renderJourney();
       renderLearningStack();
 
+      // 9. Contact
       const ct = siteData.contact || {};
       document.getElementById('contact-heading').value = ct.heading || '';
       document.getElementById('contact-intro').value = ct.intro || '';
@@ -1782,15 +2061,19 @@
       document.getElementById('contact-portrait-img').value = ct.portrait_image || './assets/contact_portrait.jpg';
       document.getElementById('prev-contact-portrait').src = '../' + (ct.portrait_image || './assets/contact_portrait.jpg').replace('./', '');
 
+      // 10. Footer & Socials
       const ft = siteData.footer || {};
       document.getElementById('footer-copyright').value = ft.copyright || '';
       document.getElementById('footer-created-by').value = ft.created_by || 'Gacondo Labs';
+      const fcuEl = document.getElementById('footer-created-by-url'); if (fcuEl) fcuEl.value = ft.created_by_url || '#';
 
       const soc = ft.social || {};
       document.getElementById('social-x').value = soc.x || '';
       document.getElementById('social-ig').value = soc.instagram || '';
       document.getElementById('social-be').value = soc.behance || '';
       document.getElementById('social-dr').value = soc.dribbble || '';
+      const sliEl = document.getElementById('social-li'); if (sliEl) sliEl.value = soc.linkedin || '';
+      const sghEl = document.getElementById('social-gh'); if (sghEl) sghEl.value = soc.github || '';
 
       populateMedia();
     }

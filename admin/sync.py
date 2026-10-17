@@ -72,12 +72,28 @@ def sync_all():
         html = re.sub(r'href="tel:[^"]*"', f'href="tel:{clean_tel}"', html)
         html = re.sub(r'>\+250\s*(?:788\s*749\s*709\s*)+<', f'>{phone}<', html)
 
+        # Status Badge & Button
+        status_badge = nav.get('status_badge', 'Available for work')
+        html = re.sub(r'>(?:Available for work|Looking for work|Open to work)<', f'>{status_badge}<', html)
+
+        btn = nav.get('button', {})
+        btn_lbl = btn.get('label', 'Contact')
+        btn_url = btn.get('url', '#contact')
+        html = re.sub(r'href="[^"]*#contact[^"]*"', f'href="{btn_url}"', html)
+
+        # Favicon
+        fav = gen.get('favicon_image', './assets/favicon.png')
+        clean_fav = asset_prefix + os.path.basename(fav)
+        html = re.sub(r'href="[^"]*favicon\.[^"]*"', f'href="{clean_fav}"', html)
+
         # Social links
         soc = footer.get('social', {})
         if soc.get('x'): html = re.sub(r'href="https://x\.com/[^"]*"', f'href="{soc.get("x")}"', html)
         if soc.get('instagram'): html = re.sub(r'href="https://www\.instagram\.com/[^"]*"', f'href="{soc.get("instagram")}"', html)
         if soc.get('behance'): html = re.sub(r'href="https://www\.behance\.net/[^"]*"', f'href="{soc.get("behance")}"', html)
         if soc.get('dribbble'): html = re.sub(r'href="https://dribbble\.com/[^"]*"', f'href="{soc.get("dribbble")}"', html)
+        if soc.get('linkedin'): html = re.sub(r'href="https://(?:www\.)?linkedin\.com/[^"]*"', f'href="{soc.get("linkedin")}"', html)
+        if soc.get('github'): html = re.sub(r'href="https://(?:www\.)?github\.com/[^"]*"', f'href="{soc.get("github")}"', html)
 
         # Avatar
         avatar = gen.get('avatar_image', './assets/avatar.jpg')
@@ -135,6 +151,33 @@ def sync_all():
             for idx, pat in enumerate(old_item_defaults):
                 if idx < len(s1_items):
                     html = re.sub(f'>({pat})<', f'>{s1_items[idx]}<', html)
+
+        # Featured Projects Header
+        fph = data.get('featured_projects_header', {})
+        fp_heading = fph.get('heading', 'Featured Projects')
+        fp_intro = fph.get('intro', '')
+        if fp_heading:
+            html = re.sub(r'>Featured Projects<', f'>{fp_heading}<', html)
+        if fp_intro:
+            html = re.sub(r'These selected projects reflect how I learn[^\<]*', fp_intro, html)
+
+        # Services Header
+        svh = data.get('services_header', {})
+        sv_heading = svh.get('heading', 'what I can do for you')
+        sv_intro = svh.get('intro', '')
+        if sv_heading:
+            html = re.sub(r'>what I can do for you<', f'>{sv_heading}<', html)
+        if sv_intro:
+            html = re.sub(r'I don’t have one box\. I build companies[^\<]*', sv_intro, html)
+
+        # FAQ Header
+        fqh = data.get('faq_header', {})
+        fq_heading = fqh.get('heading', 'Frequently Asked Questions')
+        fq_intro = fqh.get('intro', '')
+        if fq_heading:
+            html = re.sub(r'>Frequently Asked Questions<', f'>{fq_heading}<', html)
+        if fq_intro:
+            html = re.sub(r'Here are answers to some of the most common questions[^\<]*', fq_intro, html)
 
         # Ensure project cards link directly to authentic URLs
         proj_url_map = [
@@ -278,6 +321,20 @@ def sync_all():
                 )
                 html_proj = html_proj[:m.start()] + rep + html_proj[m.end():]
 
+        # Section Headers for Projects
+        fph = data.get('featured_projects_header', {})
+        fp_heading = fph.get('heading', 'Featured Projects')
+        fp_intro = fph.get('intro', '')
+        if fp_heading:
+            html_proj = re.sub(r'>Featured Projects<', f'>{fp_heading}<', html_proj)
+        if fp_intro:
+            html_proj = re.sub(r'These selected projects reflect how I learn[^\<]*', fp_intro, html_proj)
+
+        mph = data.get('more_projects_header', {})
+        mp_heading = mph.get('heading', 'More Projects')
+        if mp_heading:
+            html_proj = re.sub(r'>More Projects<', f'>{mp_heading}<', html_proj)
+
         for pat, repl in proj_url_map:
             html_proj = re.sub(pat, repl, html_proj)
 
@@ -295,6 +352,14 @@ def sync_all():
 
         html_about = update_common(html_about, is_root=False)
 
+        # Header Titles
+        ab_badge = about.get('badge', 'About me')
+        ab_name = about.get('name', 'Axel Karambizi')
+        if ab_badge:
+            html_about = re.sub(r'>About me<', f'>{ab_badge}<', html_about)
+        if ab_name:
+            html_about = re.sub(r'>Axel Karambizi<', f'>{ab_name}<', html_about)
+
         # Bio Paragraphs
         p1 = about.get('paragraph_1', '')
         p2 = about.get('paragraph_2', '')
@@ -302,6 +367,18 @@ def sync_all():
             html_about = re.sub(r'I’m a founder and builder from Kigali, Rwanda[^\<]*', p1, html_about)
         if p2:
             html_about = re.sub(r'I grew up believing opportunity could be on the other side[^\<]*', p2, html_about)
+
+        # Journey & Learning Headings
+        j_heading = about.get('journey_heading', 'Discover My Journey')
+        j_intro = about.get('journey_intro', '')
+        if j_heading:
+            html_about = re.sub(r'>Discover My Journey<', f'>{j_heading}<', html_about)
+        if j_intro:
+            html_about = re.sub(r'From a river crossing in rural Rwanda to software running in 20\+ institutions[^\<]*', j_intro, html_about)
+
+        l_heading = about.get('learning_heading', 'What I’m Becoming')
+        if l_heading:
+            html_about = re.sub(r'>What I’m Becoming<', f'>{l_heading}<', html_about)
 
         # Learning Stack Intro
         intro = about.get('learning_stack_intro', '')
@@ -351,18 +428,22 @@ def sync_all():
     # 6. Update all other HTML files (blogs & project details)
     # ==========================================
     for root, dirs, files in os.walk(base_dir):
-        dirs[:] = [d for d in dirs if d not in ['.git', '.vercel', '.wrangler', 'node_modules', 'admin']]
+        dirs[:] = [d for d in dirs if d not in ['.git', '.vercel', '.wrangler', 'node_modules', 'admin', '.deploy', 'scratch']]
         for file in files:
             if file.endswith('.html') and 'admin' not in root:
                 file_path = os.path.join(root, file)
                 rel_p = os.path.relpath(file_path, base_dir)
                 if rel_p in ['index.html', 'about/index.html', 'projects/index.html', 'explore/index.html', 'blogs/index.html']:
                     continue
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    content = f.read()
-                content = update_common(content, is_root=False)
-                with open(file_path, 'w', encoding='utf-8') as f:
-                    f.write(content)
+                try:
+                    with open(file_path, 'r', encoding='utf-8', errors='replace') as f:
+                        content = f.read()
+                    is_root = (os.path.dirname(rel_p) == '')
+                    content = update_common(content, is_root=is_root)
+                    with open(file_path, 'w', encoding='utf-8') as f:
+                        f.write(content)
+                except Exception as e:
+                    print(f"Skipping {rel_p}: {e}")
 
     print("ALL SITE PAGES SYNCHRONIZED SUCCESSFULLY!")
     return True

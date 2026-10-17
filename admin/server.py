@@ -422,8 +422,7 @@ class AdminHandler(http.server.SimpleHTTPRequestHandler):
                 # 4. Automatically push changes to GitHub in background thread
                 def push_worker():
                     try:
-                        import subprocess
-                        subprocess.run(['git', 'add', 'admin/content.json', 'index.html', 'projects/index.html', 'about/index.html', 'explore/index.html', 'blogs/index.html', 'assets/'], cwd=base_dir, check=False)
+                        subprocess.run(['git', 'add', 'admin/content.json', 'admin/index.html', 'admin/sync.py', 'index.html', 'projects/index.html', 'about/index.html', 'explore/index.html', 'blogs/index.html', 'assets/'], cwd=base_dir, check=False)
                         subprocess.run(['git', 'commit', '-m', 'Update site content via Admin Portal (Supabase Sync)'], cwd=base_dir, capture_output=True, text=True)
                         push_res = subprocess.run(['git', 'push', 'origin', 'main'], cwd=base_dir, capture_output=True, text=True)
                         if push_res.returncode == 0:
