@@ -10,7 +10,7 @@
   try {
     const behanceStyle = document.createElement('style');
     behanceStyle.id = 'behance-remove-style';
-    behanceStyle.textContent = '.framer-1yo788g, .framer-30cdzv, .framer-1nl2v36, a[href*="behance.net"], #floating-admin-badge, .framer-m8h9u9, .framer-ldojh2 { display: none !important; }';
+    behanceStyle.textContent = '.framer-1yo788g, .framer-30cdzv, .framer-1nl2v36, a[href*="behance.net"], #floating-admin-badge, .framer-m8h9u9, .framer-ldojh2, #enhanced-contact-bar { display: none !important; }';
     if (document.head) document.head.appendChild(behanceStyle);
     else document.addEventListener('DOMContentLoaded', () => document.head.appendChild(behanceStyle));
   } catch (e) {}
@@ -651,8 +651,9 @@
         });
       }
 
-      // Enhanced Contact Quick-Connect Actions Injection (WhatsApp, Email Copy, Call)
-      injectEnhancedContactBar(ct);
+      // Ensure enhanced contact bar is removed
+      const existingBar = document.getElementById('enhanced-contact-bar');
+      if (existingBar) existingBar.remove();
     }
 
     if (data.footer) {
@@ -708,64 +709,6 @@
     if (existingBadge) existingBadge.remove();
   }
 
-  function injectEnhancedContactBar(ct) {
-    if (document.getElementById('enhanced-contact-bar')) return;
-    const contactSection = document.getElementById('contact');
-    if (!contactSection) return;
-
-    const email = ct.email || 'hello@axelkarambizi.com';
-    const phone = ct.phone || '+250 788 749 709';
-    const whatsapp = ct.whatsapp || 'https://wa.me/250788749709';
-    const location = ct.location || 'Kigali, Rwanda';
-
-    const bar = document.createElement('div');
-    bar.id = 'enhanced-contact-bar';
-    bar.style.cssText = 'margin-top:24px; padding:18px 22px; background:rgba(21, 23, 34, 0.75); border:1px solid rgba(255, 255, 255, 0.1); border-radius:14px; backdrop-filter:blur(16px); display:flex; flex-wrap:wrap; gap:14px; align-items:center; justify-content:space-between; z-index:10;';
-
-    bar.innerHTML = `
-      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-        <span style="display:inline-flex; align-items:center; gap:6px; font-size:12.5px; font-weight:600; color:#27d974; background:rgba(39, 217, 116, 0.12); padding:4px 10px; border-radius:20px; border:1px solid rgba(39, 217, 116, 0.25);">
-          <span style="width:7px; height:7px; border-radius:50%; background:#27d974; display:inline-block; box-shadow:0 0 6px #27d974;"></span>
-          Available for new projects
-        </span>
-        <span style="font-size:12.5px; color:#8b92a8; display:inline-flex; align-items:center; gap:4px;">
-          📍 ${location} · GMT+2
-        </span>
-      </div>
-      <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-        <a href="${whatsapp}" target="_blank" rel="noopener noreferrer" style="text-decoration:none; display:inline-flex; align-items:center; gap:7px; background:#25d366; color:#0c0d12; font-weight:700; font-size:12.5px; padding:8px 16px; border-radius:8px; transition:transform 0.2s, box-shadow 0.2s; box-shadow:0 4px 14px rgba(37, 211, 102, 0.3);">
-          <svg style="width:16px; height:16px; fill:currentColor;" viewBox="0 0 256 256"><path d="M207.2,48.8A111.4,111.4,0,0,0,128,16,112,112,0,0,0,31,169.5L16,224l55.8-14.6A111.9,111.9,0,0,0,128,240h0a112,112,0,0,0,79.2-191.2ZM128,224a95.8,95.8,0,0,1-48.9-13.4l-3.5-2.1-36.4,9.5,9.7-35.4-2.3-3.7A96,96,0,1,1,128,224Zm52.6-70.1c-2.9-1.4-17-8.4-19.6-9.3s-4.5-1.4-6.4,1.4-7.4,9.3-9.1,11.2-3.4,2.1-6.3.7a79.5,79.5,0,0,1-23.4-14.4,87.6,87.6,0,0,1-16.2-20.2c-1.7-2.9-.2-4.5,1.3-5.9s2.9-3.4,4.3-5.1a19.4,19.4,0,0,0,2.9-4.8,5.4,5.4,0,0,0-.3-5.1c-.7-1.4-6.4-15.4-8.8-21.1s-4.7-4.8-6.4-4.9-3.6-.1-5.5-.1a10.6,10.6,0,0,0-7.7,3.6,32.4,32.4,0,0,0-10.1,24.1c0,14.2,10.3,27.9,11.8,29.9s20.3,31,49.2,43.5c6.9,3,12.2,4.8,16.4,6.1a39.4,39.4,0,0,0,18.1,1.1c5.5-.8,17-6.9,19.4-13.6s2.4-12.4,1.7-13.6C184,156,182.1,155.3,180.6,153.9Z"></path></svg>
-          Chat on WhatsApp
-        </a>
-        <button type="button" id="btn-copy-email" onclick="copyContactEmail('${email}')" style="cursor:pointer; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#fff; font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:8px; display:inline-flex; align-items:center; gap:6px; transition:all 0.2s;">
-          ✉️ Copy Email
-        </button>
-        <a href="tel:${phone.replace(/[^\d+]/g, '')}" style="text-decoration:none; background:rgba(106, 113, 223, 0.15); border:1px solid rgba(106, 113, 223, 0.4); color:#fff; font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:8px; display:inline-flex; align-items:center; gap:6px;">
-          📞 Call
-        </a>
-      </div>
-    `;
-
-    const contactCol = contactSection.querySelector('.framer-3nw2d6, [data-framer-name="Contact Column"]') || contactSection;
-    contactCol.appendChild(bar);
-  }
-
-  window.copyContactEmail = function(email) {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(email).then(() => {
-        const btn = document.getElementById('btn-copy-email');
-        if (btn) {
-          const old = btn.innerHTML;
-          btn.innerHTML = '✓ Copied!';
-          btn.style.borderColor = '#27d974';
-          btn.style.color = '#27d974';
-          setTimeout(() => { btn.innerHTML = old; btn.style.borderColor = ''; btn.style.color = ''; }, 2500);
-        }
-      });
-    } else {
-      prompt('Axel Karambizi verified email:', email);
-    }
-  };
 
 
   // Run on initial load
