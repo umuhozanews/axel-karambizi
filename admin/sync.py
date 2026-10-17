@@ -125,6 +125,25 @@ def sync_all():
         html = re.sub(r'<div class="framer-m8h9u9"[^>]*>.*?</div>', '', html, flags=re.DOTALL)
         html = re.sub(r'<div class="framer-ldojh2"[^>]*>.*?</div>', '', html, flags=re.DOTALL)
 
+        # Permanently eliminate enhanced contact bar and floating admin badge
+        html = re.sub(r'<div id="enhanced-contact-bar"[^>]*>.*?</div>', '', html, flags=re.DOTALL)
+        html = re.sub(r'<a id="floating-admin-badge"[^>]*>.*?</a>', '', html, flags=re.DOTALL)
+        html = re.sub(r'<style id="hide-framer-badge">.*?</style>',
+                      '''<style id="hide-framer-badge">
+#__framer-badge-container, .__framer-badge, [id*="framer-badge"], #__framer-editorbar, #enhanced-contact-bar, #floating-admin-badge, .framer-m8h9u9, .framer-ldojh2 {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  height: 0 !important;
+  max-height: 0 !important;
+  width: 0 !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+</style>''', html, flags=re.DOTALL)
+
         return html
 
     # ==========================================

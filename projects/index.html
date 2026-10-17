@@ -318,14 +318,17 @@
 }
 </style>
 <style id="hide-framer-badge">
-#__framer-badge-container, .__framer-badge, [id*="framer-badge"], #__framer-editorbar {
+#__framer-badge-container, .__framer-badge, [id*="framer-badge"], #__framer-editorbar, #enhanced-contact-bar, #floating-admin-badge, .framer-m8h9u9, .framer-ldojh2 {
   display: none !important;
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;
   height: 0 !important;
+  max-height: 0 !important;
   width: 0 !important;
   overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 </style>
 
@@ -391,7 +394,20 @@
 <script src="../assets/cookie-consent.js?v=20261005g" defer></script>
 <script src="../assets/analytics.js?v=20261005g" defer></script>
 <script src="../assets/nav-scroll.js?v=20261005h" defer=""></script>
-<script src="../assets/site-sync.js?v=20261016" defer></script>
+<script src="../assets/site-sync.js?v=20261017g" defer></script>
+<script id="purge-bars">
+  (function() {
+    function kill() {
+      var els = document.querySelectorAll('#enhanced-contact-bar, #floating-admin-badge');
+      for (var i = 0; i < els.length; i++) els[i].remove();
+    }
+    kill();
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', kill);
+    window.addEventListener('load', kill);
+    var t = setInterval(kill, 50);
+    setTimeout(function() { clearInterval(t); }, 6000);
+  })();
+</script>
 </body>
 
 </html>

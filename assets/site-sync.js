@@ -6,13 +6,22 @@
 (function() {
   'use strict';
 
-  // Ensure Behance is permanently hidden and removed
+  // Ensure Behance, enhanced contact bar, admin badge, and photo descriptions are permanently hidden and removed
   try {
-    const behanceStyle = document.createElement('style');
-    behanceStyle.id = 'behance-remove-style';
-    behanceStyle.textContent = '.framer-1yo788g, .framer-30cdzv, .framer-1nl2v36, a[href*="behance.net"], #floating-admin-badge, .framer-m8h9u9, .framer-ldojh2, #enhanced-contact-bar { display: none !important; }';
-    if (document.head) document.head.appendChild(behanceStyle);
-    else document.addEventListener('DOMContentLoaded', () => document.head.appendChild(behanceStyle));
+    const suppressStyle = document.createElement('style');
+    suppressStyle.id = 'suppress-unwanted-elements-style';
+    suppressStyle.textContent = '.framer-1yo788g, .framer-30cdzv, .framer-1nl2v36, a[href*="behance.net"], #floating-admin-badge, .framer-m8h9u9, .framer-ldojh2, #enhanced-contact-bar { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; height: 0 !important; max-height: 0 !important; width: 0 !important; overflow: hidden !important; margin: 0 !important; padding: 0 !important; }';
+    if (document.head) document.head.appendChild(suppressStyle);
+    else document.addEventListener('DOMContentLoaded', () => document.head.appendChild(suppressStyle));
+
+    const purgeUnwanted = () => {
+      document.querySelectorAll('#enhanced-contact-bar, #floating-admin-badge').forEach(el => el.remove());
+    };
+    purgeUnwanted();
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', purgeUnwanted);
+    window.addEventListener('load', purgeUnwanted);
+    const purgeTimer = setInterval(purgeUnwanted, 50);
+    setTimeout(() => clearInterval(purgeTimer), 6000);
   } catch (e) {}
 
   function resolvePath(url) {
