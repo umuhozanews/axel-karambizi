@@ -255,7 +255,7 @@ class AdminHandler(http.server.SimpleHTTPRequestHandler):
                 email = str(creds.get('email', '')).strip().lower()
                 password = str(creds.get('password', '')).strip()
 
-                valid_emails = [e.lower() for e in ["nextech@gmail.com", "admin", "axel", "hello@axelkarambizi.com", "axelkarambizi", "karambizi", "axel.karambizi", "karambiziaxel", "papilocostaa@gmail.com", "apilocostaa@gmail.com"]]
+                valid_emails = [e.lower() for e in ["hello@axelkarambizi.com", "nextech@gmail.com", "admin", "axel", "axelkarambizi", "karambizi", "axel.karambizi", "karambiziaxel"]]
                 valid_passwords = ["axel@12345", "Axel@12345", "axel12345", "Axel12345"]
                 if (email in valid_emails or email == ADMIN_EMAIL.lower()) and (password in valid_passwords or password == ADMIN_PASSWORD):
                     self.send_response(200)

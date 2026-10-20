@@ -129,7 +129,7 @@ export async function onRequest(context) {
       const cleanEmail = String(body.email || '').trim().toLowerCase();
       const cleanPass = String(body.password || '').trim();
 
-      const VALID_EMAILS = ['nextech@gmail.com', 'admin', 'axel', 'hello@axelkarambizi.com', 'axelkarambizi', 'karambizi', 'axel.karambizi', 'karambiziaxel', 'papilocostaa@gmail.com', 'apilocostaa@gmail.com'];
+      const VALID_EMAILS = ['hello@axelkarambizi.com', 'nextech@gmail.com', 'admin', 'axel', 'axelkarambizi', 'karambizi', 'axel.karambizi', 'karambiziaxel'];
       const VALID_PASSWORDS = ['axel@12345', 'Axel@12345', 'axel12345', 'Axel12345'];
 
       if (VALID_EMAILS.includes(cleanEmail) && VALID_PASSWORDS.includes(cleanPass)) {
