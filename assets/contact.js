@@ -13,11 +13,9 @@
     if (!forms.length) return;
 
     forms.forEach(function (form) {
-      // Set native fallback attributes
-      if (!form.getAttribute('action') || form.getAttribute('action') === '#') {
-        form.setAttribute('action', 'https://formsubmit.co/' + RECIPIENT_EMAIL);
-        form.setAttribute('method', 'POST');
-      }
+      // Enforce recipient email attributes
+      form.setAttribute('action', 'https://formsubmit.co/' + RECIPIENT_EMAIL);
+      form.setAttribute('method', 'POST');
 
       // Add hidden inputs for FormSubmit if not present
       if (!form.querySelector('input[name="_captcha"]')) {
