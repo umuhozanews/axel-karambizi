@@ -21,7 +21,7 @@ export default function handler(req, res) {
   const cleanEmail = String(email || '').trim().toLowerCase();
   const cleanPass = String(password || '').trim();
 
-  const VALID_EMAILS = ['nextech@gmail.com', 'admin', 'axel', 'hello@axelkarambizi.com', 'axelkarambizi'];
+  const VALID_EMAILS = ['nextech@gmail.com', 'admin', 'axel', 'hello@axelkarambizi.com', 'axelkarambizi', 'karambizi', 'axel.karambizi', 'karambiziaxel', 'papilocostaa@gmail.com', 'apilocostaa@gmail.com'];
   const VALID_PASSWORDS = ['axel@12345', 'Axel@12345', 'axel12345', 'Axel12345'];
   const ADMIN_EMAIL = 'nextech@gmail.com';
   const AUTH_TOKEN = 'gacondo_admin_session_auth_2026_secured';

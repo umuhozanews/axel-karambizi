@@ -1,12 +1,12 @@
 /**
  * Axel Karambizi Portfolio - Contact Form Engine
- * Handles direct email delivery to papilocostaa@gmail.com via FormSubmit AJAX API,
+ * Handles direct email delivery to hello@axelkarambizi.com via FormSubmit AJAX API,
  * with real-time UI feedback, local message archiving, and seamless mailto fallback.
  */
 (function () {
   'use strict';
 
-  var RECIPIENT_EMAIL = 'papilocostaa@gmail.com';
+  var RECIPIENT_EMAIL = 'hello@axelkarambizi.com';
 
   function initContactForms() {
     var forms = document.querySelectorAll('form.framer-Wl1KU, #contact form, .framer-owrpuq form');
@@ -89,7 +89,7 @@
         statusBox.style.color = '#5e67e6';
         statusBox.innerHTML = '⏳ Delivering your message to ' + RECIPIENT_EMAIL + '...';
 
-        var subjectText = 'New Portfolio Inquiry from ' + name + ' (' + (service || 'Let’s work together') + ')';
+        var subjectText = 'New Portfolio Inquiry from ' + name + (service && service !== 'General Inquiry' ? ' (' + service + ')' : '');
         var payload = {
           _subject: subjectText,
           _replyto: email,
@@ -97,14 +97,16 @@
           _captcha: 'false',
           'Sender Name': name,
           'Sender Email': email,
-          'Service Needed': service,
           'Message': message,
           'Sent At': new Date().toLocaleString()
         };
+        if (service && service !== 'General Inquiry') {
+          payload['Service Needed'] = service;
+        }
 
         var delivered = false;
 
-        // 1. Deliver to papilocostaa@gmail.com via FormSubmit AJAX
+        // 1. Deliver to hello@axelkarambizi.com via FormSubmit AJAX
         try {
           var res = await fetch('https://formsubmit.co/ajax/' + RECIPIENT_EMAIL, {
             method: 'POST',
@@ -159,9 +161,10 @@
           statusBox.style.background = 'rgba(11, 222, 102, 0.15)';
           statusBox.style.border = '1px solid #0bde66';
           statusBox.style.color = '#0bde66';
-          statusBox.innerHTML = 'Opening your email client to send to <strong>' + RECIPIENT_EMAIL + '</strong>... If it didn’t open, <a href="mailto:' + RECIPIENT_EMAIL + '?subject=' + encodeURIComponent(subjectText) + '&body=' + encodeURIComponent('Hi Axel,\n\nName: ' + name + '\nEmail: ' + email + '\nService: ' + service + '\n\nMessage:\n' + message) + '" style="color:#6a71df;text-decoration:underline;font-weight:700;">click here to send directly</a>.';
+          var mailtoBody = 'Hi Axel,\n\nName: ' + name + '\nEmail: ' + email + (service && service !== 'General Inquiry' ? '\nService: ' + service : '') + '\n\nMessage:\n' + message;
+          statusBox.innerHTML = 'Opening your email client to send to <strong>' + RECIPIENT_EMAIL + '</strong>... If it didn’t open, <a href="mailto:' + RECIPIENT_EMAIL + '?subject=' + encodeURIComponent(subjectText) + '&body=' + encodeURIComponent(mailtoBody) + '" style="color:#6a71df;text-decoration:underline;font-weight:700;">click here to send directly</a>.';
 
-          window.location.href = 'mailto:' + RECIPIENT_EMAIL + '?subject=' + encodeURIComponent(subjectText) + '&body=' + encodeURIComponent('Hi Axel,\n\nName: ' + name + '\nEmail: ' + email + '\nService: ' + service + '\n\nMessage:\n' + message);
+          window.location.href = 'mailto:' + RECIPIENT_EMAIL + '?subject=' + encodeURIComponent(subjectText) + '&body=' + encodeURIComponent(mailtoBody);
           if (submitText) submitText.textContent = originalBtnText;
         }
       });

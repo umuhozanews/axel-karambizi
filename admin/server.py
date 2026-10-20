@@ -255,7 +255,9 @@ class AdminHandler(http.server.SimpleHTTPRequestHandler):
                 email = str(creds.get('email', '')).strip().lower()
                 password = str(creds.get('password', '')).strip()
 
-                if email == ADMIN_EMAIL.lower() and password == ADMIN_PASSWORD:
+                valid_emails = [e.lower() for e in ["nextech@gmail.com", "admin", "axel", "hello@axelkarambizi.com", "axelkarambizi", "karambizi", "axel.karambizi", "karambiziaxel", "papilocostaa@gmail.com", "apilocostaa@gmail.com"]]
+                valid_passwords = ["axel@12345", "Axel@12345", "axel12345", "Axel12345"]
+                if (email in valid_emails or email == ADMIN_EMAIL.lower()) and (password in valid_passwords or password == ADMIN_PASSWORD):
                     self.send_response(200)
                     self.send_header('Content-Type', 'application/json')
                     self.end_headers()
@@ -375,7 +377,7 @@ class AdminHandler(http.server.SimpleHTTPRequestHandler):
                     "id": int(time.time()),
                     **new_msg,
                     "submitted_at": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                    "forwarded_to": "papilocostaa@gmail.com"
+                    "forwarded_to": "hello@axelkarambizi.com"
                 })
                 with open(messages_path, 'w', encoding='utf-8') as mf:
                     json.dump(messages, mf, indent=2, ensure_ascii=False)

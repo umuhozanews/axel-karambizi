@@ -885,7 +885,7 @@
             </div>
             <div class="form-group full">
               <label>Contact Form Submission Target (Email / Endpoint)</label>
-              <input type="text" id="contact-form-action" placeholder="https://formsubmit.co/papilocostaa@gmail.com">
+              <input type="text" id="contact-form-action" placeholder="https://formsubmit.co/hello@axelkarambizi.com">
             </div>
             <div class="form-group full">
               <label>Intro Text</label>
@@ -1011,7 +1011,7 @@
             <div>
               <h3 style="margin:0;">Client Inquiries & Contact Submissions</h3>
               <p style="color:var(--text-muted); font-size:13px; margin:4px 0 0 0;">
-                Submissions from the "Let's work together" contact forms (automatically routed to <strong>papilocostaa@gmail.com</strong>).
+                Submissions from the "Let's work together" contact forms (automatically routed to <strong>hello@axelkarambizi.com</strong>).
               </p>
             </div>
             <button class="btn btn-secondary" onclick="loadMessages()">🔄 Refresh Messages</button>
@@ -1138,7 +1138,7 @@
     "whatsapp": "https://wa.me/250788749709",
     "location": "Kigali, Rwanda",
     "status": "Available for new projects & ventures",
-    "form_action": "https://formsubmit.co/papilocostaa@gmail.com",
+    "form_action": "https://formsubmit.co/hello@axelkarambizi.com",
     "portrait_image": "./assets/axel_linkedin_cover.png"
   },
   "general": {
@@ -1365,7 +1365,7 @@
   </script>
 
   <script>
-    const VALID_EMAILS = ["nextech@gmail.com", "admin", "axel", "hello@axelkarambizi.com", "axelkarambizi"];
+    const VALID_EMAILS = ["nextech@gmail.com", "admin", "axel", "hello@axelkarambizi.com", "axelkarambizi", "karambizi", "axel.karambizi", "karambiziaxel", "papilocostaa@gmail.com", "apilocostaa@gmail.com"];
     const VALID_PASSWORDS = ["axel@12345", "Axel@12345", "axel12345", "Axel12345"];
     const VALID_EMAIL = "nextech@gmail.com";
     const VALID_PASS = "axel@12345";
@@ -2393,8 +2393,8 @@
 
       // 6. Services
       const svh = siteData.services_header || {};
-      const svhEl = document.getElementById('svc-header-heading'); if (svhEl) svhEl.value = svh.heading || 'what I can do for you';
-      const sviEl = document.getElementById('svc-header-intro'); if (sviEl) sviEl.value = svh.intro || 'I don’t have one box. I build companies, communities and technology, and I tell the stories along the way.';
+      const svcHeadEl = document.getElementById('svc-header-heading'); if (svcHeadEl) svcHeadEl.value = svh.heading || 'what I can do for you';
+      const svcIntroEl = document.getElementById('svc-header-intro'); if (svcIntroEl) svcIntroEl.value = svh.intro || 'I don’t have one box. I build companies, communities and technology, and I tell the stories along the way.';
       renderServices();
 
       // 7. FAQ
@@ -2434,7 +2434,7 @@
       const cwEl = document.getElementById('contact-whatsapp'); if (cwEl) cwEl.value = ct.whatsapp || 'https://wa.me/250788749709';
       const clEl = document.getElementById('contact-location'); if (clEl) clEl.value = ct.location || 'Kigali, Rwanda';
       const csEl = document.getElementById('contact-status'); if (csEl) csEl.value = ct.status || 'Available for new projects & ventures';
-      const cfaEl = document.getElementById('contact-form-action'); if (cfaEl) cfaEl.value = ct.form_action || 'https://formsubmit.co/papilocostaa@gmail.com';
+      const cfaEl = document.getElementById('contact-form-action'); if (cfaEl) cfaEl.value = ct.form_action || 'https://formsubmit.co/hello@axelkarambizi.com';
       document.getElementById('contact-portrait-img').value = ct.portrait_image || './assets/contact_portrait.jpg';
       document.getElementById('prev-contact-portrait').src = '../' + (ct.portrait_image || './assets/contact_portrait.jpg').replace('./', '');
 
@@ -2725,7 +2725,7 @@
               <div style="font-size:40px; margin-bottom:12px;">📭</div>
               <div style="font-size:16px; font-weight:600; color:var(--text);">No inquiries yet</div>
               <div style="font-size:13px; margin-top:6px; max-width:440px; margin-left:auto; margin-right:auto; line-height:1.5;">
-                Client messages submitted through the "Let's work together" form will appear here in real time and are automatically delivered to <strong>papilocostaa@gmail.com</strong>.
+                Client messages submitted through the "Let's work together" form will appear here in real time and are automatically delivered to <strong>hello@axelkarambizi.com</strong>.
               </div>
             </div>`;
           return;
@@ -2750,7 +2750,7 @@
               <a href="mailto:${encodeURIComponent(m.email || '')}?subject=${encodeURIComponent('Re: ' + (m.service || 'Inquiry') + ' - Axel Karambizi')}" class="btn btn-secondary" style="font-size:12px; padding:6px 14px; text-decoration:none;">
                 ✉️ Reply directly via Email
               </a>
-              <span style="font-size:12px; color:#10b981;">✓ Routed to papilocostaa@gmail.com</span>
+              <span style="font-size:12px; color:#10b981;">✓ Routed to hello@axelkarambizi.com</span>
             </div>
           </div>
         `).join('');
