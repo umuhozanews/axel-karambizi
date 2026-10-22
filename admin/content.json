@@ -356,5 +356,9 @@
       "quote": "Four young people decided they could build things for other people.",
       "image": "./assets/img_10.jpg"
     }
-  ]
+  ],
+  "services[0]": {
+    "title": "1.Building Businesses",
+    "items[0]": "Startups & product development — Turning ideas into products people need. "
+  }
 }
