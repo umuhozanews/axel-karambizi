@@ -368,10 +368,50 @@
     }
 
     if (Array.isArray(data.services) && data.services.length > 0) {
-      const titles = document.querySelectorAll('.framer-12x9h0a h3, [data-framer-name="Service Title"] h3');
-      data.services.forEach((svc, sIdx) => {
-        if (titles[sIdx] && svc.title) titles[sIdx].textContent = svc.title;
-      });
+      const cards = document.querySelectorAll('.framer-1id3mzr');
+      if (cards.length > 0) {
+        cards.forEach((card, cIdx) => {
+          const sIdx = cIdx % data.services.length;
+          const svc = data.services[sIdx];
+          if (!svc) return;
+
+          // 1. Update Title
+          const titleEl = card.querySelector('.framer-12x9h0a h3, [data-framer-name="Top"] h3, h3');
+          if (titleEl && svc.title) titleEl.textContent = svc.title;
+
+          // 2. Update Checklist / Offerings items
+          const bottom = card.querySelector('.framer-of9a55, [data-framer-name="Bottom"]');
+          if (bottom && Array.isArray(svc.items)) {
+            const itemContainers = Array.from(bottom.children).filter(child => child.querySelector('.framer-188sluc p') || child.classList.contains('framer-188sluc'));
+            const template = itemContainers[0];
+
+            svc.items.forEach((itemText, itmIdx) => {
+              if (itmIdx < itemContainers.length) {
+                const c = itemContainers[itmIdx];
+                c.style.display = '';
+                const p = c.querySelector('.framer-188sluc p') || c.querySelector('p');
+                if (p) p.textContent = itemText;
+              } else if (template) {
+                const clone = template.cloneNode(true);
+                clone.style.display = '';
+                const p = clone.querySelector('.framer-188sluc p') || clone.querySelector('p');
+                if (p) p.textContent = itemText;
+                bottom.appendChild(clone);
+              }
+            });
+
+            // Hide extra items if any
+            for (let extra = svc.items.length; extra < itemContainers.length; extra++) {
+              itemContainers[extra].style.display = 'none';
+            }
+          }
+        });
+      } else {
+        const titles = document.querySelectorAll('.framer-12x9h0a h3, [data-framer-name="Service Title"] h3');
+        data.services.forEach((svc, sIdx) => {
+          if (titles[sIdx] && svc.title) titles[sIdx].textContent = svc.title;
+        });
+      }
     }
 
     // 7. FAQ Header & Items

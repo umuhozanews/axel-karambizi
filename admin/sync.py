@@ -54,6 +54,94 @@ def sync_all():
             text = text[:m.start()] + replacement + text[m.end():]
         return text
 
+    def sync_services_html(html_str, svc_list):
+        if not svc_list:
+            return html_str
+        card_pattern = re.compile(r'(<div\s+class="[^"]*framer-1id3mzr[^"]*"[\s\S]*?)(?=(?:<div\s+class="[^"]*framer-1id3mzr[^"]*"|</section>|$))')
+        matches = list(card_pattern.finditer(html_str))
+        if not matches:
+            return html_str
+
+        num_services = len(svc_list)
+        for i in reversed(range(len(matches))):
+            m = matches[i]
+            card_html = m.group(1)
+            svc_idx = i % num_services
+            svc = svc_list[svc_idx]
+            
+            # Title <h3>
+            if svc.get('title'):
+                card_html = re.sub(
+                    r'(<h3[^>]*>)(.*?)(</h3>)',
+                    lambda tm: tm.group(1) + svc['title'] + tm.group(3),
+                    card_html,
+                    count=1
+                )
+            
+            # Items
+            items = svc.get('items', [])
+            of_pos = card_html.find('framer-of9a55')
+            if of_pos != -1:
+                div_start = card_html.rfind('<div', 0, of_pos)
+                tag_open = card_html.find('>', div_start) + 1
+                depth = 1
+                idx = tag_open
+                div_end = -1
+                while idx < len(card_html) and depth > 0:
+                    next_open = card_html.find('<div', idx)
+                    next_close = card_html.find('</div>', idx)
+                    if next_close == -1:
+                        break
+                    if next_open != -1 and next_open < next_close:
+                        depth += 1
+                        idx = next_open + 4
+                    else:
+                        depth -= 1
+                        if depth == 0:
+                            div_end = next_close
+                            break
+                        idx = next_close + 6
+                    
+                if div_end != -1:
+                    bottom_inner = card_html[tag_open:div_end]
+                    item_re = re.compile(r'(<div\s+class="framer-[a-z0-9]+-container"[^>]*>\s*<div\s+class="framer-hPZSA[\s\S]*?</div>\s*</div>)')
+                    existing_item_blocks = list(item_re.finditer(bottom_inner))
+                    
+                    if existing_item_blocks:
+                        sample_block = existing_item_blocks[0].group(1)
+                        new_blocks = []
+                        for itm_idx, itm_text in enumerate(items):
+                            if itm_idx < len(existing_item_blocks):
+                                b = existing_item_blocks[itm_idx].group(1)
+                                b = re.sub(
+                                    r'(<div\s+class="framer-188sluc"[^>]*>\s*<p[^>]*>)(.*?)(</p>\s*</div>)',
+                                    lambda pm: pm.group(1) + itm_text + pm.group(3),
+                                    b
+                                )
+                                new_blocks.append(b)
+                            else:
+                                b = re.sub(
+                                    r'(<div\s+class="framer-188sluc"[^>]*>\s*<p[^>]*>)(.*?)(</p>\s*</div>)',
+                                    lambda pm: pm.group(1) + itm_text + pm.group(3),
+                                    sample_block
+                                )
+                                new_blocks.append(b)
+                        
+                        new_bottom_inner = "".join(new_blocks)
+                        card_html = card_html[:tag_open] + new_bottom_inner + card_html[div_end:]
+            else:
+                item_pattern = re.compile(r'(<div\s+class="framer-188sluc"[^>]*>\s*<p[^>]*>)(.*?)(</p>)')
+                card_item_matches = list(item_pattern.finditer(card_html))
+                for item_idx in reversed(range(len(card_item_matches))):
+                    im = card_item_matches[item_idx]
+                    if item_idx < len(items):
+                        new_text = items[item_idx]
+                        card_html = card_html[:im.start(2)] + new_text + card_html[im.end(2):]
+
+            html_str = html_str[:m.start(1)] + card_html + html_str[m.end(1):]
+        return html_str
+
+
     def update_common(html, is_root=True):
         prefix = './' if is_root else '../'
         asset_prefix = './assets/' if is_root else '../assets/'
@@ -177,22 +265,8 @@ def sync_all():
             html = re.sub(r'>1,000\+<', f'>{counters[2].get("number", "1,000+")}<', html)
             html = re.sub(r'>Trees Planted<', f'>{counters[2].get("label", "Trees Planted")}<', html)
 
-        # Services Section
-        if len(services) > 0:
-            s1 = services[0]
-            s1_title = s1.get('title', '1. ui/ux design')
-            s1_items = s1.get('items', [])
-            html = re.sub(r'>1\.\s*(?:software\s*&\s*design|ui/ux\s*design)<', f'>{s1_title}<', html, flags=re.IGNORECASE)
-            
-            old_item_defaults = [
-                r'Custom software systems and digital solutions|Wireframing and prototyping',
-                r'EdTech and library intelligence platforms|User Interface design for web and mobile apps',
-                r'Design and software agency work with Atomiq|Usability testing and user feedback analysis',
-                r'AI-powered tools built to be useful|Interaction design and micro-interactions'
-            ]
-            for idx, pat in enumerate(old_item_defaults):
-                if idx < len(s1_items):
-                    html = re.sub(f'>({pat})<', f'>{s1_items[idx]}<', html)
+        # Services Section (Full dynamic sync of titles and all items)
+        html = sync_services_html(html, services)
 
         # Featured Projects Header
         fph = data.get('featured_projects_header', {})
@@ -561,6 +635,9 @@ def sync_all():
         intro = about.get('learning_stack_intro', '')
         if intro:
             html_about = re.sub(r'I learn by doing\. Here is what I’m actively mastering[^\<]*', intro, html_about)
+
+        # Services Section (Full dynamic sync of titles and all items)
+        html_about = sync_services_html(html_about, services)
 
         # External Live Journey Links
         html_about = re.sub(r'>Risevana Foundation(?: ↗)?</h3>', '><a href="https://risevana-foundation.vercel.app/" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;display:inline-block">Risevana Foundation ↗</a></h3>', html_about)

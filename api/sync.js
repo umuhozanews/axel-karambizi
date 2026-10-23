@@ -1,3 +1,88 @@
+export function syncServicesHtml(html, services) {
+  if (!Array.isArray(services) || services.length === 0) return html;
+  const cardPattern = /(<div\s+class="[^"]*framer-1id3mzr[^"]*"[\s\S]*?)(?=(?:<div\s+class="[^"]*framer-1id3mzr[^"]*"|<\/section>|$))/g;
+  const matches = [];
+  let m;
+  while ((m = cardPattern.exec(html)) !== null) {
+    matches.push({ index: m.index, length: m[1].length, text: m[1] });
+  }
+  if (matches.length === 0) return html;
+
+  const numServices = services.length;
+  for (let i = matches.length - 1; i >= 0; i--) {
+    const match = matches[i];
+    let cardHtml = match.text;
+    const svc = services[i % numServices];
+    if (!svc) continue;
+
+    // 1. Title
+    if (svc.title) {
+      cardHtml = cardHtml.replace(/(<h3[^>]*>)(.*?)(<\/h3>)/, `$1${svc.title}$3`);
+    }
+
+    // 2. Items
+    const items = svc.items || [];
+    const ofPos = cardHtml.indexOf('framer-of9a55');
+    if (ofPos !== -1) {
+      const divStart = cardHtml.lastIndexOf('<div', ofPos);
+      const tagOpen = cardHtml.indexOf('>', divStart) + 1;
+      let depth = 1;
+      let idx = tagOpen;
+      let divEnd = -1;
+      while (idx < cardHtml.length && depth > 0) {
+        const nextOpen = cardHtml.indexOf('<div', idx);
+        const nextClose = cardHtml.indexOf('</div>', idx);
+        if (nextClose === -1) break;
+        if (nextOpen !== -1 && nextOpen < nextClose) {
+          depth++;
+          idx = nextOpen + 4;
+        } else {
+          depth--;
+          if (depth === 0) {
+            divEnd = nextClose;
+            break;
+          }
+          idx = nextClose + 6;
+        }
+      }
+      if (divEnd !== -1) {
+        const bottomInner = cardHtml.slice(tagOpen, divEnd);
+        const itemRegex = /(<div\s+class="framer-[a-z0-9]+-container"[^>]*>\s*<div\s+class="framer-hPZSA[\s\S]*?<\/div>\s*<\/div>)/g;
+        const existingBlocks = [];
+        let em;
+        while ((em = itemRegex.exec(bottomInner)) !== null) {
+          existingBlocks.push(em[1]);
+        }
+        if (existingBlocks.length > 0) {
+          const sample = existingBlocks[0];
+          const newBlocks = items.map((itmText, itmIdx) => {
+            const base = (itmIdx < existingBlocks.length) ? existingBlocks[itmIdx] : sample;
+            return base.replace(/(<div\s+class="framer-188sluc"[^>]*>\s*<p[^>]*>)(.*?)(<\/p>\s*<\/div>)/, `$1${itmText}$3`);
+          });
+          cardHtml = cardHtml.slice(0, tagOpen) + newBlocks.join('') + cardHtml.slice(divEnd);
+        }
+      }
+    } else {
+      const itemPattern = /(<div\s+class="framer-188sluc"[^>]*>\s*<p[^>]*>)(.*?)(<\/p>)/g;
+      const cardItemMatches = [];
+      let cim;
+      while ((cim = itemPattern.exec(cardHtml)) !== null) {
+        cardItemMatches.push(cim);
+      }
+      for (let j = cardItemMatches.length - 1; j >= 0; j--) {
+        if (j < items.length) {
+          const matched = cardItemMatches[j];
+          cardHtml = cardHtml.slice(0, matched.index + matched[1].length) + items[j] + cardHtml.slice(matched.index + matched[1].length + matched[2].length);
+        }
+      }
+    }
+
+    html = html.slice(0, match.index) + cardHtml + html.slice(match.index + match.length);
+  }
+  return html;
+}
+
+
 /**
  * Node.js Static Site Synchronizer for Axel Karambizi Portfolio
  * Replicates admin/sync.py for cloud serverless execution.
@@ -112,25 +197,8 @@ export function syncIndex(html, data) {
     }
   }
 
-  // Services
-  if (services && services.length > 0) {
-    const s1 = services[0];
-    const s1Title = s1.title || '1. ui/ux design';
-    const s1Items = s1.items || [];
-    html = html.replace(/>1\.\s*(?:software\s*&\s*design|ui\/ux\s*design)</gi, `>${s1Title}<`);
-
-    const oldItemDefaults = [
-      'Custom software systems and digital solutions|Wireframing and prototyping',
-      'EdTech and library intelligence platforms|User Interface design for web and mobile apps',
-      'Design and software agency work with Atomiq|Usability testing and user feedback analysis',
-      'AI-powered tools built to be useful|Interaction design and micro-interactions'
-    ];
-    oldItemDefaults.forEach((pat, idx) => {
-      if (idx < s1Items.length) {
-        html = html.replace(new RegExp(`>(${pat})<`, 'g'), `>${s1Items[idx]}<`);
-      }
-    });
-  }
+  // Services (Full dynamic sync of titles and all items)
+  html = syncServicesHtml(html, services);
 
   // FAQ Header
   const fqh = data.faq_header || {};
