@@ -468,8 +468,6 @@ def run_server():
         print(f"======================================================")
         print(f" Live Site:  http://localhost:{PORT}/")
         print(f" Admin URL:  http://localhost:{PORT}/admin/")
-        print(f" Admin Email: {ADMIN_EMAIL}")
-        print(f" Password:    {ADMIN_PASSWORD}")
         print(f" Press Ctrl+C to stop the server.")
         print(f"======================================================")
         
