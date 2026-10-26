@@ -145,7 +145,7 @@
     if (data.featured_projects_header) {
       const fph = data.featured_projects_header;
       if (fph.heading) {
-        document.querySelectorAll('.framer-vosmgd h2, .framer-h8of8r h1, [data-framer-name="Projects Heading"] h2, h1, h2').forEach(el => {
+        document.querySelectorAll('.framer-vosmgd h2, .framer-h8of8r h1, [data-framer-name="Projects Heading"] h2').forEach(el => {
           if (el.textContent.trim().toLowerCase() === 'featured projects' || el.dataset.sync === 'fp-heading') {
             el.textContent = fph.heading;
             el.dataset.sync = 'fp-heading';
@@ -238,7 +238,7 @@
     if (data.more_projects_header) {
       const mph = data.more_projects_header;
       if (mph.heading) {
-        document.querySelectorAll('.framer-1dv323k h2, [data-framer-name="More Projects Heading"] h2, h2').forEach(el => {
+        document.querySelectorAll('.framer-1dv323k h2, [data-framer-name="More Projects Heading"] h2').forEach(el => {
           if (el.textContent.trim().toLowerCase() === 'more projects' || el.dataset.sync === 'mp-heading') {
             el.textContent = mph.heading;
             el.dataset.sync = 'mp-heading';
@@ -368,7 +368,7 @@
     }
 
     if (Array.isArray(data.services) && data.services.length > 0) {
-      const cards = document.querySelectorAll('.framer-1id3mzr');
+      const cards = document.querySelectorAll('#service .framer-1id3mzr');
       if (cards.length > 0) {
         cards.forEach((card, cIdx) => {
           const sIdx = cIdx % data.services.length;
@@ -407,7 +407,7 @@
           }
         });
       } else {
-        const titles = document.querySelectorAll('.framer-12x9h0a h3, [data-framer-name="Service Title"] h3');
+        const titles = document.querySelectorAll('#service .framer-12x9h0a h3, #service [data-framer-name="Service Title"] h3');
         data.services.forEach((svc, sIdx) => {
           if (titles[sIdx] && svc.title) titles[sIdx].textContent = svc.title;
         });
@@ -564,7 +564,7 @@
     // 8. Explore Stories / Blogs
     if (data.explore_header) {
       const eh = data.explore_header;
-      document.querySelectorAll('.framer-1m0m5yq h2, [data-framer-name="Explore Heading"] h2, h2').forEach(el => {
+      document.querySelectorAll('.framer-1m0m5yq h2, [data-framer-name="Explore Heading"] h2').forEach(el => {
         if (el.textContent.includes('The World Is Too Alive') || el.dataset.sync === 'exp-heading') {
           if (eh.heading) el.textContent = eh.heading;
           el.dataset.sync = 'exp-heading';

@@ -57,19 +57,30 @@ def sync_all():
     def sync_services_html(html_str, svc_list):
         if not svc_list:
             return html_str
-        card_pattern = re.compile(r'(<div\s+class="[^"]*framer-1id3mzr[^"]*"[\s\S]*?)(?=(?:<div\s+class="[^"]*framer-1id3mzr[^"]*"|</section>|$))')
-        matches = list(card_pattern.finditer(html_str))
-        if not matches:
+        
+        svc_match = re.search(r'(<section[^>]*id="service"[^>]*>)([\s\S]*?)(</section>)', html_str)
+        if not svc_match:
             return html_str
 
+        sec_open, sec_body, sec_close = svc_match.group(1), svc_match.group(2), svc_match.group(3)
+        
+        card_pattern = re.compile(r'(<div\s+class="[^"]*framer-1id3mzr[^"]*"[\s\S]*?)(?=(?:<div\s+class="[^"]*framer-1id3mzr[^"]*"|$))')
+        matches = list(card_pattern.finditer(sec_body))
+        if not matches:
+            return html_str
+        
         num_services = len(svc_list)
+        new_sec_body = sec_body
+
+        item_re = re.compile(r'(<div\s+class="framer-[a-z0-9]+-container"[^>]*>[\s\S]*?<div\s+class="framer-188sluc"[^>]*>\s*<p[^>]*>)(.*?)(</p>\s*</div>\s*</div>\s*</div>)')
+
         for i in reversed(range(len(matches))):
             m = matches[i]
             card_html = m.group(1)
             svc_idx = i % num_services
             svc = svc_list[svc_idx]
-            
-            # Title <h3>
+
+            # 1. Update Title <h3>
             if svc.get('title'):
                 card_html = re.sub(
                     r'(<h3[^>]*>)(.*?)(</h3>)',
@@ -78,69 +89,40 @@ def sync_all():
                     count=1
                 )
             
-            # Items
+            # 2. Checklist Items
             items = svc.get('items', [])
-            of_pos = card_html.find('framer-of9a55')
-            if of_pos != -1:
-                div_start = card_html.rfind('<div', 0, of_pos)
-                tag_open = card_html.find('>', div_start) + 1
-                depth = 1
-                idx = tag_open
-                div_end = -1
-                while idx < len(card_html) and depth > 0:
-                    next_open = card_html.find('<div', idx)
-                    next_close = card_html.find('</div>', idx)
-                    if next_close == -1:
-                        break
-                    if next_open != -1 and next_open < next_close:
-                        depth += 1
-                        idx = next_open + 4
+            card_items = list(item_re.finditer(card_html))
+            if card_items:
+                sample_item = card_items[0].group(0)
+                # Update existing items in-place (preserves all closing </div> tags)
+                for itm_idx in reversed(range(len(card_items))):
+                    citm = card_items[itm_idx]
+                    if itm_idx < len(items):
+                        new_text = items[itm_idx]
+                        card_html = card_html[:citm.start(2)] + new_text + card_html[citm.end(2):]
                     else:
-                        depth -= 1
-                        if depth == 0:
-                            div_end = next_close
-                            break
-                        idx = next_close + 6
-                    
-                if div_end != -1:
-                    bottom_inner = card_html[tag_open:div_end]
-                    item_re = re.compile(r'(<div\s+class="framer-[a-z0-9]+-container"[^>]*>\s*<div\s+class="framer-hPZSA[\s\S]*?</div>\s*</div>)')
-                    existing_item_blocks = list(item_re.finditer(bottom_inner))
-                    
-                    if existing_item_blocks:
-                        sample_block = existing_item_blocks[0].group(1)
-                        new_blocks = []
-                        for itm_idx, itm_text in enumerate(items):
-                            if itm_idx < len(existing_item_blocks):
-                                b = existing_item_blocks[itm_idx].group(1)
-                                b = re.sub(
-                                    r'(<div\s+class="framer-188sluc"[^>]*>\s*<p[^>]*>)(.*?)(</p>\s*</div>)',
-                                    lambda pm: pm.group(1) + itm_text + pm.group(3),
-                                    b
-                                )
-                                new_blocks.append(b)
-                            else:
-                                b = re.sub(
-                                    r'(<div\s+class="framer-188sluc"[^>]*>\s*<p[^>]*>)(.*?)(</p>\s*</div>)',
-                                    lambda pm: pm.group(1) + itm_text + pm.group(3),
-                                    sample_block
-                                )
-                                new_blocks.append(b)
-                        
-                        new_bottom_inner = "".join(new_blocks)
-                        card_html = card_html[:tag_open] + new_bottom_inner + card_html[div_end:]
-            else:
-                item_pattern = re.compile(r'(<div\s+class="framer-188sluc"[^>]*>\s*<p[^>]*>)(.*?)(</p>)')
-                card_item_matches = list(item_pattern.finditer(card_html))
-                for item_idx in reversed(range(len(card_item_matches))):
-                    im = card_item_matches[item_idx]
-                    if item_idx < len(items):
-                        new_text = items[item_idx]
-                        card_html = card_html[:im.start(2)] + new_text + card_html[im.end(2):]
+                        # Cleanly remove extra items with complete matching blocks
+                        card_html = card_html[:citm.start(0)] + card_html[citm.end(0):]
+                
+                # If more items were supplied than existing, append using full matching template
+                if len(items) > len(card_items):
+                    current_matches = list(item_re.finditer(card_html))
+                    if current_matches:
+                        insert_pos = current_matches[-1].end(0)
+                        new_items_html = []
+                        for itm_idx in range(len(card_items), len(items)):
+                            extra_text = items[itm_idx]
+                            extra_block = re.sub(
+                                r'(<div\s+class="framer-188sluc"[^>]*>\s*<p[^>]*>)(.*?)(</p>\s*</div>\s*</div>\s*</div>)',
+                                lambda pm: pm.group(1) + extra_text + pm.group(3),
+                                sample_item
+                            )
+                            new_items_html.append(extra_block)
+                        card_html = card_html[:insert_pos] + "".join(new_items_html) + card_html[insert_pos:]
 
-            html_str = html_str[:m.start(1)] + card_html + html_str[m.end(1):]
-        return html_str
+            new_sec_body = new_sec_body[:m.start(1)] + card_html + new_sec_body[m.end(1):]
 
+        return html_str[:svc_match.start(2)] + new_sec_body + html_str[svc_match.end(2):]
 
     def update_common(html, is_root=True):
         prefix = './' if is_root else '../'
@@ -636,8 +618,6 @@ def sync_all():
         if intro:
             html_about = re.sub(r'I learn by doing\. Here is what I’m actively mastering[^\<]*', intro, html_about)
 
-        # Services Section (Full dynamic sync of titles and all items)
-        html_about = sync_services_html(html_about, services)
 
         # External Live Journey Links
         html_about = re.sub(r'>Risevana Foundation(?: ↗)?</h3>', '><a href="https://risevana-foundation.vercel.app/" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;display:inline-block">Risevana Foundation ↗</a></h3>', html_about)
