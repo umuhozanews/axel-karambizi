@@ -51,39 +51,51 @@
   ],
   "services": [
     {
-      "title": "1.Business",
+      "title": "Building Ventures & Creating Opportunities",
       "items": [
-        "Wireframing and prototyping",
-        "User Interface design for web and mobile apps",
-        "Usability testing and user feedback analysis",
-        "Interaction design and micro-interactions"
+        "Startup Founding & Venture Development",
+        "Business Development & Strategic Partnerships",
+        "Product Strategy & Market Research",
+        "Business Model Development & Validation",
+        "Entrepreneurship & Innovation",
+        "Turning Ideas Into Scalable Businesses",
+        "Building Solutions Around Real-World Problems"
       ]
     },
     {
-      "title": "2. Education",
+      "title": "Technology, AI & Digital Innovation",
       "items": [
-        "Accredited school foundations in rural areas",
-        "Classrooms and daily meals for children",
-        "Mobile classroom bringing tech to underserved areas",
-        "Community mentorship pathways for local youth"
+        "Artificial Intelligence & Machine Learning Solutions",
+        "Software & Digital Product Development",
+        "EdTech & Education Technology",
+        "AgriTech & Technology for Rural Communities",
+        "Digital Transformation & Innovation",
+        "Research, Experimentation & Rapid Prototyping",
+        "Technology for Sustainable Development"
       ]
     },
     {
-      "title": "3. Community Action",
+      "title": "Empowering People & Transforming Communities",
       "items": [
-        "Kigali Car Free Day community runs",
-        "Blood drives and civic events",
-        "Environmental initiatives, 1,000+ trees planted",
-        "Youth empowerment with Youth Uplift Initiative"
+        "Youth Empowerment & Leadership Development",
+        "Digital Skills & Technology Education",
+        "Community Development & Grassroots Initiatives",
+        "Access to Education & Equal Opportunities",
+        "Youth Entrepreneurship & Mentorship",
+        "Social Impact Projects & Volunteering",
+        "Building Communities Through Collaboration"
       ]
     },
     {
-      "title": "4. Storytelling",
+      "title": "Ideas, Stories & Inspiration",
       "items": [
-        "Writing and travel journals",
-        "Field notes from founder journeys",
-        "Building across borders: DRC, Uganda, France, UAE",
-        "Documenting lessons in building and giving back"
+        "Public Speaking & Conference Presentations",
+        "Personal Branding & Digital Presence",
+        "Writing & Sharing Ideas",
+        "Documenting Entrepreneurship & Innovation",
+        "Technology, Education & Social Impact Advocacy",
+        "Storytelling Through Digital Media",
+        "Inspiring the Next Generation of Builders"
       ]
     }
   ],
@@ -91,7 +103,7 @@
     {
       "id": "risevana",
       "title": "Risevana Foundation",
-      "category": "Education \u00b7 Social Impact",
+      "category": "Education · Social Impact",
       "description": "A community-led education initiative making learning accessible to children in underserved rural communities. What started with one room in Nyamasheke is growing into a model for early childhood education, digital learning, and opportunity. ",
       "image": "./assets/Screenshot_2026-10-04_at_2.53.39_PM.png",
       "link": "https://risevana-foundation.vercel.app/"
@@ -99,8 +111,8 @@
     {
       "id": "libblio",
       "title": "Atomiq",
-      "category": "Design \u00b7 Technology",
-      "description": "A software and design agency built by young Rwandan founders to help startups and companies turn ideas into real products\u2014from brand identity and digital experiences to AI, mobile apps, and full software systems. ",
+      "category": "Design · Technology",
+      "description": "A software and design agency built by young Rwandan founders to help startups and companies turn ideas into real products—from brand identity and digital experiences to AI, mobile apps, and full software systems. ",
       "image": "./assets/Screenshot_2026-10-04_at_2.42.02_PM.png",
       "link": "https://www.atomiq.rw/"
     },
@@ -115,7 +127,7 @@
     {
       "id": "project-1791365220085",
       "title": "Hippo Technology",
-      "category": "E-commerce \u00b7 Business",
+      "category": "E-commerce · Business",
       "description": "East Africa's most trusted tech gadget's delivery store. Premium quality gadgets paid after inspection with a delivery time below 20 minutes",
       "image": "./assets/hipooooo.jpeg",
       "link": "https://www.hippotech.rw/"
@@ -185,39 +197,39 @@
       "category": "Movement",
       "date": "Apr 20, 2025",
       "tag": "",
-      "excerpt": "Out on the waters of Lake Kivu, taking in Rwanda\u2019s natural beauty, adventure, fresh air and the freedom of boundless horizons.",
+      "excerpt": "Out on the waters of Lake Kivu, taking in Rwanda’s natural beauty, adventure, fresh air and the freedom of boundless horizons.",
       "image": "./assets/explore_lake_kivu_jetski.png",
       "link": "./blog-detail/",
       "body": " hogashdoufboUAFVOBSuhbfoSDGFBGOUDSGYFOdsgfodsugfudsgvodsgodufgougbofiGOSDFGSODFUHGSADDOUHGASDOUFGSDOU"
     }
   ],
   "about": {
-    "paragraph_1": "I\u2019m a founder and builder from Kigali, Rwanda, passionate about turning barriers into opportunity through companies, communities and technology.",
+    "paragraph_1": "I’m a founder and builder from Kigali, Rwanda, passionate about turning barriers into opportunity through companies, communities and technology.",
     "paragraph_2": "I grew up believing opportunity could be on the other side of a barrier. Sometimes a river, sometimes access to technology. So I started building.",
     "portrait_image": "./assets/contact_portrait.jpg",
     "journey": [
       {
         "title": "Founder & Director",
         "company": "Risevana Foundation",
-        "years": "2021 \u2013 Present"
+        "years": "2021 – Present"
       },
       {
         "title": "Co-Founder & Tech Lead",
         "company": "Libblio",
-        "years": "2023 \u2013 Present"
+        "years": "2023 – Present"
       },
       {
         "title": "Founder & Lead Strategist",
         "company": "Atomiq Agency",
-        "years": "2022 \u2013 Present"
+        "years": "2022 – Present"
       },
       {
         "title": "Founder & Community Lead",
         "company": "Youth Uplift Initiative",
-        "years": "2021 \u2013 Present"
+        "years": "2021 – Present"
       }
     ],
-    "learning_stack_intro": "I learn by doing. Here is what I\u2019m actively mastering across engineering, design, leadership, and operational scale.",
+    "learning_stack_intro": "I learn by doing. Here is what I’m actively mastering across engineering, design, leadership, and operational scale.",
     "learning_stack": [
       {
         "name": "Full-Stack Software Architecture",
@@ -246,14 +258,14 @@
     "paragraph_3": "",
     "journey_heading": "Discover My Journey",
     "journey_intro": "From a river crossing in rural Rwanda to software running in 20+ institutions. What connects every chapter is doing the work before having the permission.",
-    "learning_heading": "What I\u2019m Becoming",
+    "learning_heading": "What I’m Becoming",
     "process_header": {
       "heading": "Building with Purpose and Curiosity",
       "intro": "My process starts with a real barrier and ends with something people can use, built alongside the people it is for."
     }
   },
   "contact": {
-    "heading": "Let\u2019s build something.",
+    "heading": "Let’s build something.",
     "intro": "Have a project in mind, an initiative you'd like to collaborate on, or just want to connect? Reach out below.",
     "email": "hello@axelkarambizi.com",
     "phone": "+250 788 749 709",
@@ -264,7 +276,7 @@
     "form_action": "https://formsubmit.co/hello@axelkarambizi.com"
   },
   "footer": {
-    "copyright": "\u00a9 Copyright 2025. All Rights Reserved by Axel Karambizi",
+    "copyright": "© Copyright 2025. All Rights Reserved by Axel Karambizi",
     "created_by": "Gacondo Labs",
     "created_by_url": "#",
     "social": {
@@ -309,7 +321,7 @@
   ],
   "featured_projects_header": {
     "heading": "Featured Projects",
-    "intro": "These selected projects reflect how I learn: by building things for other people and solving problems that don\u2019t have obvious answers."
+    "intro": "These selected projects reflect how I learn: by building things for other people and solving problems that don’t have obvious answers."
   },
   "more_projects_header": {
     "heading": "More Projects",
@@ -317,11 +329,11 @@
   },
   "services_header": {
     "heading": "what I can do for you",
-    "intro": "I don\u2019t have one box. I build companies, communities and technology, and I tell the stories along the way."
+    "intro": "I don’t have one box. I build companies, communities and technology, and I tell the stories along the way."
   },
   "faq_header": {
     "heading": "Frequently Asked Questions",
-    "intro": "Here are answers to some of the most common questions I receive. If you don\u2019t see your question here, feel free to reach out\u2014I\u2019m happy to help!"
+    "intro": "Here are answers to some of the most common questions I receive. If you don’t see your question here, feel free to reach out—I’m happy to help!"
   },
   "stories_and_voices_header": {
     "heading": "Stories & Voices",
@@ -331,7 +343,7 @@
     {
       "id": "sv-1",
       "name": "Risevana",
-      "role": "Education on the Community\u2019s Side",
+      "role": "Education on the Community’s Side",
       "quote": "A river stood between children and school. So we built the classroom on their side.",
       "image": "./assets/img_7.jpg"
     },
@@ -356,5 +368,9 @@
       "quote": "Four young people decided they could build things for other people.",
       "image": "./assets/img_10.jpg"
     }
-  ]
+  ],
+  "services[0]": {
+    "title": "1.Building Businesses",
+    "items[0]": "Startups & product development — Turning ideas into products people need. "
+  }
 }
